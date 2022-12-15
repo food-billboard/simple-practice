@@ -1,10 +1,13 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import EventEmitter from 'eventemitter3'
 import { debounce } from 'lodash'
+// @ts-ignore
+import * as ChartXkcd from 'chart.xkcd'
 import { WiredProgress } from "wired-elements-react/lib/WiredProgress"
 import { WiredListbox } from "wired-elements-react/lib/WiredListbox"
 import { WiredItem } from "wired-elements-react/lib/WiredItem"
 import { WiredCard } from "wired-elements-react/lib/WiredCard"
+import { WiredImage } from "wired-elements-react/lib/WiredImage"
 // @ts-ignore
 import Rough from 'roughjs/bundled/rough.esm'
 import type { RoughSVG } from 'roughjs/bin/svg'
@@ -36,6 +39,222 @@ type LifecycleDataSourceItem = {
 // ----type----
 
 // ----components----
+
+// 柱形图
+const BarChart = (props: {
+  title: string 
+  value: {
+    x: string 
+    y: number 
+  }[]
+}) => {
+
+  const { title, value=[{x: '1', y: 20}, {x: '2', y: 20}] } = props 
+
+  const chartRef = useRef<SVGSVGElement>(null)
+
+  const realData = useMemo(() => {
+    let labels: string[] = [] 
+    let values: number[] = [] 
+    value.forEach(item => {
+      const { x, y } = item
+      labels.push(x) 
+      values.push(y)
+    })
+    return {
+      labels,
+      datasets: [{
+        data: values,
+      }]
+    }
+  }, [value])
+
+  useEffect(() => {
+    new ChartXkcd.Bar(chartRef.current, {
+      title,
+      data: realData,
+      options: {
+        backgroundColor: 'transparent',
+        dataColors: COLOR_LIST
+      }
+    })
+  }, [title, realData])
+
+  return (
+    <svg
+      ref={chartRef}
+      className="home-page-bar-chart"
+    >
+
+    </svg>
+  )
+
+}
+
+// 折线图
+const LineChart = (props: {
+  title: string 
+  value: {
+    series: string[]
+    value: {
+      [key: string]: number[]
+    }
+    label: string[]
+  }
+}) => {
+
+  const { title, value={
+    series: ['1', '2'],
+    label: ['1', '2'],
+    value: {
+      1: [20, 30],
+      2: [40, 20]
+    }
+  } } = props 
+
+  const chartRef = useRef<SVGSVGElement>(null)
+
+  const realData = useMemo(() => {
+    return {
+      labels: value.label,
+      datasets: value.series.map((item) => {
+        return {
+          label: item,
+          data: value.value[item]
+        }
+      })
+    }
+  }, [value])
+
+  useEffect(() => {
+    new ChartXkcd.Line(chartRef.current, {
+      title,
+      data: realData,
+      options: {
+        backgroundColor: 'transparent',
+        dataColors: COLOR_LIST
+      }
+    })
+  }, [title, realData])
+
+  return (
+    <svg
+      ref={chartRef}
+      className="home-page-line-chart"
+    >
+
+    </svg>
+  )
+
+}
+
+// 雷达图
+const RadarChart = (props: {
+  title: string 
+  value: {
+    series: string[]
+    value: {
+      [key: string]: number[]
+    }
+    label: string[]
+  }
+}) => {
+
+  const { title, value={
+    series: ['1', '2'],
+    label: ['1', '2', '3', '4'],
+    value: {
+      1: [20, 30, 50, 10],
+      2: [40, 20, 5, 25]
+    }
+  } } = props 
+
+  const chartRef = useRef<SVGSVGElement>(null)
+
+  const realData = useMemo(() => {
+    return {
+      labels: value.label,
+      datasets: value.series.map((item) => {
+        return {
+          label: item,
+          data: value.value[item]
+        }
+      })
+    }
+  }, [value])
+
+  useEffect(() => {
+    new ChartXkcd.Radar(chartRef.current, {
+      title,
+      data: realData,
+      options: {
+        backgroundColor: 'transparent',
+        dataColors: COLOR_LIST
+      }
+    })
+  }, [title, realData])
+
+  return (
+    <svg
+      ref={chartRef}
+      className="home-page-radar-chart"
+    >
+
+    </svg>
+  )
+
+}
+
+// 饼图
+const PieChart = (props: {
+  title: string 
+  value: {
+    x: string 
+    y: number 
+  }[]
+}) => {
+
+  const { title, value=[{x: '1', y: 20}, {x: '2', y: 20}] } = props 
+
+  const chartRef = useRef<SVGSVGElement>(null)
+
+  const realData = useMemo(() => {
+    let labels: string[] = [] 
+    let values: number[] = [] 
+    value.forEach(item => {
+      const { x, y } = item
+      labels.push(x) 
+      values.push(y)
+    })
+    return {
+      labels,
+      datasets: [{
+        data: values,
+      }]
+    }
+  }, [value])
+
+  useEffect(() => {
+    new ChartXkcd.Pie(chartRef.current, {
+      title,
+      data: realData,
+      options: {
+        backgroundColor: 'transparent',
+        dataColors: COLOR_LIST
+      }
+    })
+  }, [title, realData])
+
+  return (
+    <svg
+      ref={chartRef}
+      className="home-page-pie-chart"
+    >
+
+    </svg>
+  )
+
+}
 
 // 提交记录
 const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
@@ -238,12 +457,17 @@ const MessageBubble = (props: Omit<CommonAnimationProps, 'onComplete'> & {
 
 }
 
+// 图片
+const Image = () => {
+
+  return (
+    <WiredImage />
+  )
+
+}
+
 // 路径动画
 const PathAnimation = () => {
-
-  useEffect(() => {
-    console.log('11111111')
-  }, [])
 
   return (
     <div>
@@ -350,7 +574,7 @@ const SelectBox = (props: Pick<CommonAnimationProps, 'children'> & {
 const LIFE_CYCLE_DATA_SOURCE: LifecycleDataSourceItem[] = [
   {
     key: '9999',
-    element: GithubCommitHistoryChart,
+    element: PieChart,
     direction: 'left',
     response: () => true 
   },
@@ -399,6 +623,12 @@ const GITHUB_INFO = {
   RECT_MARGIN: 4,
 
 }
+
+// 色调列表
+const COLOR_LIST = ['red', 'yellow', 'green', 'pink']
+
+// 公交图标
+const BUS_SVG = ""
 
 // ----constants----
 

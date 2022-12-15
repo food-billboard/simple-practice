@@ -4,7 +4,10 @@
   overflow: hidden;
   transform-origin: left top;
   /* transform: scale(0.5); */
-  background-color: rgba(0, 0, 0, 0.1)
+  background-color: rgba(0, 0, 0, 0.1);
+
+  --message-width: 550px;
+  --message-height: 300px;
 }
 .zero-scrollbar {
   scrollbar-width: none;
@@ -43,6 +46,22 @@
   transform-origin: left top;
 }
 .github-commit-svg {
-  width: 550px;
-  height: 300px;
+  width: var(--message-width);
+  height: var(--message-height);
+}
+.home-page-bar-chart {
+  width: var(--message-width);
+  /* height: var(--message-height); */
+}
+.home-page-line-chart {
+  width: var(--message-width);
+  /* height: var(--message-height); */
+}
+.home-page-radar-chart {
+  width: var(--message-width);
+  /* height: var(--message-height); */
+}
+.home-page-pie-chart {
+  width: var(--message-width);
+  /* height: var(--message-height); */
 }
