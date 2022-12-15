@@ -1,0 +1,48 @@
+.home-page {
+  width: 750px;
+  height: 1334px;
+  overflow: hidden;
+  transform-origin: left top;
+  /* transform: scale(0.5); */
+  background-color: rgba(0, 0, 0, 0.1)
+}
+.zero-scrollbar {
+  scrollbar-width: none;
+}
+.zero-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.w-100 {
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+.dis-flex {
+  display: flex;
+}
+
+.home-page-loading {
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.home-page-message-list-wrapper {
+  height: 1270px;
+  overflow: auto hidden;
+}
+.home-page-response-wrapper {
+  height: 64px;
+}
+.home-page-message-box {
+  max-width: 600px;
+  overflow: hidden;
+  word-break: break-all;
+  /* transform: scale(1.5); */
+  transform-origin: left top;
+}
+.github-commit-svg {
+  width: 550px;
+  height: 300px;
+}
