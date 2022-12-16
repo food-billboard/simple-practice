@@ -7,7 +7,9 @@
   background-color: rgba(0, 0, 0, 0.1);
 
   --message-width: 550px;
-  --message-height: 300px;
+  --message-height: calc( var(--message-width) * 2 / 3 );
+
+  --message-chart-width: calc( var(--message-width) / 3 * 2 )
 }
 .zero-scrollbar {
   scrollbar-width: none;
@@ -24,6 +26,9 @@
 }
 .dis-flex {
   display: flex;
+}
+.te-ce {
+  text-align: center;
 }
 
 .home-page-loading {
@@ -42,26 +47,60 @@
   max-width: 600px;
   overflow: hidden;
   word-break: break-all;
+  margin-bottom: 25px;
   /* transform: scale(1.5); */
   transform-origin: left top;
+}
+.home-page-message-box-right {
+  display: flex;
+  justify-content: flex-end;
+}
+.home-page-message-box-multi {
+  flex-direction: column;
+}
+.home-page-select-button-wrapper {
+  justify-content: space-evenly;
 }
 .github-commit-svg {
   width: var(--message-width);
   height: var(--message-height);
 }
 .home-page-bar-chart {
-  width: var(--message-width);
+  width: var(--message-chart-width);
   /* height: var(--message-height); */
 }
 .home-page-line-chart {
-  width: var(--message-width);
+  width: var(--message-chart-width);
   /* height: var(--message-height); */
 }
 .home-page-radar-chart {
-  width: var(--message-width);
+  width: var(--message-chart-width);
   /* height: var(--message-height); */
 }
 .home-page-pie-chart {
-  width: var(--message-width);
+  width: var(--message-chart-width);
   /* height: var(--message-height); */
+}
+.home-page-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+.home-page-avatar > span{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.home-page-path-animation {
+  position: relative;
+}
+.home-page-shake {
+  font-size: 40px;
+  text-align: center;
+}
+.healthy-card {
+  margin-top: 25px;
 }
