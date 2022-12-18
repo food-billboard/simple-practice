@@ -733,7 +733,6 @@ const SvgAnimation = (props: CommonAnimationProps & {
   const vivusRef = useRef<Vivus>();
 
   useEffect(() => {
-
     vivusRef.current = new Vivus(
       svgId,
       {
@@ -2332,6 +2331,7 @@ const Home = () => {
 
   // 动画完成
   const onComplete = useCallback((value?: any) => {
+    value && EVENT_EMITTER.emit(EVENT_EMITTER_LISTENER.POST_MESSAGE, value)
     if (responseCallback.current) return
     let nextMessage: LifecycleDataSourceItem | undefined
     // 当前消息已经没有了
@@ -2347,7 +2347,6 @@ const Home = () => {
     if (nextMessage) {
       const { skip } = nextMessage
       setLifecycleList(prev => [...prev, nextMessage!])
-      EVENT_EMITTER.emit(EVENT_EMITTER_LISTENER.POST_MESSAGE, nextMessage)
 
       if (skip) {
         dataSourceRef.current![currentDataSource.current!].splice(0, skip)
@@ -2403,7 +2402,7 @@ const Home = () => {
       let children: any
       if (Array.isArray(element)) {
         children = (
-          <MultiMessageWrapper id={key} onComplete={onComplete} value={element} />
+          <MultiMessageWrapper id={key} onComplete={onComplete.bind(null, item)} value={element} />
         )
       } else {
         const { element: Element, value, ...nextProps } = element
@@ -2411,7 +2410,7 @@ const Home = () => {
           <Element
             {...nextProps}
             id={key}
-            onComplete={onComplete.bind(null, element)}
+            onComplete={onComplete.bind(null, item)}
             value={value}
           />
         )
