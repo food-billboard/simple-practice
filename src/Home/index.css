@@ -38,7 +38,7 @@
 }
 .home-page-message-list-wrapper {
   height: 1270px;
-  overflow: auto hidden;
+  overflow: hidden auto;
 }
 .home-page-response-wrapper {
   height: 64px;

@@ -43,6 +43,8 @@ const useChartInit = (init: () => void, onComplete: () => void, depts: any[]) =>
 type Options = {
   value: string
   text: string
+  skip?: number
+  map?: keyof ReturnType<typeof getLifecycle>
 }
 
 type RoughInstance = RoughSVG
@@ -53,7 +55,8 @@ type CommonAnimationProps = {
   immediately?: boolean
   children?: ReactNode
   animate?: boolean
-  value?: any 
+  value?: any
+  delay?: number
   notation?: {
     element: string,
     config: RoughAnnotationConfig
@@ -78,11 +81,34 @@ type LifecycleDataSourceItem = {
   direction: 'left' | 'right'
   response?: (value: string) => boolean
   options?: Options[]
+  skip?: number
 }
 
 // ----type----
 
 // ----components----
+
+// Anime组件
+const AnimeComponent = (props: CommonAnimationProps & {
+  config: Anime.AnimeParams
+}) => {
+
+  const { config, children, id } = props 
+
+  useEffect(() => {
+    Anime({
+      targets: `#${id}`,
+      ...config
+    })
+  }, [])
+
+  return (
+    <div>
+
+    </div>
+  )
+
+}
 
 // 柱形图
 const BarChart = (props: {
@@ -93,7 +119,7 @@ const BarChart = (props: {
   }[]
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value = [{ x: '1', y: 20 }, { x: '2', y: 20 }], onComplete } = props
+  const { title, value, onComplete } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -147,14 +173,7 @@ const LineChart = (props: {
   }
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value = {
-    series: ['1', '2'],
-    label: ['1', '2'],
-    value: {
-      1: [20, 30],
-      2: [40, 20]
-    }
-  }, onComplete } = props
+  const { title, value, onComplete } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -204,14 +223,7 @@ const RadarChart = (props: {
   }
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value = {
-    series: ['1', '2'],
-    label: ['1', '2', '3', '4'],
-    value: {
-      1: [20, 30, 50, 10],
-      2: [40, 20, 5, 25]
-    },
-  }, onComplete } = props
+  const { title, value, onComplete } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -258,7 +270,7 @@ const PieChart = (props: {
   }[],
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value = [{ x: '1', y: 20 }, { x: '2', y: 20 }], onComplete } = props
+  const { title, value, onComplete } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -303,7 +315,7 @@ const PieChart = (props: {
 // 提交记录
 const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
 
-  const { id } = props
+  const { id, onComplete } = props
 
   const roughRef = useRef<RoughInstance>()
   const svgRef = useRef<SVGSVGElement>(null)
@@ -376,6 +388,8 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
   useEffect(() => {
     roughRef.current = Rough.svg(svgRef)
     init()
+
+    setTimeout(onComplete, 1000)
   }, [])
 
   return (
@@ -387,15 +401,15 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
 // 健康码
 const HealthyAnimation = (props: CommonAnimationProps) => {
 
-  const { onComplete } = props 
+  const { onComplete, delay=0 } = props
 
-  const [ qrCode, setQrCode ] = useState<string>()
+  const [qrCode, setQrCode] = useState<string>()
 
   const onLoad = useCallback(() => {
     annotate(document.querySelector('#healthy-card')!, {
       type: 'circle'
     }).show()
-    setTimeout(onComplete, 1200)
+    setTimeout(onComplete, 1200 + delay)
   }, [onComplete])
 
   const generateQrCode = async () => {
@@ -428,7 +442,7 @@ const HealthyAnimation = (props: CommonAnimationProps) => {
 
   return (
     <div className="te-ce">
-      <img  
+      <img
         id={"healthy-card"}
         src={qrCode}
         onLoad={onLoad}
@@ -440,9 +454,12 @@ const HealthyAnimation = (props: CommonAnimationProps) => {
 }
 
 // 数字动画
-const NumberAnimation = (props: CommonAnimationProps) => {
+const NumberAnimation = (props: CommonAnimationProps & {
+  prefix?: ReactNode
+  suffix?: ReactNode
+}) => {
 
-  const { value, onComplete } = props 
+  const { value, onComplete, delay=0, prefix='', suffix='' } = props
 
   const chartId = useRef<string>('number_animation_' + Date.now().toString() + (Math.random() * 100).toFixed(0))
 
@@ -455,12 +472,14 @@ const NumberAnimation = (props: CommonAnimationProps) => {
       },
     );
     instance.start();
-    setTimeout(onComplete, 2200);
+    setTimeout(onComplete, 2200 +  delay);
   }, [])
 
   return (
-    <div id={chartId.current}>
-     
+    <div>
+      <span>{prefix}</span>
+      <span id={chartId.current}></span>
+      <span>{suffix}</span>
     </div>
   )
 
@@ -468,25 +487,27 @@ const NumberAnimation = (props: CommonAnimationProps) => {
 
 // 物体抖动
 const ShakeAnimation = (props: CommonAnimationProps & {
-  shakeProps?: any 
+  shakeProps?: any
 }) => {
 
-  const { value, onComplete, shakeProps={}, id, notation=[] } = props 
+  const { value, onComplete, shakeProps = {}, id, notation = [], delay=0 } = props
 
   useEffect(() => {
-    if(!notation.length) {
-      setTimeout(onComplete, 1000)
-    }else {
+    if (!notation.length) {
+      setTimeout(onComplete, 1000 + delay)
+    } else {
       annotationGroup(notation.map(item => {
         const { element, config } = item
-        return annotate(document.querySelector(element)!, config) 
-      })).show()
-      setTimeout(onComplete, 800 * notation.length + 400)
+        const dom = document.querySelector(element)
+        if(!dom) return 
+        return annotate(dom as HTMLElement, config)
+      }).filter(Boolean) as any).show()
+      setTimeout(onComplete, 800 * notation.length + 400 + delay)
     }
   }, [])
 
   return (
-    <Shake 
+    <Shake
       h={56}
       v={39}
       r={20}
@@ -546,12 +567,10 @@ const NormalText = (props: CommonAnimationProps & {
   value: string
   onComplete: () => void
 }) => {
-  const { value, onComplete } = props
+  const { value, onComplete, delay=0 } = props
 
   useEffect(() => {
-    setTimeout(() => {
-      onComplete()
-    }, 400)
+    setTimeout(onComplete, 400 + delay)
   }, [])
 
   return (
@@ -566,29 +585,28 @@ const TextAnimation = (props: CommonAnimationProps & {
   value: string | string[]
   notationIndex?: {
     index: number
-    selector: string 
+    selector: string
   }[]
-  onComplete: () => void
 }) => {
 
-  const { value, onComplete, id, immediately, notationIndex=[], notation=[] } = props
+  const { value, onComplete, id, immediately, notationIndex = [], notation = [], delay=0 } = props
 
   const [animationText, setAnimationText] = useState('')
 
   const timerRef = useRef<NodeJS.Timeout>()
   const complete = useRef(false)
+  const actionComplete = useRef(1 + (notationIndex.length ? 1 : 0))
 
   const realValue = useMemo(() => {
-    return Array.isArray(value) ? value.join('') : value 
+    return Array.isArray(value) ? value.join('') : value
   }, [value])
 
   const realAnimationText = useMemo(() => {
-    if(realValue === '还记得那次的项目吗') console.log(notationIndex.length, animationText.length, realValue.length, 222222)
-    if(!notationIndex.length || animationText.length < realValue.length) return animationText
-    complete.current = true 
+    if (!notationIndex.length || animationText.length < realValue.length) return animationText
+    complete.current = true
     return value.map((item: any, index: number) => {
       const target = notationIndex.find(item => item.index === index)
-      if(!target) return item 
+      if (!target) return item
       return (
         <span className={target.selector} key={index}>
           {item}
@@ -598,8 +616,9 @@ const TextAnimation = (props: CommonAnimationProps & {
   }, [animationText])
 
   const notationAnimation = () => {
-    if(!notation.length) {
-      onComplete()
+    actionComplete.current -- 
+    if (!actionComplete.current) {
+      setTimeout(onComplete, delay)
     }
   }
 
@@ -609,7 +628,7 @@ const TextAnimation = (props: CommonAnimationProps & {
     timerRef.current = setInterval(() => {
       index++
       setAnimationText(realValue.slice(0, index))
-      if (index >= realValue.length + 20 || (immediately && index >= realValue.length + 50)) {
+      if (index >= realValue.length + 20 || (immediately && index >= realValue.length + 5)) {
         clearInterval(timerRef.current)
         notationAnimation()
       }
@@ -621,12 +640,12 @@ const TextAnimation = (props: CommonAnimationProps & {
   }, [realValue, id])
 
   useEffect(() => {
-    if(!complete.current) return 
+    if (!complete.current) return
     annotationGroup(notation.map(item => {
       const { element, config } = item
-      return annotate(document.querySelector(element)!, config) 
+      return annotate(document.querySelector(element)!, config)
     })).show()
-    setTimeout(onComplete, 800 * notation.length + 400)
+    setTimeout(notationAnimation, 800 * notation.length + 400)
   }, [realAnimationText])
 
   return (
@@ -690,7 +709,13 @@ const MessageBubble = (props: Omit<CommonAnimationProps, 'onComplete'> & Pick<Li
 }
 
 // 图片
-const Image = () => {
+const Image = (props: CommonAnimationProps) => {
+
+  const { onComplete, delay=0 } = props 
+
+  useEffect(() => {
+    setTimeout(onComplete, 1000 + delay);
+  }, [])
 
   return (
     <WiredImage />
@@ -703,7 +728,7 @@ const SvgAnimation = (props: CommonAnimationProps & {
   svgId: string
 }) => {
 
-  const { svgId, onComplete, children } = props
+  const { svgId, onComplete, children, delay=0 } = props
 
   const vivusRef = useRef<Vivus>();
 
@@ -768,7 +793,7 @@ const PathAnimation = (props: CommonAnimationProps & {
   shapeRef: any
 }) => {
 
-  const { svgRef, shapeRef, children, onComplete } = props
+  const { svgRef, shapeRef, children, onComplete, delay=0 } = props
 
   const chartInstance = useRef<Anime.AnimeInstance>()
 
@@ -784,7 +809,7 @@ const PathAnimation = (props: CommonAnimationProps & {
       rotate: pathData('angle'),
       duration: 20000,
     });
-    setTimeout(onComplete, 3000)
+    setTimeout(onComplete, 3000 + delay)
   }, [])
 
   return (
@@ -961,7 +986,7 @@ const Loading = ({ onLoad }: { onLoad: () => void }) => {
 
 // 选择表单
 const SelectBox = (props: Pick<CommonAnimationProps, 'children'> & {
-  onResponse: (value: string) => void
+  onResponse: (value: string, origin: Options) => void
 }) => {
 
   const { onResponse } = props
@@ -975,7 +1000,7 @@ const SelectBox = (props: Pick<CommonAnimationProps, 'children'> & {
         <WiredButton
           elevation={3}
           key={value}
-          onclick={() => onResponse(value)}
+          onclick={() => onResponse(value, item)}
         >
           {(text || value) as any}
         </WiredButton>
@@ -1009,25 +1034,564 @@ const SelectBox = (props: Pick<CommonAnimationProps, 'children'> & {
 
 // ----constants----
 
-// 历史数据的一个记录
-const LIFE_CYCLE_DATA_SOURCE: LifecycleDataSourceItem[] = [
-  {
-    key: '995',
-    element: [
-      {
-        value: '今天的你，非常的幸运',
-        element: TextAnimation,
-        id: '1'
+function getLifecycle() {
+  // 历史数据的一个记录
+  const LIFE_CYCLE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+
+    {
+      key: '1',
+      element: {
+        value: '你好，2023的我',
+        element: TextAnimation
       },
-      {
-        value: '你守护住了你的绿码',
-        element: TextAnimation,
-        id: '2'
+      direction: 'left'
+    },
+    {
+      key: '2',
+      element: {
+        value: '我是2022的我',
+        element: TextAnimation
       },
-      {
+      direction: 'left'
+    },
+    {
+      key: '2-1',
+      element: {
+        value: '图片地址',
+        element: Image
+      },
+      direction: 'left',
+      options: [
+        {
+          value: '你好',
+          text: '你好'
+        }
+      ]
+    },
+    {
+      key: '3',
+      element: {
+        value: '不知不觉，过了一年',
+        element: TextAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '4',
+      element: {
+        value: '这一年发生了很多的事情',
+        element: TextAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '5',
+      element: {
+        value: '让我来跟你说一说吧',
+        element: TextAnimation
+      },
+      direction: 'left',
+      options: [
+        {
+          text: '好',
+          value: '好',
+          skip: 2
+        },
+        {
+          text: '不好',
+          value: '不好'
+        }
+      ]
+    },
+    {
+      key: '6',
+      element: {
+        value: '没用，我还是要跟你说',
+        element: TextAnimation
+      },
+      direction: 'left',
+    },
+    {
+      key: '6-1',
+      element: {
+        value: '图片地址',
+        element: Image
+      },
+      direction: 'left',
+    },
+  ]
+
+  // 健身
+  const FIT_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '8',
+      element: {
+        value: '先来说一说这一年我的健身成果吧',
+        element: TextAnimation
+      },
+      direction: 'left',
+    },
+    {
+      key: '8-1',
+      element: [
+        {
+          element: TextAnimation,
+          value: '今年总计锻炼次数为：',
+          id: '1'
+        },
+        {
+          element: NumberAnimation,
+          value: 200,
+          id: '2'
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '9',
+      element: [
+        {
+          value: '再看看看看这一年的健身记录',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          element: BarChart,
+          id: '2'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '10',
+      element: [
+        {
+          value: '多了很多的健身器材',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: '哑铃',
+          element: TextAnimation,
+          id: '2'
+        },
+        {
+          value: '',
+          element: Dumbbell,
+          id: '3'
+        },
+        {
+          value: '杠铃',
+          element: TextAnimation,
+          id: '4'
+        },
+        {
+          value: '',
+          element: Barbell,
+          id: '5'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '11',
+      element: [
+        {
+          value: '依旧按照规定的健身计划',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: {
+            series: ['1', '2'],
+            label: ['1', '2', '3', '4'],
+            value: {
+              1: [20, 30, 50, 10],
+              2: [40, 20, 5, 25]
+            },
+          },
+          element: RadarChart,
+          id: '2'
+        },
+        {
+          value: [
+            '两天',
+            '一练'
+          ],
+          id: '3',
+          element: TextAnimation,
+          notationIndex: [
+            {
+              selector: 'fit_date_loop',
+              index: 0
+            }
+          ],
+          notation: [
+            {
+              config: {
+                type: 'highlight'
+              },
+              element: '.fit_date_loop'
+            }
+          ]
+        },
+      ],
+      direction: 'left',
+    },
+    {
+      key: '12',
+      element: [
+        {
+          id: '1',
+          value: '体重基本没有发生变化',
+          element: TextAnimation
+        },
+        {
+          id: '2',
+          value: {
+            series: ['1', '2'],
+            label: ['1', '2'],
+            value: {
+              1: [20, 30],
+              2: [40, 20]
+            }
+          },
+          element: LineChart
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: 'fit_prompt',
+      direction: 'left',
+      element: {
+        value: ['还有一个事情，我要提醒你！！！'],
+        element: TextAnimation,
+        notationIndex: [
+          {
+            index: 0,
+            selector: 'fit_prompt'
+          }
+        ],
+        notation: [
+          {
+            element: '.fit_prompt',
+            config: {
+              type: 'circle'
+            }
+          }
+        ]
+      },
+      options: [
+        {
+          text: '什么事情呢',
+          value: '什么事情呢'
+        },
+        {
+          text: '不想听',
+          value: '不想听',
+          skip: 1
+        }
+      ]
+    },
+    {
+      key: '12-2',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          value: [
+            '热身',
+            '热身',
+            '热身',
+          ],
+          element: TextAnimation,
+          notationIndex: new Array(3).fill(0).map((_, index) => {
+            return {
+              index,
+              selector: `fit_prompt_message_${index}`
+            }
+          }),
+          notation: new Array(3).fill(0).map((_, index) => {
+            return {
+              config: {
+                type: 'circle'
+              },
+              element: `.fit_prompt_message_${index}`
+            }
+          })
+        },
+        {
+          id: '2',
+          value: '重要的事情说三遍',
+          element: TextAnimation
+        },
+        {
+          id: '3',
+          value: '不热身就锻炼，你就是傻子',
+          element: TextAnimation
+        },
+      ]
+    },
+    {
+      key: '12-3',
+      direction: 'left',
+      element: [
+        {
+          element: TextAnimation,
+          value: '那你就当我放了个屁吧',
+          id: '1'
+        },
+        {
+          element: AnimeComponent,
+          value: '💨💨',
+          id: 'fit_boom',
+          config: {
+            loop: false,
+            duration: 3000,
+            delay: 500,
+            keyframes: [
+              {
+                translateX: 100
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+
+  // 游戏
+  const GAME_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '13',
+      element: {
+        value: '说说游戏吧',
+        element: TextAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '14',
+      element: [
+        {
+          value: '今年的王者荣耀',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: '皮肤出得依旧很快',
+          element: TextAnimation,
+          id: '2'
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '15',
+      element: {
+        value: [
+          '但是不影响我当',
+          '豹子头'
+        ],
+        element: TextAnimation,
+        notationIndex: [
+          {
+            index: 1,
+            selector: 'game_money_zero'
+          }
+        ],
+        notation: [
+          {
+            element: '.game_money_zero',
+            config: {
+              type: 'circle'
+            }
+          }
+        ]
+      },
+      direction: 'left'
+    },
+    {
+      key: '16',
+      element: {
+        value: '每个赛季都上了王者',
+        element: TextAnimation,
+      },
+      direction: 'left',
+    },
+    {
+      key: '17',
+      element: [
+        {
+          value: '每个工作日的中午就是我的游戏时间',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: '一个小时刚好三局',
+          element: TextAnimation,
+          id: '2'
+        },
+        {
+          value: '😈',
+          element: ShakeAnimation,
+          id: '3'
+        },
+      ],
+      direction: 'left',
+    },
+    {
+      key: '18',
+      element: [
+        {
+          value: [
+            '有时候时间到了还没打完，也受到了领导的特别',
+            '问候'
+          ],
+          element: TextAnimation,
+          id: '1',
+          notationIndex: [
+            {
+              selector: 'game_message',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.game_message',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ]
+        },
+        {
+          value: '但是不影响我上分😕',
+          element: TextAnimation,
+          id: '2'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '19',
+      element: [
+        {
+          value: [
+            '今年还新买了',
+            'switch',
+            '游戏机'
+          ],
+          element: TextAnimation,
+          id: '1',
+          notationIndex: [
+            {
+              selector: 'game_switch',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.game_switch',
+              config: {
+                type: 'underline'
+              }
+            }
+          ]
+        },
+        {
+          value: '🎮',
+          element: ShakeAnimation,
+          id: '2'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '20',
+      element: [
+        {
+          value: [
+            '入手了',
+            '健身环'
+          ],
+          element: TextAnimation,
+          id: '1',
+          notationIndex: [
+            {
+              selector: 'game_switch_circle',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.game_switch_circle',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ]
+        },
+        {
+          value: '冬天冷，就靠这个当作运动项目',
+          element: TextAnimation,
+          id: '2'
+        }
+      ],
+      direction: 'left',
+    },
+  ]
+
+  // 交通
+  const TRAFFIC_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '21',
+      element: {
+        id: '1',
+        value: '疫情的影响，让日常工作通勤也出现了压力',
+        element: TextAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '22',
+      element: {
+        value: '',
+        element: BusPathAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '23',
+      element: {
+        value: '但随着地铁的通车，也稍微缓解了高峰期的压力',
+        element: TextAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '24',
+      element: {
+        value: '',
+        element: SubwayPathAnimation
+      },
+      direction: 'left'
+    },
+    {
+      key: '25',
+      element: {
+        value: '好在我也幸运的守护住了绿码',
+        element: TextAnimation,
+      },
+      direction: 'left'
+    },
+    {
+      key: 'healthy_shake_id',
+      element: {
         value: '🐴 🐎 🐴 🐎',
         element: ShakeAnimation,
-        id: 'healthy_shake_id',
         shakeProps: {
           h: 5,
           v: 5,
@@ -1044,180 +1608,679 @@ const LIFE_CYCLE_DATA_SOURCE: LifecycleDataSourceItem[] = [
           }
         ]
       },
-      {
+      direction: 'left'
+    },
+    {
+      key: '27',
+      element: {
         value: '',
         element: HealthyAnimation,
-        id: '4'
-      },
-    ],
-    direction: 'left'
-  },
-  {
-    key: '996',
-    element: [
-      {
-        value: '今年这一年',
-        element: TextAnimation,
-        id: '1'
-      },
-      {
-        value: '一共锻炼了',
-        element: TextAnimation,
-        id: '2'
-      },
-      {
-        value: 100,
-        element: NumberAnimation,
-        id: '3'
-      },
-      {
-        value: '天',
-        element: TextAnimation,
-        id: '4'
-      },
-    ],
-    direction: 'left'
-  },
-  {
-    key: '997',
-    element: [
-      {
-        value: [
-          '还记得那次的',
-          '项目',
-          '吗'
-        ],
-        element: TextAnimation,
-        id: '1',
-        notationIndex: [
-          {
-            index: 1,
-            selector: 'aaaa'
-          },
-          {
-            index: 2,
-            selector: 'bbbb'
-          }
-        ],
+        id: 'healthy_qr_code_id',
+        delay: 200,
         notation: [
           {
-            element: '.aaaa',
+            element: '#healthy_qr_code_id',
             config: {
-              type: 'underline'
-            }
-          },
-          {
-            element: '.bbbb',
-            config: {
-              type: 'box'
+              type: 'circle'
             }
           }
         ]
       },
-      {
-        value: '合作了那个磨叽的同事',
-        element: TextAnimation,
-        id: '2'
-      },
-      {
-        value: '🙉 🙉',
-        element: ShakeAnimation,
-        id: '3'
-      }
-    ],
-    direction: 'left'
-  },
-  {
-    key: '999',
-    element: [
-      {
-        value: '两周一次的循环健身',
-        element: TextAnimation,
-        id: '1'
-      },
-      {
-        value: '哑铃',
-        element: TextAnimation,
-        id: '2'
-      },
-      {
-        value: '',
-        element: Dumbbell,
-        id: '3'
-      },
-      {
-        value: '杠铃',
-        element: TextAnimation,
-        id: '4'
-      },
-      {
-        value: '',
-        element: Barbell,
-        id: '5'
-      },
-    ],
-    direction: 'left'
-  },
-  {
-    key: '998',
-    element: [
-      {
-        value: '每天早上的公交车，经常让自己迟到',
-        element: TextAnimation,
-        id: '1'
-      },
-      {
-        value: '',
-        element: BusPathAnimation,
-        id: '2'
-      },
-      {
-        value: '现在多了一个选择--地铁',
-        element: TextAnimation,
-        id: '3'
-      },
-      {
-        value: '',
-        element: SubwayPathAnimation,
-        id: '4'
-      },
-    ],
-    direction: 'left'
-  },
-  {
-    key: '1',
-    element: {
-      value: '你好，年底的我',
-      element: TextAnimation
+      direction: 'left'
     },
-    direction: 'left'
-  },
-  {
-    key: '2',
+  ]
+
+  // 工作
+  const WORK_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '28',
+      element: {
+        value: '今年也是平平静静的在公司工作',
+        element: TextAnimation,
+      },
+      direction: 'left'
+    },
+    {
+      key: '29',
+      element: [
+        {
+          prefix: '但是也因为交通迟到了',
+          suffix: '次',
+          value: 10,
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          element: BarChart,
+          id: '3'
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '30',
+      element: [
+        {
+          value: [
+            '虽然每个月有',
+            '三次',
+            '机会'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              selector: 'work_three',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.work_three',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ],
+          id: '1'
+        },
+        {
+          value: '不过当然是不够用的，喜提扣钱',
+          element: TextAnimation,
+          id: '2'
+        },
+        {
+          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          element: BarChart,
+          id: '3'
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '31',
+      element: [
+        {
+          id: '1',
+          value: '被迫完成了两次技术分享',
+          element: TextAnimation
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '32',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          value: '我的工资呢？',
+          element: TextAnimation
+        },
+        {
+          id: '2',
+          value: '🤷‍♂️',
+          element: ShakeAnimation
+        },
+        {
+          id: '3',
+          value: {
+            series: ['1', '2'],
+            label: ['1', '2'],
+            value: {
+              1: [20, 30],
+              2: [40, 20]
+            }
+          },
+          element: LineChart
+        },
+      ]
+    }
+  ]
+
+  // 代码人生
+  const CODE_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '33',
+      element: [
+        {
+          id: '1',
+          element: TextAnimation,
+          value: '今年一如既往的活跃在github社区中'
+        },
+        {
+          id: '2',
+          element: GithubCommitHistoryChart,
+          value: ''
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '34',
+      element: {
+        element: TextAnimation,
+        value: '虽然一般都是自己做些玩玩的东西'
+      },
+      direction: 'left'
+    },
+    {
+      key: '35',
+      element: {
+        element: TextAnimation,
+        value: '不知道你想不想看我写的成果呢'
+      },
+      direction: 'left',
+      options: [
+        {
+          text: '好',
+          value: '好',
+          skip: 1
+        },
+        {
+          text: '不好',
+          value: '不好',
+        }
+      ]
+    },
+    {
+      key: '35-1',
+      element: {
+        element: TextAnimation,
+        value: '好吧，那我讲点别的',
+      },
+      direction: 'left',
+      skip: 2
+    },
+    {
+      key: '36',
+      element: [
+        {
+          element: TextAnimation,
+          value: [
+            '今年我主要精力都在',
+            '可视化大屏项目',
+            '上'
+          ],
+          notationIndex: [
+            {
+              selector: 'code_screen',
+              index: 1,
+            }
+          ],
+          notation: [
+            {
+              element: '.code_screen',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ],
+          id: '1'
+        },
+        {
+          id: '2',
+          element: TextAnimation,
+          value: '他是一个组件丰富，交互方便的可视化大屏设计器，并且他包含了从设计到生产的所有环节的功能。'
+        },
+        {
+          id: '3',
+          element: TextAnimation,
+          value: '当然我还是一直在持续迭代的'
+        },
+        {
+          id: '4',
+          element: ShakeAnimation,
+          value: '👏🏻'
+        }
+      ],
+      options: [
+        {
+          text: '看起来不错的样子',
+          value: '看起来不错的样子'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '37',
+      element: [
+        {
+          id: '1',
+          value: [
+            '是的，还有关于他的',
+            '后台服务',
+            '他也是一个老项目了，不知道你还记得吗？'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              selector: 'code_server',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.code_server',
+              config: {
+                type: 'circle'
+              }
+            }
+          ]
+        },
+        {
+          id: '2',
+          value: '他已经支撑了好几个项目的后台服务了，超级多的接口。',
+          element: TextAnimation
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '38',
+      direction: 'left',
+      element: {
+        element: TextAnimation,
+        value: '我还参加了掘金的游戏比赛'
+      },
+      options: [
+        {
+          text: '是吗',
+          value: '是吗',
+        },
+        {
+          text: '没啥了不起',
+          value: '没啥了不起',
+          skip: 1
+        }
+      ]
+    },
+    {
+      key: '39',
+      direction: 'left',
+      skip: 1,
+      element: [
+        {
+          element: TextAnimation,
+          value: [
+            '对啊',
+            '不知道你还记不记得小时候玩的红白机游戏',
+            '炸弹人'
+          ],
+          id: '1',
+          notationIndex: [
+            {
+              selector: 'code_game_name',
+              index: 2
+            }
+          ],
+          notation: [
+            {
+              element: '.code_game_name',
+              config: {
+                type: 'circle'
+              }
+            }
+          ]
+        },
+        {
+          element: TextAnimation,
+          value: '我把他用javascript给重新实现了。',
+          id: '2'
+        },
+        {
+          element: TextAnimation,
+          value: [
+            '并且拿了',
+            '优秀奖'
+          ],
+          id: '3',
+          notationIndex: [
+            {
+              selector: 'code_game_award',
+              index: 1
+            }
+          ],
+          notation: [
+            {
+              element: '.code_game_award',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ]
+        },
+      ],
+    },
+    {
+      key: '38-1',
+      direction: 'left',
+      element: {
+        element: TextAnimation,
+        value: '好吧，那我不说了🙂'
+      }
+    },
+    {
+      key: '40',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          value: '还有哦，我第一次给开源项目贡献了代码',
+          element: TextAnimation
+        },
+        {
+          id: '2',
+          value: '😊',
+          element: ShakeAnimation
+        }
+      ],
+      options: [
+        {
+          text: '怎么回事呢',
+          value: '怎么回事呢'
+        }
+      ]
+    },
+    {
+      key: '41',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          value: [
+            '我发现了',
+            'antd',
+            '的input组件的一个bug'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              selector: 'code_antd',
+              index: 1,
+            }
+          ],
+          notation: [
+            {
+              element: '.code_antd',
+              config: {
+                type: 'underline'
+              }
+            }
+          ]
+        },
+        {
+          id: '2',
+          value: '成功提交了代码！',
+          element: TextAnimation
+        },
+        {
+          id: '3',
+          value: '看到下面的图了吗，上面有我的头像',
+          element: TextAnimation
+        },
+        {
+          id: '4',
+          value: '',
+          element: Image
+        }
+      ]
+    }
+  ]
+
+  // 新年祈愿
+  const NEW_YEAR_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
+    {
+      key: '42',
+      element: [
+        {
+          value: '希望明年我的体重',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          element: NumberAnimation,
+          id: '2',
+          value: 10,
+          prefix: '还能减少',
+          suffix: '斤'
+        },
+        {
+          id: '3',
+          value: '图片地址',
+          element: Image
+        }
+      ],
+      direction: 'left'
+    },
+    {
+      key: '43',
+      element: [
+        {
+          value: '健身计划还能持续下去🦆 ',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          element: TextAnimation,
+          id: '2',
+          value: '希望疫情早点结束吧',
+        },
+        {
+          id: '3',
+          value: '图片地址',
+          element: AnimeComponent
+        },
+        {
+          element: TextAnimation,
+          id: '2',
+          value: [
+            '拾起我的羽毛球',
+            '羽毛球',
+            '计划'
+          ],
+          notationIndex: [
+            {
+              index: 1,
+              selector: 'new_year_sport'
+            }
+          ],
+          notation: [
+            {
+              element: '.new_year_sport',
+              config: {
+                type: 'box'
+              }
+            }
+          ]
+        },
+      ],
+      direction: 'left'
+    },
+    {
+      key: '44',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          value: '还有',
+          element: TextAnimation
+        },
+        {
+          id: '2',
+          value: '感觉自己的代码水平似乎到了瓶颈期',
+          element: TextAnimation
+        },
+        {
+          id: '3',
+          value: '图片',
+          element: Image
+        },
+        {
+          id: '4',
+          value: [
+            '越来越像一个',
+            'CV工程师'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              index: 1,
+              selector: 'new_year_code_cv'
+            }
+          ],
+          notation: [
+            {
+              element: '.new_year_code_cv',
+              config: {
+                type: 'circle'
+              }
+            }
+          ]
+        },
+        {
+          id: '6',
+          value: [
+            '一定要给自己一点',
+            '压力'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              index: 0,
+              selector: 'new_year_code_strict'
+            }
+          ],
+          notation: [
+            {
+              element: '.new_year_code_strict',
+              config: {
+                type: 'highlight'
+              }
+            }
+          ]
+        },
+        {
+          id: '5',
+          value: [
+            '基础',
+            '很重要，一定要多温习温习!!!'
+          ],
+          element: TextAnimation,
+          notationIndex: [
+            {
+              index: 0,
+              selector: 'new_year_code_base'
+            }
+          ],
+          notation: [
+            {
+              element: '.new_year_code_base',
+              config: {
+                type: 'circle'
+              }
+            }
+          ]
+        },
+        {
+          id: '7',
+          value: '平时也要拓展一下自己的视野，多看看，多听听',
+          element: TextAnimation
+        }
+      ]
+    },
+    {
+      key: '45',
+      direction: 'left',
+      element: [
+        {
+          id: '1',
+          element: TextAnimation,
+          value: '自己的项目也要一如既往的持续迭代🦆'
+        },
+        {
+          id: '2',
+          element: TextAnimation,
+          value: '也希望有感兴趣的人能多给我提提意见'
+        },
+        {
+          id: '3',
+          value: '如果觉得不错的，也能给我几个赞',
+          element: TextAnimation
+        },
+        {
+          id: '4',
+          value: '如果觉得不错的，也能给我几个赞',
+          element: TextAnimation
+        }
+      ]
+    }
+  ]
+
+  return {
+    LIFE_CYCLE_DATA_SOURCE,
+    FIT_MODE_DATA_SOURCE,
+    GAME_MODE_DATA_SOURCE,
+    TRAFFIC_MODE_DATA_SOURCE,
+    WORK_MODE_DATA_SOURCE,
+    CODE_MODE_DATA_SOURCE,
+    NEW_YEAR_MODE_DATA_SOURCE,
+  }
+}
+
+// 通用询问选项
+function getOptions() {
+  // 通用选项
+  const COMMON_OPTIONS: Options[] = [
+    {
+      text: '健身',
+      value: '我想听听你的健身故事',
+      map: 'FIT_MODE_DATA_SOURCE'
+    },
+    {
+      text: '游戏',
+      value: '游戏你要说啥',
+      map: 'GAME_MODE_DATA_SOURCE'
+    },
+    {
+      text: '交通',
+      value: '交通怎么了',
+      map: 'TRAFFIC_MODE_DATA_SOURCE'
+    },
+    {
+      text: '工作',
+      value: '今年的工作如何',
+      map: 'WORK_MODE_DATA_SOURCE'
+    },
+    {
+      text: '代码人生',
+      value: '啥代码人生',
+      map: 'CODE_MODE_DATA_SOURCE'
+    },
+    {
+      text: '新年祈愿',
+      value: '新的一年有什么愿望',
+      map: 'NEW_YEAR_MODE_DATA_SOURCE'
+    },
+  ]
+
+  return COMMON_OPTIONS
+}
+
+// 通用询问
+function getCommonPrompt(first: boolean) {
+  // 通用的询问
+  const COMMON_MODE_QUESTION: LifecycleDataSourceItem = {
     element: {
-      value: '我是年前的我',
+      value: `你${first ? '' : '还'}想听什么呢？`,
       element: TextAnimation
     },
     direction: 'left',
-    response: (value) => {
-      return value === '你好'
-    },
-    options: [
-      {
-        value: '你好',
-        text: '你好'
-      }
-    ]
-  },
-  {
-    key: '3',
-    element: {
-      value: '你好鸭',
-      element: TextAnimation
-    },
-    direction: 'left'
-  },
-]
+    key: 'common_prompt' + Date.now() 
+  }
+
+  return COMMON_MODE_QUESTION
+}
 
 // 全局事件
 const EVENT_EMITTER = new EventEmitter()
@@ -1259,49 +2322,78 @@ const getCurrentDayCount = (year: number) => {
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
-  const [lifecycleList, setLifecycleList] = useState<typeof LIFE_CYCLE_DATA_SOURCE>([])
+  const [lifecycleList, setLifecycleList] = useState<LifecycleDataSourceItem[]>([])
 
+  const dataSourceRef = useRef<ReturnType<typeof getLifecycle>>()
+  const currentDataSource = useRef<keyof ReturnType<typeof getLifecycle>>()
+  const options = useRef<Options[]>([])
+  const optionsCounter = useRef(0)
   const responseCallback = useRef<any>()
 
   // 动画完成
   const onComplete = useCallback((value?: any) => {
     if (responseCallback.current) return
-    const nextMessage = LIFE_CYCLE_DATA_SOURCE.shift()
-    responseCallback.current = nextMessage?.response
+    let nextMessage: LifecycleDataSourceItem | undefined
+    // 当前消息已经没有了
+    if(!dataSourceRef.current![currentDataSource.current!].length) {
+      nextMessage = {
+        ...getCommonPrompt(optionsCounter.current === options.current.length),
+        options: options.current
+      }
+    }else {
+      nextMessage = dataSourceRef.current![currentDataSource.current!].shift()
+    }
+    responseCallback.current = nextMessage?.options
     if (nextMessage) {
-      setLifecycleList(prev => [...prev, nextMessage])
+      const { skip } = nextMessage
+      setLifecycleList(prev => [...prev, nextMessage!])
       EVENT_EMITTER.emit(EVENT_EMITTER_LISTENER.POST_MESSAGE, nextMessage)
+
+      if (skip) {
+        dataSourceRef.current![currentDataSource.current!].splice(0, skip)
+      }
     }
   }, [])
 
   // 交互响应
-  const onResponse = useCallback((value: string) => {
-    let isCorrect = true
-    if (responseCallback.current) {
-      isCorrect = responseCallback.current(value)
+  const onResponse = useCallback((value: string, origin: Options) => {
+
+    options.current = options.current.filter(item => item.value !== value)
+
+    responseCallback.current = null
+    const nextMessage: LifecycleDataSourceItem = {
+      key: Date.now().toString(),
+      element: {
+        value,
+        element: NormalText
+      },
+      direction: 'right'
     }
-    if (isCorrect) {
-      responseCallback.current = null
-      const nextMessage: LifecycleDataSourceItem = {
-        key: Date.now().toString(),
-        element: {
-          value,
-          element: NormalText
-        },
-        direction: 'right'
-      }
-      setLifecycleList(prev => {
-        return [
-          ...prev,
-          nextMessage
-        ]
-      })
-      EVENT_EMITTER.emit(EVENT_EMITTER_LISTENER.POST_MY_MESSAGE, nextMessage)
+    setLifecycleList(prev => {
+      return [
+        ...prev,
+        nextMessage
+      ]
+    })
+    EVENT_EMITTER.emit(EVENT_EMITTER_LISTENER.POST_MY_MESSAGE, nextMessage)
+
+    const { skip, map } = origin
+    // 切换消息展示类型
+    if (map) {
+      currentDataSource.current = map
+    }
+    if (typeof skip === 'number') {
+      dataSourceRef.current![currentDataSource.current!].splice(0, skip)
     }
   }, [])
 
   const onLoad = useCallback(() => {
     setLoading(false)
+    currentDataSource.current = 'LIFE_CYCLE_DATA_SOURCE'
+    dataSourceRef.current = getLifecycle()
+    options.current = getOptions()
+    optionsCounter.current = options.current.length
+    responseCallback.current = null
     onComplete()
   }, [onComplete])
 
