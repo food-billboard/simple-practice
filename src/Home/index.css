@@ -1,15 +1,17 @@
 .home-page {
-  width: 750px;
-  height: 1334px;
+  width: min(100vw, 750px);
+  height: 100vh;
   overflow: hidden;
-  transform-origin: left top;
-  /* transform: scale(0.5); */
   background-color: rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
 
-  --message-width: 550px;
+  --message-width: min(72vw, 550px);
   --message-height: calc( var(--message-width) * 2 / 3 );
 
-  --message-chart-width: calc( var(--message-width) / 3 * 2 )
+  --message-chart-width: calc( var(--message-width) / 4 * 3 );
 }
 .zero-scrollbar {
   scrollbar-width: none;
@@ -37,19 +39,19 @@
   flex-direction: column;
 }
 .home-page-message-list-wrapper {
-  height: 1270px;
+  height: calc(100vh - 64px);
   overflow: hidden auto;
 }
 .home-page-response-wrapper {
   height: 64px;
+  position: sticky;
+  bottom: 0;
 }
 .home-page-message-box {
-  max-width: 600px;
+  max-width: min(80vw, 600px);
   overflow: hidden;
   word-break: break-all;
   margin-bottom: 25px;
-  /* transform: scale(1.5); */
-  transform-origin: left top;
 }
 .home-page-message-box-right {
   display: flex;
@@ -59,27 +61,31 @@
   flex-direction: column;
 }
 .home-page-select-button-wrapper {
-  justify-content: space-evenly;
+  overflow: auto hidden;
+  white-space: nowrap;
+  line-height: 64px;
+  text-align: center;
+}
+.home-page-select-button-wrapper > * {
+  margin-left: 16px;
+}
+.home-page-select-button-wrapper > *:nth-of-type(1) {
+  margin-left: 0;
 }
 .github-commit-svg {
   width: var(--message-width);
   height: var(--message-height);
 }
-.home-page-bar-chart {
-  width: var(--message-chart-width);
-  /* height: var(--message-height); */
+.home-page-chart-wrapper {
+  width: 120%;
+  padding-right: 20%;
+  box-sizing: border-box;
 }
-.home-page-line-chart {
-  width: var(--message-chart-width);
-  /* height: var(--message-height); */
-}
-.home-page-radar-chart {
-  width: var(--message-chart-width);
-  /* height: var(--message-height); */
-}
+.home-page-bar-chart,
+.home-page-line-chart,
+.home-page-radar-chart,
 .home-page-pie-chart {
   width: var(--message-chart-width);
-  /* height: var(--message-height); */
 }
 .home-page-avatar {
   width: 50px;
@@ -93,6 +99,10 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .home-page-path-animation {
   position: relative;
@@ -103,4 +113,29 @@
 }
 .healthy-card {
   margin-top: 25px;
+}
+.home-page-number span:nth-of-type(2) {
+  font-size: 40px;
+}
+.home-page-image {
+  
+}
+.home-page-emoji {
+  font-size: 40px;
+  position: relative;
+  text-align: center;
+}
+.home-page-emoji > span {
+  transform-origin: center center;
+}
+.home-page-emoji > span:nth-of-type(2) {
+  font-size: 20px;
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+.home-page-like {
+  text-align: center;
 }
