@@ -73,8 +73,7 @@
   margin-left: 0;
 }
 .github-commit-svg {
-  width: var(--message-width);
-  height: var(--message-height);
+  width: var(--message-chart-width);
 }
 .home-page-chart-wrapper {
   width: 120%;
@@ -138,4 +137,10 @@
 }
 .home-page-like {
   text-align: center;
+}
+.home-page-path-target {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
 }

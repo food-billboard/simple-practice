@@ -2,9 +2,9 @@ import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRe
 import EventEmitter from 'eventemitter3'
 import { debounce } from 'lodash'
 import Anime from 'animejs'
-import Vivus from 'vivus'
 import { CountUp } from 'countup.js';
 import QRCode from 'qrcode'
+import scrollIntoView from 'scroll-into-view-if-needed'
 import { annotate, annotationGroup } from 'rough-notation'
 import type { RoughAnnotationConfig } from 'rough-notation/lib/model';
 // @ts-ignore
@@ -15,6 +15,8 @@ import { WiredProgress } from "wired-elements-react/lib/WiredProgress"
 import { WiredButton } from "wired-elements-react/lib/WiredButton"
 import { WiredCard } from "wired-elements-react/lib/WiredCard"
 import { WiredImage } from "wired-elements-react/lib/WiredImage"
+import { WiredCalendar } from 'wired-elements-react/lib/WiredCalendar'
+import { WiredDialog } from 'wired-elements-react/lib/WiredDialog'
 // @ts-ignore
 import Rough from 'roughjs/bundled/rough.esm'
 import type { RoughSVG } from 'roughjs/bin/svg'
@@ -31,7 +33,7 @@ const useChartInit = (init: () => void, onComplete: () => void, depts: any[]) =>
     }, 0)
     if (!complete.current) {
       complete.current = true
-      setTimeout(onComplete, 400)
+      setTimeout(onComplete, 2400)
     }
   }, depts)
 
@@ -84,6 +86,59 @@ type LifecycleDataSourceItem = {
 // ----type----
 
 // ----components----
+
+// 健身日历图
+const KeepCalender = (props: CommonAnimationProps) => {
+
+  const { value } = props
+
+  const [ visible, setVisible ] = useState(false)
+
+  const timerRef = useRef<NodeJS.Timeout>()
+
+  const open = useCallback(() => {
+    setVisible(true)
+  }, [])
+  
+  useEffect(() => {
+
+  }, [])
+
+  return (
+    <div
+      
+    >
+      <LineChart
+        title="我的健身日程"
+        xLabel="月份"
+        yLabel="健身次数"
+        value={value}
+        onComplete={() => {}}
+      />
+      <WiredButton
+        onclick={open}
+      >
+        {"查看详情" as any}
+      </WiredButton>
+      {/* @ts-ignore */}
+      <WiredDialog
+        open={visible}
+      >
+        <WiredCalendar 
+          firstdate="2022-1-1"
+          lastdate="2022-12-31"
+        />
+        <div style={{
+          textAlign: 'right',
+          padding: '30px 16px 16px'
+        }}>
+          <WiredButton id="closeDialog">{"关闭" as any}</WiredButton>
+        </div>
+      </WiredDialog>
+    </div>
+  )
+
+}
 
 // 口罩动画
 const HealthyEmojiAnime = (props: CommonAnimationProps) => {
@@ -192,9 +247,11 @@ const BarChart = (props: {
     x: string
     y: number
   }[]
+  yLabel?: string 
+  xLabel?: string 
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value, onComplete } = props
+  const { title, value, onComplete, yLabel='', xLabel='' } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -217,6 +274,8 @@ const BarChart = (props: {
   useChartInit(() => {
     new ChartXkcd.Bar(chartRef.current, {
       title,
+      yLabel,
+      xLabel,
       data: realData,
       options: {
         backgroundColor: 'transparent',
@@ -243,6 +302,8 @@ const BarChart = (props: {
 // 折线图
 const LineChart = (props: {
   title: string
+  yLabel?: string 
+  xLabel?: string 
   value: {
     series: string[]
     value: {
@@ -252,7 +313,7 @@ const LineChart = (props: {
   }
 } & Pick<CommonAnimationProps, 'onComplete'>) => {
 
-  const { title, value, onComplete } = props
+  const { title, value, onComplete, xLabel, yLabel } = props
 
   const chartRef = useRef<SVGSVGElement>(null)
 
@@ -271,6 +332,8 @@ const LineChart = (props: {
   useChartInit(() => {
     new ChartXkcd.Line(chartRef.current, {
       title,
+      xLabel, 
+      yLabel,
       data: realData,
       options: {
         backgroundColor: 'transparent',
@@ -411,27 +474,6 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
   const roughRef = useRef<RoughInstance>()
   const svgRef = useRef<SVGSVGElement>(null)
 
-  // 创建月份和周文字
-  const createDateText = useCallback(() => {
-    const month = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((item, index) => {
-      const firstDay = new Date(GITHUB_INFO.CURRENT_YEAR.toString()).getTime()
-      const monthFirstDay = new Date(`${GITHUB_INFO.CURRENT_YEAR}-${index + 1}`).getTime()
-
-    })
-    const week = ['Mon', 'Wed', 'Fri']
-
-  }, [])
-
-  // 创建图例
-  const createLegend = useCallback(() => {
-
-  }, [])
-
-  // 填充内容
-  const createDataChart = useCallback(() => {
-
-  }, [])
-
   // 创建空的一年图
   const createEmpty = useCallback(() => {
     const date = new Date(GITHUB_INFO.CURRENT_YEAR.toString())
@@ -443,14 +485,21 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
     let startIndex = weekDay
     let currentLine = 0
 
-    const children = new Array(getCurrentDayCount(currentYear)).fill(0).map((date) => {
+    const githubValue = {"rgb(155, 233, 168)":["2","6","12","14","15","16","18","19","24","28","30","32","33","34","35","36","37","38","40","44","45","50","55","56","57","58","59","60","65","66","73","76","77","84","86","87","90","91","92","95","96","97","98","99","102","103","104","105","107","108","115","116","121","123","124","128","131","134","136","142","143","144","149","157","159","160","162","163","165","170","174","178","179","180","181","184","185","186","190","192","196","197","198","199","200","201","202","204","209","210","211","213","215","216","217","221","222","223","227","231","232","235","236","237","240","243","246","251","252","253","255","257","258","259","260","262","264","266","269","271","272","273","274","278","281","282","286","288","289","292","293","294","296","299","300","301","303","304","305","306","308","309","310","312","313","315","317","318","326","327","328","329","331","332","333","334","335","336","338","340","341","342","343","344","346","348"],"rgb(64, 196, 99)":["3","4","5","8","9","11","13","20","21","22","23","25","27","42","43","46","47","48","49","51","52","53","54","61","64","67","68","69","70","71","72","74","75","79","80","81","82","88","89","100","101","110","113","114","117","118","119","125","127","129","130","132","137","138","139","140","141","145","147","150","151","152","153","156","158","161","164","166","171","172","176","189","193","194","195","203","207","214","220","224","228","229","230","238","242","244","245","248","250","256","263","270","283","284","285","290","297","298","311","319","323","339"],"rgb(48, 161, 78)":["10","26","41","62","63","85","109","112","133","146","167","175","182","187","206","241","287","291","295","320","321","337"],"rgb(33, 110, 57)":["17","83","111","173","188","249","322","347"]}
+
+    const findColor = (index: number) => {
+      const [ color ] = Object.entries(githubValue).find(item => item[1].some(item => item === index.toString())) || []
+      return color 
+    }
+
+    const children = new Array(getCurrentDayCount(currentYear)).fill(0).map((date, index) => {
       const dom = roughRef.current?.rectangle(
-        (currentLine + 1) * GITHUB_INFO.RECT_MARGIN + (currentLine + 1) * GITHUB_INFO.RECT_SIZE,
-        (startIndex + 1) * GITHUB_INFO.RECT_MARGIN + (startIndex + 1) * GITHUB_INFO.RECT_SIZE,
+        currentLine * GITHUB_INFO.RECT_MARGIN + currentLine * GITHUB_INFO.RECT_SIZE,
+        startIndex * GITHUB_INFO.RECT_MARGIN + startIndex * GITHUB_INFO.RECT_SIZE,
         GITHUB_INFO.RECT_SIZE,
         GITHUB_INFO.RECT_SIZE,
         {
-          fill: 'gray',
+          fill: findColor(index) || 'rgb(235, 237, 240)',
           stroke: 'transparent'
         }
       )
@@ -459,7 +508,6 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
         currentLine++
         startIndex = 0
       }
-      if (dom) dom.style.fill = 'red'
       return dom!
     })
 
@@ -471,16 +519,12 @@ const GithubCommitHistoryChart = (props: CommonAnimationProps) => {
   const init = useCallback(() => {
     if (svgRef.current) svgRef.current.innerHTML = ''
     createEmpty()
-    createDateText()
-    createLegend()
-    createDataChart()
   }, [])
 
   useEffect(() => {
     roughRef.current = Rough.svg(svgRef)
     init()
-
-    setTimeout(onComplete, 1000)
+    setTimeout(onComplete, 3000)
   }, [])
 
   return (
@@ -498,7 +542,9 @@ const HealthyAnimation = (props: CommonAnimationProps) => {
 
   const onLoad = useCallback(() => {
     annotate(document.querySelector('#healthy-card')!, {
-      type: 'circle'
+      type: 'circle',
+      color: COLOR_LIST[2],
+      iterations: 3
     }).show()
     setTimeout(onComplete, 1200 + delay)
   }, [onComplete])
@@ -569,7 +615,7 @@ const NumberAnimation = (props: CommonAnimationProps & {
   return (
     <div className={`${className} home-page-number`} style={style}>
       <span>{prefix}</span>
-      <span id={chartId.current}></span>
+      <span id={chartId.current} style={{color: COLOR_LIST[0]}}></span>
       <span>{suffix}</span>
     </div>
   )
@@ -637,17 +683,6 @@ const Avatar = (props: {
     <div className="home-page-avatar" style={style}>
       <svg ref={svgRef} />
       <span>{children}</span>
-    </div>
-  )
-
-}
-
-// 时钟
-const ClockChart = () => {
-
-  return (
-    <div>
-
     </div>
   )
 
@@ -756,7 +791,7 @@ const Image = (props: CommonAnimationProps) => {
   }, [])
 
   return (
-    <WiredImage src={value} className="home-page-image" />
+    <WiredImage elevation={3} src={value} className="home-page-image" />
   )
 
 }
@@ -768,35 +803,22 @@ const SvgAnimation = (props: CommonAnimationProps & {
 
   const { svgId, onComplete: propsOnComplete, children, delay = 0 } = props
 
-  const completed = useRef(false)
-
   const onComplete = useCallback(() => {
-    if (completed.current) return
-    completed.current = true
-    propsOnComplete()
+    setTimeout(propsOnComplete, delay)
   }, [])
 
-  const vivusRef = useRef<Vivus>();
-
   useEffect(() => {
-    setTimeout(() => {
-      vivusRef.current = new Vivus(
-        svgId,
-        {
-          type: 'sync',
-          duration: 500,
-          // delay: 200
-        },
-        () => {
-          setTimeout(onComplete, delay)
-        },
-      )
-      setTimeout(onComplete, 5000)
-    }, 0)
-    return () => {
-      vivusRef.current?.destroy();
-    };
-  }, []);
+    Anime({
+      targets: `#${svgId} path`,
+      strokeDashoffset: [Anime.setDashoffset, 0],
+      easing: 'easeInOutSine',
+      duration: 1500,
+      delay: function(el, i) { return i * 250 },
+      direction: 'alternate',
+      loop: false,
+      complete: onComplete
+    });
+  }, [])
 
   return (
     <div>
@@ -917,19 +939,16 @@ const BusPathAnimation = (props: CommonAnimationProps) => {
         id={svgRef.current}
       >
         <g>
-          <path d="M10 10 L120 50 H140 V100" fill="none" stroke="red" strokeWidth="2" />
+          <path d="m3,73.5c83,-34 75,29 138,3c63,-26 91,13 91,12.5" fill="none" stroke="transparent" strokeWidth="2" />
         </g>
       </svg>
       {/* @ts-ignore */}
-      {/* <svg ref={shapeRef} t="1671115381884" viewBox="0 0 1024 1024" version="1.1" p-id="2786" width="200" height="200">  
+      <svg className="home-page-path-target" id={shapeRef.current} viewBox="0 0 1024 1024" version="1.1" p-id="2786" width="25" height="25">  
         <path d="M325.818182 488.727273v-139.636364c0-13.963636-9.309091-23.272727-23.272727-23.272727s-23.272727 9.309091-23.272728 23.272727v116.363636H139.636364v-186.181818h302.545454v186.181818h-46.545454c-13.963636 0-23.272727 9.309091-23.272728 23.272728s9.309091 23.272727 23.272728 23.272727h69.818181c13.963636 0 23.272727-9.309091 23.272728-23.272727V256c0-13.963636-9.309091-23.272727-23.272728-23.272727H116.363636c-13.963636 0-23.272727 9.309091-23.272727 23.272727v232.727273c0 13.963636 9.309091 23.272727 23.272727 23.272727h186.181819c13.963636 0 23.272727-9.309091 23.272727-23.272727z" p-id="2787"/>
         <path d="M256 768m-23.272727 0a23.272727 23.272727 0 1 0 46.545454 0 23.272727 23.272727 0 1 0-46.545454 0Z" p-id="2788"/>  
         <path d="M814.545455 768m-23.272728 0a23.272727 23.272727 0 1 0 46.545455 0 23.272727 23.272727 0 1 0-46.545455 0Z" p-id="2789"/>
         <path d="M975.127273 456.145455l-76.8-25.6c-6.981818-2.327273-13.963636-11.636364-13.963637-20.945455V209.454545c0-39.563636-30.254545-69.818182-69.818181-69.818181H69.818182C30.254545 139.636364 0 169.890909 0 209.454545v512c0 39.563636 30.254545 69.818182 69.818182 69.818182 13.963636 0 23.272727-9.309091 23.272727-23.272727s-9.309091-23.272727-23.272727-23.272727-23.272727-9.309091-23.272727-23.272728V209.454545c0-13.963636 9.309091-23.272727 23.272727-23.272727h744.727273c13.963636 0 23.272727 9.309091 23.272727 23.272727v200.145455c0 30.254545 18.618182 55.854545 48.872727 65.163636l76.8 25.6c9.309091 2.327273 16.290909 11.636364 16.290909 20.945455V581.818182h-23.272727c-13.963636 0-23.272727 9.309091-23.272727 23.272727s9.309091 23.272727 23.272727 23.272727h23.272727v93.090909c0 13.963636-9.309091 23.272727-23.272727 23.272728H930.909091c-11.636364-53.527273-58.181818-93.090909-114.036364-93.090909-9.309091 0-16.290909 0-23.272727 2.327272V256c0-13.963636-9.309091-23.272727-23.272727-23.272727h-209.454546c-13.963636 0-23.272727 9.309091-23.272727 23.272727v488.727273H372.363636c-11.636364-53.527273-58.181818-93.090909-114.036363-93.090909-65.163636 0-116.363636 51.2-116.363637 116.363636s51.2 116.363636 116.363637 116.363636c55.854545 0 102.4-39.563636 114.036363-93.090909h186.181819c13.963636 0 23.272727-9.309091 23.272727-23.272727v-93.090909h162.909091c-23.272727 16.290909-39.563636 41.890909-44.218182 69.818182H651.636364c-13.963636 0-23.272727 9.309091-23.272728 23.272727s9.309091 23.272727 23.272728 23.272727h48.872727c11.636364 53.527273 58.181818 93.090909 114.036364 93.090909s102.4-39.563636 114.036363-93.090909H954.181818c39.563636 0 69.818182-30.254545 69.818182-69.818182v-200.145454c0-30.254545-18.618182-55.854545-48.872727-65.163636zM256 837.818182c-39.563636 0-69.818182-30.254545-69.818182-69.818182s30.254545-69.818182 69.818182-69.818182 69.818182 30.254545 69.818182 69.818182-30.254545 69.818182-69.818182 69.818182z m325.818182-279.272727h46.545454c13.963636 0 23.272727 9.309091 23.272728 23.272727s9.309091 23.272727 23.272727 23.272727 23.272727-9.309091 23.272727-23.272727c0-39.563636-30.254545-69.818182-69.818182-69.818182h-46.545454V279.272727h162.909091v116.363637c-6.981818 0-11.636364 2.327273-16.290909 6.981818l-46.545455 46.545454c-9.309091 9.309091-9.309091 23.272727 0 32.581819 4.654545 4.654545 11.636364 6.981818 16.290909 6.981818s11.636364-2.327273 16.290909-6.981818l30.254546-30.254546V628.363636h-162.909091v-69.818181z m232.727273 279.272727c-39.563636 0-69.818182-30.254545-69.818182-69.818182s30.254545-69.818182 69.818182-69.818182 69.818182 30.254545 69.818181 69.818182-30.254545 69.818182-69.818181 69.818182z" p-id="2790"/>
-      </svg> */}
-      <div id={shapeRef.current} style={{ display: 'inline-block', position: 'absolute', top: 0, left: 0 }}>
-        2222
-      </div>
+      </svg>
     </PathAnimation>
   )
 
@@ -951,19 +970,15 @@ const SubwayPathAnimation = (props: CommonAnimationProps) => {
         id={svgRef.current}
       >
         <g>
-          <path d="M10 10 L120 50 H140 V100" fill="none" stroke="red" strokeWidth="2" />
+          <path d="m1,71.5c140.00001,-3 196.00001,-3 196.00001,-4.5" fill="none" stroke="transparent" strokeWidth="2" />
         </g>
       </svg>
-      {/* @ts-ignore */}
-      {/* <svg ref={shapeRef} t="1671115381884" viewBox="0 0 1024 1024" version="1.1" p-id="2786" width="200" height="200">  
+      <svg id={shapeRef.current} className="home-page-path-target" viewBox="0 0 1024 1024" version="1.1" p-id="2786" width="25" height="25">  
         <path d="M325.818182 488.727273v-139.636364c0-13.963636-9.309091-23.272727-23.272727-23.272727s-23.272727 9.309091-23.272728 23.272727v116.363636H139.636364v-186.181818h302.545454v186.181818h-46.545454c-13.963636 0-23.272727 9.309091-23.272728 23.272728s9.309091 23.272727 23.272728 23.272727h69.818181c13.963636 0 23.272727-9.309091 23.272728-23.272727V256c0-13.963636-9.309091-23.272727-23.272728-23.272727H116.363636c-13.963636 0-23.272727 9.309091-23.272727 23.272727v232.727273c0 13.963636 9.309091 23.272727 23.272727 23.272727h186.181819c13.963636 0 23.272727-9.309091 23.272727-23.272727z" p-id="2787"/>
         <path d="M256 768m-23.272727 0a23.272727 23.272727 0 1 0 46.545454 0 23.272727 23.272727 0 1 0-46.545454 0Z" p-id="2788"/>  
         <path d="M814.545455 768m-23.272728 0a23.272727 23.272727 0 1 0 46.545455 0 23.272727 23.272727 0 1 0-46.545455 0Z" p-id="2789"/>
         <path d="M975.127273 456.145455l-76.8-25.6c-6.981818-2.327273-13.963636-11.636364-13.963637-20.945455V209.454545c0-39.563636-30.254545-69.818182-69.818181-69.818181H69.818182C30.254545 139.636364 0 169.890909 0 209.454545v512c0 39.563636 30.254545 69.818182 69.818182 69.818182 13.963636 0 23.272727-9.309091 23.272727-23.272727s-9.309091-23.272727-23.272727-23.272727-23.272727-9.309091-23.272727-23.272728V209.454545c0-13.963636 9.309091-23.272727 23.272727-23.272727h744.727273c13.963636 0 23.272727 9.309091 23.272727 23.272727v200.145455c0 30.254545 18.618182 55.854545 48.872727 65.163636l76.8 25.6c9.309091 2.327273 16.290909 11.636364 16.290909 20.945455V581.818182h-23.272727c-13.963636 0-23.272727 9.309091-23.272727 23.272727s9.309091 23.272727 23.272727 23.272727h23.272727v93.090909c0 13.963636-9.309091 23.272727-23.272727 23.272728H930.909091c-11.636364-53.527273-58.181818-93.090909-114.036364-93.090909-9.309091 0-16.290909 0-23.272727 2.327272V256c0-13.963636-9.309091-23.272727-23.272727-23.272727h-209.454546c-13.963636 0-23.272727 9.309091-23.272727 23.272727v488.727273H372.363636c-11.636364-53.527273-58.181818-93.090909-114.036363-93.090909-65.163636 0-116.363636 51.2-116.363637 116.363636s51.2 116.363636 116.363637 116.363636c55.854545 0 102.4-39.563636 114.036363-93.090909h186.181819c13.963636 0 23.272727-9.309091 23.272727-23.272727v-93.090909h162.909091c-23.272727 16.290909-39.563636 41.890909-44.218182 69.818182H651.636364c-13.963636 0-23.272727 9.309091-23.272728 23.272727s9.309091 23.272727 23.272728 23.272727h48.872727c11.636364 53.527273 58.181818 93.090909 114.036364 93.090909s102.4-39.563636 114.036363-93.090909H954.181818c39.563636 0 69.818182-30.254545 69.818182-69.818182v-200.145454c0-30.254545-18.618182-55.854545-48.872727-65.163636zM256 837.818182c-39.563636 0-69.818182-30.254545-69.818182-69.818182s30.254545-69.818182 69.818182-69.818182 69.818182 30.254545 69.818182 69.818182-30.254545 69.818182-69.818182 69.818182z m325.818182-279.272727h46.545454c13.963636 0 23.272727 9.309091 23.272728 23.272727s9.309091 23.272727 23.272727 23.272727 23.272727-9.309091 23.272727-23.272727c0-39.563636-30.254545-69.818182-69.818182-69.818182h-46.545454V279.272727h162.909091v116.363637c-6.981818 0-11.636364 2.327273-16.290909 6.981818l-46.545455 46.545454c-9.309091 9.309091-9.309091 23.272727 0 32.581819 4.654545 4.654545 11.636364 6.981818 16.290909 6.981818s11.636364-2.327273 16.290909-6.981818l30.254546-30.254546V628.363636h-162.909091v-69.818181z m232.727273 279.272727c-39.563636 0-69.818182-30.254545-69.818182-69.818182s30.254545-69.818182 69.818182-69.818182 69.818182 30.254545 69.818181 69.818182-30.254545 69.818182-69.818181 69.818182z" p-id="2790"/>
-      </svg> */}
-      <div id={shapeRef.current} style={{ display: 'inline-block', position: 'absolute', top: 0, left: 0 }}>
-        2222
-      </div>
+      </svg>
     </PathAnimation>
   )
 
@@ -972,30 +987,51 @@ const SubwayPathAnimation = (props: CommonAnimationProps) => {
 // 聊天框
 const MessageBubble = (props: Omit<CommonAnimationProps, 'onComplete'> & Pick<LifecycleDataSourceItem, 'direction'> & {
   wrapperStyle?: CSSProperties
+  isLast?: boolean 
 }) => {
 
-  const { id, children, direction, wrapperStyle = {} } = props
+  const { id, children, direction, wrapperStyle = {}, isLast } = props
 
   const cardRef = useRef<any>()
+  const boxId = useRef(`message_box_${Date.now()}`)
+  const boxSizeRef = useRef(0)
+  const observerRef = useRef<any>()
 
-  const _onResize = useCallback((targetId: string) => {
-    if (targetId === id) {
-    }
-  }, [id])
+  const _onResize = useCallback((target: any) => {
+    scrollIntoView(target, {
+      scrollMode: 'if-needed',
+      block: 'nearest',
+      inline: 'nearest',
+    })
+  }, [])
 
   const onResize = debounce(_onResize)
 
   useEffect(() => {
-    EVENT_EMITTER.addListener(EVENT_EMITTER_LISTENER.MESSAGE_SIZE_CHANGE, onResize)
-
-    return () => {
-      EVENT_EMITTER.removeListener(EVENT_EMITTER_LISTENER.MESSAGE_SIZE_CHANGE, onResize)
+    if(!isLast) {
+      observerRef.current?.disconnect()
+      return 
     }
-  }, [onResize])
+    const target = document.querySelector(`#${boxId.current}`)
+    observerRef.current = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const { clientHeight } = entry.target;
+        if(clientHeight !== boxSizeRef.current) {
+          onResize(entry.target)
+        }
+      });
+    });
+
+    observerRef.current.observe(target);
+    return () => {
+      observerRef.current.disconnect();
+    };
+  }, [isLast])
 
   return (
     <div
       className={`home-page-message-box-${direction}`}
+      id={boxId.current}
     >
       <div className="home-page-message-box dis-flex">
         {
@@ -1113,6 +1149,10 @@ const Loading = ({ onLoad }: { onLoad: () => void }) => {
         max={100}
         min={0}
         value={step >= 100 ? 100 : step}
+        style={{
+          // @ts-ignore 
+          '--wired-progress-color': ACTIVE_COLOR
+        }}
       />
       {content}
     </div>
@@ -1293,7 +1333,7 @@ function getLifecycle() {
         },
         {
           element: NumberAnimation,
-          value: 200,
+          value: 213,
           id: '2',
           suffix: '次💪 '
         }
@@ -1304,17 +1344,67 @@ function getLifecycle() {
       key: '9',
       element: [
         {
-          value: '再看看看看这一年的健身记录',
+          value: '再看看这一年的健身记录',
           element: TextAnimation,
           id: '1'
         },
         {
-          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          value: {
+            series: ['健身日程'],
+            label: new Array(12).fill(0).map((_, index) => `${index + 1}月`),
+            value: {
+              健身日程: [4, 3, 5, 5, 5, 4, 2, 6, 6, 2, 1, 1],
+            },
+          },
+          xLabel: '月份',
+          yLabel: '健身次数',
+          title: '我的健身日程',
           wrapperStyle: {
             textAlign: 'center'
           },
-          element: BarChart,
+          element: LineChart,
           id: '2'
+        }
+      ],
+      direction: 'left',
+    },
+    {
+      key: '9-1',
+      element: [
+        {
+          value: '再看看keep上的情况',
+          element: TextAnimation,
+          id: '1'
+        },
+        {
+          value: [{ x: '力量强化-肩', y: 15 }, { x: '腹肌撕裂者挑战', y: 15 }, { x: '引体向上', y: 8 }],
+          wrapperStyle: {
+            textAlign: 'center'
+          },
+          element: PieChart,
+          id: '2'
+        },
+        {
+          value: '运动时间',
+          element: TextAnimation,
+          id: '3'
+        },
+        {
+          value: 1690,
+          suffix: '(分钟)',
+          element: NumberAnimation,
+          id: '4'
+        },
+        {
+          value: '消耗',
+          element: TextAnimation,
+          id: '5'
+        },
+        {
+          value: 10547,
+          suffix: '(千卡)',
+          element: NumberAnimation,
+          id: '6'
         }
       ],
       direction: 'left',
@@ -1370,16 +1460,16 @@ function getLifecycle() {
         },
         {
           value: {
-            series: ['1', '2'],
-            label: ['1', '2', '3', '4'],
+            series: ['健身计划'],
+            label: ['肩膀', '背', '腹肌', '二头', '胸'],
             value: {
-              1: [20, 30, 50, 10],
-              2: [40, 20, 5, 25]
+              健身计划: [15, 10, 20, 30, 30],
             },
           },
           wrapperStyle: {
             textAlign: 'center'
           },
+          title: '我的健身计划',
           element: RadarChart,
           id: '2'
         },
@@ -1399,7 +1489,7 @@ function getLifecycle() {
           notation: [
             {
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[0]
               },
               element: '.fit_date_loop'
@@ -1420,16 +1510,17 @@ function getLifecycle() {
         {
           id: '2',
           value: {
-            series: ['1', '2'],
-            label: ['1', '2'],
+            series: ['体重变化'],
+            label: ['开始', '结束'],
             value: {
-              1: [20, 30],
-              2: [40, 20]
+              体重变化: [136, 140],
             }
           },
+          yLabel: '体重(斤)',
           wrapperStyle: {
             textAlign: 'center'
           },
+          title: '我的体重变化',
           element: LineChart
         }
       ],
@@ -1452,7 +1543,8 @@ function getLifecycle() {
             element: '.fit_prompt',
             config: {
               type: 'circle',
-              color: COLOR_LIST[0]
+              color: COLOR_LIST[0],
+              iterations: 2
             }
           }
         ]
@@ -1472,6 +1564,7 @@ function getLifecycle() {
     {
       key: '12-2',
       direction: 'left',
+      skip: 1,
       element: [
         {
           id: '1',
@@ -1491,7 +1584,8 @@ function getLifecycle() {
             return {
               config: {
                 type: 'circle',
-                color: COLOR_LIST[0]
+                color: COLOR_LIST[0],
+                iterations: 3
               },
               element: `.fit_prompt_message_${index}`
             }
@@ -1658,7 +1752,7 @@ function getLifecycle() {
             {
               element: '.game_message',
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[1]
               }
             }
@@ -1739,7 +1833,7 @@ function getLifecycle() {
             {
               element: '.game_switch_circle',
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[1]
               }
             }
@@ -1759,35 +1853,28 @@ function getLifecycle() {
   const TRAFFIC_MODE_DATA_SOURCE: LifecycleDataSourceItem[] = [
     {
       key: '21',
-      element: {
-        id: '1',
-        value: '疫情的影响，让日常工作通勤也出现了压力',
-        element: TextAnimation
-      },
-      direction: 'left'
-    },
-    {
-      key: '22',
-      element: {
-        value: '',
-        element: BusPathAnimation
-      },
-      direction: 'left'
-    },
-    {
-      key: '23',
-      element: {
-        value: '但随着地铁的通车，也稍微缓解了高峰期的压力',
-        element: TextAnimation
-      },
-      direction: 'left'
-    },
-    {
-      key: '24',
-      element: {
-        value: '',
-        element: SubwayPathAnimation
-      },
+      element: [
+        {
+          id: '1',
+          value: '疫情的影响，让日常工作通勤也出现了压力',
+          element: TextAnimation
+        },
+        {
+          id: '2',
+          value: '',
+          element: BusPathAnimation
+        },
+        {
+          id: '3',
+          value: '但随着地铁的通车，也稍微缓解了高峰期的压力',
+          element: TextAnimation
+        },
+        {
+          id: '4',
+          value: '',
+          element: SubwayPathAnimation
+        }
+      ],
       direction: 'left'
     },
     {
@@ -1829,15 +1916,6 @@ function getLifecycle() {
         element: HealthyAnimation,
         id: 'healthy_qr_code_id',
         delay: 200,
-        notation: [
-          {
-            element: '#healthy_qr_code_id',
-            config: {
-              type: 'circle',
-              color: COLOR_LIST[2]
-            }
-          }
-        ]
       },
       direction: 'left'
     },
@@ -1859,12 +1937,28 @@ function getLifecycle() {
         {
           prefix: '但是也因为交通迟到了',
           suffix: '次',
-          value: 10,
-          element: TextAnimation,
+          value: 34,
+          element: NumberAnimation,
           id: '1'
         },
         {
-          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          value: [
+            { x: '1月', y: 4 }, 
+            { x: '2月', y: 2 }, 
+            { x: '3月', y: 5 }, 
+            { x: '4月', y: 4 }, 
+            { x: '5月', y: 1 }, 
+            { x: '6月', y: 3 }, 
+            { x: '7月', y: 3 }, 
+            { x: '8月', y: 2 }, 
+            { x: '9月', y: 2 }, 
+            { x: '10月', y: 3 }, 
+            { x: '11月', y: 3 }, 
+            { x: '12月', y: 2 }
+          ],
+          xLabel: '月份',
+          yLabel: '迟到次数',
+          title: '每月迟到次数',
           element: BarChart,
           wrapperStyle: {
             textAlign: 'center'
@@ -1902,7 +1996,7 @@ function getLifecycle() {
             {
               element: '.work_three',
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[3]
               }
             }
@@ -1918,7 +2012,10 @@ function getLifecycle() {
           wrapperStyle: {
             textAlign: 'center'
           },
-          value: [{ x: '1', y: 20 }, { x: '2', y: 20 }],
+          value: [{ x: '1月', y: 50 }, { x: '3月', y: 50 }, { x: '4月', y: 50 }],
+          xLabel: '月份',
+          yLabel: '金额',
+          title: '每月扣钱记录',
           element: BarChart,
           id: '3'
         }
@@ -1962,18 +2059,10 @@ function getLifecycle() {
         },
         {
           id: '3',
-          wrapperStyle: {
-            textAlign: 'center'
-          },
-          value: {
-            series: ['1', '2'],
-            label: ['1', '2'],
-            value: {
-              1: [20, 30],
-              2: [40, 20]
-            }
-          },
-          element: LineChart
+          value: 1000,
+          prefix: '简简单单加了',
+          suffix: '💰',
+          element: NumberAnimation
         },
       ]
     }
@@ -2053,8 +2142,9 @@ function getLifecycle() {
             {
               element: '.code_screen',
               config: {
-                type: 'highlight',
-                color: COLOR_LIST[4]
+                type: 'underline',
+                color: COLOR_LIST[4],
+                iterations: 2
               }
             }
           ],
@@ -2113,7 +2203,8 @@ function getLifecycle() {
               element: '.code_server',
               config: {
                 type: 'circle',
-                color: COLOR_LIST[4]
+                color: COLOR_LIST[4],
+                iterations: 2
               }
             }
           ]
@@ -2169,7 +2260,8 @@ function getLifecycle() {
               element: '.code_game_name',
               config: {
                 type: 'circle',
-                color: COLOR_LIST[4]
+                color: COLOR_LIST[4],
+                iterations: 2
               }
             }
           ]
@@ -2196,7 +2288,7 @@ function getLifecycle() {
             {
               element: '.code_game_award',
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[4]
               }
             }
@@ -2257,6 +2349,7 @@ function getLifecycle() {
               element: '.code_antd',
               config: {
                 type: 'underline',
+                iterations: 2,
                 color: COLOR_LIST[4]
               }
             }
@@ -2294,7 +2387,7 @@ function getLifecycle() {
         {
           element: NumberAnimation,
           id: '2',
-          value: 10,
+          value: 4,
           prefix: '还能减少',
           suffix: '斤'
         },
@@ -2302,7 +2395,12 @@ function getLifecycle() {
           id: '3',
           value: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wgALCAAyADIBAREA/8QAGwAAAQUBAQAAAAAAAAAAAAAAAAMEBQYHAQL/2gAIAQEAAAAA39DAJXa1gr2V6P7tYRkOs7miNr0ao5scqyr1A7erM8zVgqeI3VZMAO//xAAvEAACAgIBAwIFAwMFAAAAAAABAgMEBREhAAYSEyIQFDEyQQcgI0JRUhY2YXGB/9oACAEBAAE/AOrNmGnVls2JFjgiUvI7HQVQNknruf8AXHMW7bp28IadP+iaVPOWTrsrv7v2ejNl8jQTJYGDZs2RGsMgA+5o/wDPx6r2IrVaKxA6yQyqHR1PDKRsEfs7zxj5jsvL45JxAZ4GQya3odJ+iGHTK/IWu7pjOUMvopAgfQ6jfA5LtKfA4HJ1HiiqNBGK0qkqFGuuwLHn2fj6zxSwWYYFMkEqFHiDbKjRA41wP2Z//bmSI+oqyEf+Kes3kquKufOz1J7XrRKiRLPHog/cQjsABojZ6xiU6gp246xiN2TwjSOwXiQeJIIAJUbC/Qcb6wyzWnlytkRq9gLGiRsWCxoW1snWySSfp+QOdbPwy/qfKokczw+pKiM6cMFJ58T+D1f7kSj249nLuZqpqqbArQM8n8g0Ade0EgjqDM4nO0KHz0D1ryp6UU8lFZmKsB9uw3j5aB0erXceEw+IiOLgsymhA8MASExpGOAzFfaDrW9KN8EDrG9zQTduiXD2g8MUXhEtms8TkIVDt7teZAJOhrrBz2p6LtbfzdJ5Yw3GyquVG9cb4/AHwv1Bcr+l5tEwdXR1+qsp2D/yOOR/brL9rXL3bNzDVpcdVSYEoYajIFf6huH6rV5psMla54iYwmGYx8jY2pIJ/HHHV2pPJiZKdXXrSRiCIyHQ8m0o2dcDn69YTtjI4vAwYyU4uz4O0peau76kYk70W511j6a0KMddXLldlnbguxJLMf8Askn4Wbnc/wDqKQJLf+XXJenGI41KuP8AEkj7Ah2T1Sv9wRZaZJ58iU8p3RJ3kUeCrLrWl2wBCD+/2nqHOZ2UW2gS1I7QEwRFZAxbaaBAJKHltnx40eOq+Sz9ulOatnLSO1hHCfKBJIx5svj7l+0+HO+dc7HWUzPc1cQB0vwyG0IZAPc+/RU+Xs2oQ+489T5buxO3cbIlzJvLHWneZ4wPMOX/AIywK60o2PcesbNlZMXUezVridoEMg+YP3a5/o/afj//2Q==',
           element: Image
-        }
+        },
+        {
+          value: '要求不高',
+          element: TextAnimation,
+          id: '4'
+        },
       ],
       direction: 'left'
     },
@@ -2331,9 +2429,9 @@ function getLifecycle() {
         },
         {
           element: TextAnimation,
-          id: '2',
+          id: '3-2',
           value: [
-            '拾起我的',
+            '这样也能拾起我的',
             '羽毛球',
             '运动'
           ],
@@ -2388,7 +2486,8 @@ function getLifecycle() {
               element: '.new_year_code_cv',
               config: {
                 type: 'circle',
-                color: COLOR_LIST[5]
+                color: COLOR_LIST[5],
+                iterations: 2
               }
             }
           ]
@@ -2401,10 +2500,10 @@ function getLifecycle() {
         {
           id: '6',
           value: [
-            '一定要给自己亿点',
+            '一定要给自己',
             '亿',
-            '点',
-            '压力'
+            '点点',
+            '压力了'
           ],
           element: TextAnimation,
           notationIndex: [
@@ -2422,13 +2521,14 @@ function getLifecycle() {
               element: '.new_year_code_number',
               config: {
                 type: 'box',
-                color: COLOR_LIST[5]
+                color: COLOR_LIST[5],
+                iterations: 5
               }
             },
             {
               element: '.new_year_code_strict',
               config: {
-                type: 'highlight',
+                type: 'underline',
                 color: COLOR_LIST[5]
               }
             }
@@ -2543,11 +2643,11 @@ function getOptions() {
 }
 
 // 通用询问
-function getCommonPrompt(first: boolean) {
+function getCommonPrompt(first: boolean, last: boolean) {
   // 通用的询问
   const COMMON_MODE_QUESTION: LifecycleDataSourceItem = {
     element: {
-      value: `你${first ? '' : '还'}想听什么呢？`,
+      value: last ? '我的话讲完了😺' : `你${first ? '' : '还'}想听什么呢？`,
       element: TextAnimation
     },
     direction: 'left',
@@ -2572,13 +2672,12 @@ const EVENT_EMITTER_LISTENER = {
 const GITHUB_INFO = {
   GITHUB_COMMIT_HISTORY_DATA: [],
   CURRENT_YEAR: 2022,
-  RECT_SIZE: 8,
-  RECT_MARGIN: 4,
-
+  RECT_SIZE: 6,
+  RECT_MARGIN: 1,
 }
 
 // 色调列表
-const COLOR_LIST = ['red', 'yellow', 'green', 'pink', '#0f0', 'blue']
+const COLOR_LIST = ['rgb(191, 48, 56)', 'rgb(229, 181, 41)', 'rgb(24, 153, 215)', 'rgb(47, 129, 37)', 'rgb(12, 96, 128)', 'rgb(57, 156, 167)']
 // 默认背景色
 const NORMAL_COLOR = "#FFF"
 // 默认选中颜色
@@ -2613,7 +2712,7 @@ const Home = () => {
     // 当前消息已经没有了
     if (!dataSourceRef.current![currentDataSource.current!].length) {
       nextMessage = {
-        ...getCommonPrompt(optionsCounter.current === options.current.length),
+        ...getCommonPrompt(optionsCounter.current === options.current.length, options.current.length === 0),
         options: options.current
       }
     } else {
@@ -2673,7 +2772,8 @@ const Home = () => {
   }, [onComplete])
 
   const messageList = useMemo(() => {
-    return lifecycleList.map(item => {
+    const length = lifecycleList.length
+    return lifecycleList.map((item, index) => {
       const { key, element, direction } = item
       let children: any
       const isMulti = Array.isArray(element)
@@ -2693,7 +2793,7 @@ const Home = () => {
         )
       }
       return (
-        <MessageBubble id={key} key={key} direction={direction} wrapperStyle={isMulti ? {} : (element as LifecycleDataSourceItemElement).wrapperStyle}>
+        <MessageBubble isLast={length === index + 1} id={key} key={key} direction={direction} wrapperStyle={isMulti ? {} : (element as LifecycleDataSourceItemElement).wrapperStyle}>
           {children}
         </MessageBubble>
       )
