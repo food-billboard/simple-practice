@@ -16,7 +16,10 @@
     "url": "https://github.com/food-billboard/juejin-practice/issues"
   },
   "homepage": "https://github.com/food-billboard/juejin-practice#readme",
-  "dependencies": {},
+  "dependencies": {
+    "react95": "^4.0.0",
+    "styled-components": "^5.3.6"
+  },
   "devDependencies": {
     "chalk": "4.1.2",
     "fs-extra": "^11.1.0",
