@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>直播平台弹幕效果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    body {
+        background-color: black;
+        overflow: hidden;
+    }
+
+    ul {
+        padding-left: 0px;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    .screen {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+
+    .screen .send {
+        height: 15%;
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        background-color: rgb(14, 155, 14);
+    }
+
+    .screen .send input {
+        height: 30px;
+        width: 400px;
+        border: 1px solid black;
+        position: absolute;
+        top: 40px;
+        left: 350px;
+        color: gray;
+    }
+
+    .screen .send .btn {
+        width: 70px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        background-color: orange;
+        border-radius: 0 10px 10px 0;
+        position: absolute;
+        left: 751px;
+        top: 40px;
+        cursor: pointer;
+    }
+
+    @keyframes fontMove {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .screen .barrage .barr {
+        animation: fontMove 1s;
+        transform-origin: 40px;
+        color: red;
+        position: absolute;
+    }
+</style>
+
+<body>
+    <div class="screen">
+        <div class="send">
+            <input type="text" value="说点什么吧" />
+            <div class="btn">评论</div>
+        </div>
+        <div class="barrage">
+            <div class="barr">杭州彭于晏!!!!</div>
+            <div class="barr">好帅啊啊..........</div>
+            <div class="barr">你是我偶像</div>
+            <div class="barr">我是第一嘛</div>
+            <div class="barr">哈哈哈哈哈哈哈哈哈哈嗝.......</div>
+        </div>
+    </div>
+</body>
+<script>
+    (function () {
+        var oInput = document.getElementsByTagName('input')[0],
+            aDiv = document.querySelectorAll('.screen .barrage div'),
+            oBarrage = document.getElementsByClassName('barrage')[0],
+            oBtn = document.getElementsByClassName('btn')[0],
+            time = 0;
+        oInput.addEventListener('focus', trigger, false);
+        oInput.addEventListener('blur', trigger, false);
+        oBtn.addEventListener('click', click, false);
+
+        function init(obj) {        //初始化函数;
+            var winHeight = document.documentElement.clientHeight,
+                winWidth = document.documentElement.clientWidth,
+                oSend = document.getElementsByClassName('send')[0],
+                maxHeight = winHeight - oSend.offsetHeight - obj.offsetHeight,
+                maxLeft = winWidth - obj.offsetWidth;
+            obj.style.top = Math.random() * maxHeight + 'px';
+            obj.style.left = maxLeft + 'px';
+            obj.style.color = randomColor();
+            move(obj, maxLeft);
+        }
+        function move(obj, maxLeft) {         //移动函数;
+            if (obj.offsetLeft > - obj.offsetWidth) {
+                maxLeft -= 3;
+                obj.style.left = maxLeft + 'px';
+                requestAnimationFrame(function () {
+                    move(obj, maxLeft);
+                });
+            } else {
+                oBarrage.removeChild(obj);
+            }
+        }
+        function randomColor() {         //生成随机颜色方法;
+            return '#' + Math.random().toString(16).slice(-6);
+        }
+        for (var i = 0; i < aDiv.length; i++) {
+            init(aDiv[i]);
+        }
+        function trigger(e) {            //评论区聚焦失焦事件;
+            var event = e || window.event;
+            switch (event.type) {
+                case 'focus':
+                    if (oInput.value == '说点什么吧') {
+                        oInput.value = "";
+                        oInput.style.color = 'black';
+                    }; break;
+                case 'blur':
+                    if (oInput.value == "") {
+                        oInput.value = '说点什么吧';
+                        oInput.style.color = 'gray';
+                    }; break;
+            }
+        }
+        function click() {           //评论按钮点击事件;
+            if (oInput.value != '说点什么吧' && oInput.value) {
+                if (new Date().getTime() - time > 1000) {
+                    var oDiv = document.createElement('div');
+                    oDiv.innerHTML = oInput.value;
+                    oDiv.classList.add('barr');
+                    oBarrage.appendChild(oDiv);
+                    init(oDiv);
+                    time = new Date().getTime();
+                }
+            }
+        }
+    })();
+
+
+</script>
+
+</html>
