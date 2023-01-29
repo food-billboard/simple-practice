@@ -1,7 +1,7 @@
 {
   "name": "juejin-practice",
   "version": "1.0.0",
-  "description": "关于掘金上面的一些小练习，做个简单记录。",
+  "description": "关于一些小练习，做个简单记录。",
   "main": "index.js",
   "scripts": {
     "build": "node ./scripts/build.js"
