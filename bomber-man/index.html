@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>炸弹人游戏（FC）</title>
+  <link rel="stylesheet" type="text/css" href="./index.css"></link>
+</head>
+<body>
+  <div id="app">
+    <div class="banner">
+      <div>
+        <span class="banner-title">TIME </span>
+        <span class="banner-title banner-title-time">480</span>
+      </div>
+      <div>
+        <span class="banner-title">LEVEL </span>
+        <span class="banner-title banner-title-level">1</span>
+      </div>
+    </div>
+    <div id="container">
+      <div id="container-main">
+
+      </div>
+    </div>
+    <div class="footer">
+      PC端：WSAD 左右移动；JKP 扔炸弹、引爆、暂停/开始；（当前未自适应屏幕 🖥 尺寸）
+    </div>
+    <div class="action margin">
+      <div class="action-move">
+        <button class="action-top">👆</button>
+        <button class="action-left">👈 </button>
+        <button class="action-right">👉 </button>  
+        <button class="action-bottom">👇 </button>
+      </div>
+      <div class="action-boom">
+        <button class="action-j">💣</button>
+        <button class="action-k">💥</button>
+        <button class="action-p">⏺ </button>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ismobilejs@1/dist/isMobile.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/konva@8/konva.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/eventemitter3@5.0.0/dist/eventemitter3.umd.min.js"></script>
+  <script type="text/javascript" src="./index.js"></script>
+</body>
+</html>
