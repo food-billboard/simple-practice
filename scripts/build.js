@@ -13,15 +13,24 @@ const chalk = require('chalk')
 
 // 打包子项目
 async function buildPackage(dir) {
-  return new Promise((resolve, reject) => {
-    shelljs.cd(dir).exec('npm run build', {
+  return new Promise((resolve) => {
+    shelljs
+    .cd(dir)
+    .exec('yarn', {
       async: true 
-    }, (_, __, error) => {
-      if(error) {
-        reject(error)
-      }else {
-        resolve()
-      }
+    }, resolve)
+  })
+  .then(() => {
+    return new Promise((resolve, reject) => {
+      shelljs.exec('yarn build', {
+        async: true 
+      }, (_, __, error) => {
+        if(error) {
+          reject(error)
+        }else {
+          resolve()
+        }
+      })
     })
   })
 }
@@ -68,6 +77,7 @@ new Promise((resolve, reject) => {
         console.log(chalk.green('remove the build dir'))
         await fsPromise.remove(buildDir)
       }
+
       console.log(chalk.green('build package'))
       await buildPackage(packageRoot)
       console.log(chalk.green(`move ${distDir} to root dist and rename to ${dir}`))
