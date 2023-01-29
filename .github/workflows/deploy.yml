@@ -1,0 +1,25 @@
+name: deploy
+on: 
+  push: 
+    branches: 
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2 
+
+      - name: Install and Build and Deploy 🔧 
+        run: |
+          npm install yarn -g 
+          yarn 
+          yarn build  
+
+      - name: Deploy 🚀
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/food-billboard/juejin-practice.git
+          npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+           
