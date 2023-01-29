@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>canvas漂浮动画</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        ul{
+            padding-left:0px;
+        }
+        li{
+            list-style:none;
+        }
+        .canvas{
+            display:block;
+            background-color:black;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="canvas"></canvas>
+</body>
+<script>
+    // (function() {
+            var oCanvas = document.getElementsByTagName('canvas')[0];
+            var w,      //浏览器宽高;
+                h;
+            var aBubble = [];       //构造函数实例的存储容器;
+            var color = ['#0cf','#0f0','#906','9f0','#c00','#f3c','#ff4500','#ee3b3b','#98f5ff'];       //随机颜色范围;
+            var content = oCanvas.getContext('2d');     //获取画布;
+            var num = 1314;  //定义小球个数;
+            (function() {       //即时随浏览器大小更改画布;
+                window.onresize = arguments.callee;
+                    w = window.innerWidth;
+                    h = window.innerHeight;
+                oCanvas.width = w;
+                oCanvas.height = h;
+            })();
+            function Bubble(){};    //构造函数;
+            Bubble.prototype = {
+                init : function() {     //初始化小球;
+                    this.x = random(0,w);   //x坐标
+                    this.y = random(0,h);   //y坐标
+                    this.r = random(2,5);   //半径
+                    this.color = color[Math.floor(random(0,color.length - 1))]; //颜色;
+                    this.vX = random(-2,2);
+                    this.vY = random(-2,2);
+                },
+                draw : function() {     //画出小球;
+                    content.beginPath();    //抬笔;
+                    content.fillStyle = this.color;
+                    content.arc(this.x,this.y,this.r,0,Math.PI * 2);
+                    content.fill();
+                },
+                move : function() {     //移动小球;
+                    this.x += this.vX;
+                    this.y += this.vY;
+                    if(this.x - this.r < 0 || this.x + this.r > w){     //边界碰撞;
+                        this.vX = -this.vX;
+                    }
+                    if(this.y - this.r < 0 || this.y + this.r > h){
+                        this.vY = -this.vY;
+                    }
+                    this.draw();
+                },
+            }
+            function createBubble(num) {       //创建实例对象;
+                for(var i = 0;i < num;i ++){
+                    var bubble = new Bubble();
+                    bubble.init();
+                    bubble.draw();
+                    aBubble.push(bubble);
+                }
+            }
+            function random(min,max) {       //产生随机数;
+                return Math.random() * (max - min) + min;
+            }
+            createBubble(num);
+            var timer = setInterval(function() {        //定时器;
+                content.clearRect(0,0,w,h);
+                // for(var i = 0;i < num;i ++){
+                //     bubbleImpact(num,i);
+                // }
+                for(var i = 0,len = aBubble.length;i < len;i ++){
+                    aBubble[i].move();
+                }
+            },1000/60);
+            // function bubbleImpact(num,order){       //小球碰撞;
+            //     var _x,
+            //         _y,
+            //         R;
+            //     for(var i = 0;i < num;i ++){
+            //         _x = aBubble[order].x - aBubble[i].x;
+            //         _y = aBubble[order].y - aBubble[i].y;
+            //         R = aBubble[order].r + aBubble[i].r;
+            //         if(Math.abs(_x) <= R && Math.abs(_y) <= R && i != order){
+            //             aBubble[order].vX = -aBubble[order].vX;
+            //             aBubble[order].vY = -aBubble[order].vY;                    
+            //         }
+            //     }
+            // }
+
+    // })();
+</script>
+</html>
