@@ -1,0 +1,184 @@
+@charset "utf-8";
+*{
+	margin:0px;
+	padding:0px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+ul{
+	padding:0px;
+}
+li{
+	list-style:none;
+}
+.space{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-color:yellow;
+}
+.wrapper{
+	width:100%;
+	height:662px;
+	background-color:#9FC;
+	position:relative;
+}
+.wrapper .content{
+	position:absolute;
+	left:34%;
+	top:10%;
+	border:1px solid black;
+	width:420px;
+	height:420px;
+	background-color:#ccc;
+}
+.two{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./2.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.four{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./4.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.eight{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./8.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.oneSix{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./16.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.threeTwo{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./32.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.sixFour{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./64.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.oneTwoEight{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./128.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.twoFiveSix{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./256.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.fiveOneTwo{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./512.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.oneZeroTwoFour{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./1024.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.twoZeroFourEight{
+	border:2px solid black;
+	width:100px;
+	height:100px;
+	margin-right:1px;
+	float:left;
+	margin-bottom:1px;
+	background-image:url(./2048.jpg);
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+.gameOver{
+	display:none;
+	width:150px;
+	height:150px;
+	background-image:url(./游戏结束.jpg);
+	border-radius:50%;
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	position:absolute;
+	left:44%;
+	top:29%;
+	cursor:pointer;
+}
+.gameWin{
+	display:none;
+	width:150px;
+	height:150px;
+	background-image:url(./游戏赢时.jpg);
+	border-radius:50%;
+	background-repeat:no-repeat;
+	background-position:center tottom;
+	position:absolute;
+	left:44%;
+	top:29%;
+	cursor:pointer;
+	overflow:hidden;
+}
