@@ -1,10 +1,45 @@
 import React, {  } from 'react'
-import {  } from './constants'
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { MenuList, MenuListItem, Separator, styleReset, Monitor } from 'react95'
+// pick a theme of your choice
+import original from 'react95/dist/themes/original';
+// original Windows95 font (optionally)
+// @ts-ignore 
+import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
+// @ts-ignore 
+import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2'
+import Main from './components/Main'
+import Footer from './components/Footer'
+
+const GlobalStyles = createGlobalStyle`
+  ${styleReset}
+  @font-face {
+    font-family: 'ms_sans_serif';
+    src: url('${ms_sans_serif}') format('woff2');
+    font-weight: 400;
+    font-style: normal
+  }
+  @font-face {
+    font-family: 'ms_sans_serif';
+    src: url('${ms_sans_serif_bold}') format('woff2');
+    font-weight: bold;
+    font-style: normal
+  }
+  body {
+    font-family: 'ms_sans_serif';
+  }
+`;
 
 const Home = () => {
 
   return (
-    <div></div>
+    <div>
+      <GlobalStyles />
+      <ThemeProvider theme={original}>
+
+        <Footer />
+      </ThemeProvider>
+    </div>
   )
 
 }
