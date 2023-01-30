@@ -1,3 +1,5 @@
+import test from './images/test.png'
+
 const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
 export const PACKAGE_MAP = [
@@ -5,7 +7,7 @@ export const PACKAGE_MAP = [
     label: '2048小游戏',
     description: '一个简单的2048小游戏',
     date: '2018-07-22',
-    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    image: test,
     key: '2048',
     url: internalUrl('2048-game'),
     code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/2048-game'

@@ -37,7 +37,7 @@ const Main = () => {
             return (
               <div
                 key={key}
-                onDoubleClick={() => handleClick(app)}
+                onClick={() => handleClick(app)}
                 className="home-page-main-app"
               > 
                 <img src={icon} alt={title} />

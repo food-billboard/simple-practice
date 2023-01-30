@@ -44,7 +44,7 @@ const PackageDetail = ((props: ProjectDetailProps) => {
   return (
     <>
       <div
-        onDoubleClick={open}
+        onClick={open}
         className="home-page-main-app home-page-main-app-detail"
         style={{
           verticalAlign: 'top',
