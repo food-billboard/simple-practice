@@ -1,17 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.dd7648b6.css",
-    "main.js": "/static/js/main.ba6a6e9c.js",
-    "static/js/787.3aa68a5b.chunk.js": "/static/js/787.3aa68a5b.chunk.js",
-    "static/media/ms_sans_serif.woff2": "/static/media/ms_sans_serif.0348082abb503fb6a8c2.woff2",
-    "static/media/ms_sans_serif_bold.woff2": "/static/media/ms_sans_serif_bold.7fcf57cc6e87ecddbf64.woff2",
-    "index.html": "/index.html",
-    "main.dd7648b6.css.map": "/static/css/main.dd7648b6.css.map",
-    "main.ba6a6e9c.js.map": "/static/js/main.ba6a6e9c.js.map",
-    "787.3aa68a5b.chunk.js.map": "/static/js/787.3aa68a5b.chunk.js.map"
+    "main.css": "./static/css/main.dd7648b6.css",
+    "main.js": "./static/js/main.af8815b6.js",
+    "static/js/787.3aa68a5b.chunk.js": "./static/js/787.3aa68a5b.chunk.js",
+    "static/media/test.png": "./static/media/test.28395068be749af26e85.png",
+    "static/media/ms_sans_serif.woff2": "./static/media/ms_sans_serif.0348082abb503fb6a8c2.woff2",
+    "static/media/ms_sans_serif_bold.woff2": "./static/media/ms_sans_serif_bold.7fcf57cc6e87ecddbf64.woff2",
+    "index.html": "./index.html",
+    "main.dd7648b6.css.map": "./static/css/main.dd7648b6.css.map",
+    "main.af8815b6.js.map": "./static/js/main.af8815b6.js.map",
+    "787.3aa68a5b.chunk.js.map": "./static/js/787.3aa68a5b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dd7648b6.css",
-    "static/js/main.ba6a6e9c.js"
+    "static/js/main.af8815b6.js"
   ]
 }
