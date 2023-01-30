@@ -1,0 +1,19 @@
+.home-page-main {
+  padding: 4px;
+  box-sizing: border-box;
+  flex: 1;
+  position: relative;
+}
+.home-page-main-app-wrapper {
+  writing-mode: vertical-lr;
+  width: 100%;
+  height: 100%;
+}
+.home-page-main-app {
+  display: inline-block;
+  writing-mode: horizontal-tb;
+  text-align: center;
+  width: 80px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}

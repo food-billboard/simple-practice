@@ -1,0 +1,53 @@
+.home-page-project-detail-window.home-page-project-window {
+  width: max(300px, 40vw);
+  min-height: 200px;
+  position: fixed !important;
+  user-select: all;
+}
+.home-page-project-detail-window-main {
+  display: flex;
+  align-items: center;
+}
+.home-page-project-detail-window-main > img {
+  width: 30%;
+  margin-right: 8px;
+}
+.home-page-project-detail-window-main > div {
+  flex: 1;
+}
+.home-page-project-detail-window-main > div > span {
+  font-weight: bold;
+  line-height: 1.5;
+}
+.home-page-project-detail-window-main > div p {
+  font-size: 0.9em;
+  margin: 1em 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  white-space: normal;
+}
+.home-page-project-detail-window-main-p-prefix {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-page-project-detail-window-footer {
+  text-align: right;
+}
+
+.home-page-main-app-detail {
+  font-size: 0.75em;
+}
+.home-page-main-app-detail > div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

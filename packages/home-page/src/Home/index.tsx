@@ -10,6 +10,7 @@ import ms_sans_serif from 'react95/dist/fonts/ms_sans_serif.woff2';
 import ms_sans_serif_bold from 'react95/dist/fonts/ms_sans_serif_bold.woff2'
 import Main from './components/Main'
 import Footer from './components/Footer'
+import './index.css'
 
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
@@ -36,8 +37,10 @@ const Home = () => {
     <div>
       <GlobalStyles />
       <ThemeProvider theme={original}>
-
-        <Footer />
+        <div className="home-page">
+          <Main />
+          <Footer />
+        </div>
       </ThemeProvider>
     </div>
   )

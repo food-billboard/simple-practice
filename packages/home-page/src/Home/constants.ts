@@ -1,11 +1,234 @@
+const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
 export const PACKAGE_MAP = [
   {
-    label: '',
-    description: '',
-    date: '',
-    image: ''
-  }
+    label: '2048小游戏',
+    description: '一个简单的2048小游戏',
+    date: '2018-07-22',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: '2048',
+    url: internalUrl('2048-game'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/2048-game'
+  },
+  {
+    label: '炸弹人小游戏',
+    description: '仿照儿时FC小霸王游戏机的炸弹人游戏',
+    date: '2022-11-18',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'bomber-man',
+    url: internalUrl('bomber-man'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/bomber-man'
+  },
+  {
+    label: 'canvas漂浮动画',
+    description: '一个使用canvas绘图实现的漂浮动画demo',
+    date: '2018-12-12',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'canvas-point-shake',
+    url: internalUrl('canvas-point-shake'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/canvas-point-shake'
+  },
+  {
+    label: 'canvas雨滴',
+    description: '一个使用canvas绘图实现的雨滴特效demo',
+    date: '2018-12-12',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'canvas-rain',
+    url: internalUrl('canvas-rain'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/canvas-rain'
+  },
+  {
+    label: '轮播改宽型',
+    description: '简单的轮播图-改动图片宽度',
+    date: '2018-05-01',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'change-width-carousel',
+    url: internalUrl('change-width-carousel'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/change-width-carousel'
+  },
+  {
+    label: '弹幕',
+    description: '一个简单的发送弹幕效果',
+    date: '2018-05-03',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'danmu-demo',
+    url: internalUrl('danmu-demo'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/danmu-demo'
+  },
+  {
+    label: '黄金矿工',
+    description: '基于canvas实现的黄金矿工游戏（有点辣鸡）',
+    date: '2018-11-01',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'gold-man',
+    url: internalUrl('gold-man'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/gold-man'
+  },
+  {
+    label: '京东轮播图',
+    description: '一个渐隐渐显的轮播图demo',
+    date: '2018-03-15',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'jd-carousel',
+    url: internalUrl('jd-carousel'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/jd-carousel'
+  },
+  {
+    label: '超级玛丽',
+    description: '基于canvas实现的超级玛丽游戏（有点辣鸡）',
+    date: '2018-12-21',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'mario-demo-game',
+    url: internalUrl('mario-demo-game'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/mario-demo-game'
+  },
+  {
+    label: '扫雷游戏',
+    description: '一开始学习javascript时实现的一个简单的扫雷小游戏',
+    date: '2017-07-08',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'minesweeper-game',
+    url: internalUrl('minesweeper-game'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/minesweeper-game'
+  },
+  {
+    label: '我与2022的自己的对话',
+    description: '一个手绘风格的简单聊天对话框',
+    date: '2022-12-20',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'summary',
+    url: internalUrl('summary'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/summary'
+  },
+  {
+    label: '西游联盟',
+    description: '游戏厅里看到的一款有趣的投球连线游戏',
+    date: '2099-12-31',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'western-travel-alliance',
+    url: internalUrl('western-travel-alliance'),
+    development: true,
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/western-travel-alliance'
+  },
+  {
+    label: '别踩白块儿',
+    description: '一个简单的别踩白块儿小游戏',
+    date: '2018-06-20',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'white-block-game',
+    url: internalUrl('white-block-game'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/white-block-game'
+  },
+  {
+    label: '可视化大屏设计器',
+    description: '基于Echarts的可视化数据大屏设计器（包含设计、预览、分享等全部流程）。',
+    date: '2023-01-19',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'create-chart',
+    url: 'http://47.97.27.23/api/backend/screen/index.html#/',
+    code: 'https://github.com/food-billboard/create-chart',
+    development: true 
+  },
+  {
+    label: '可视化大屏设计器（静态版）',
+    description: '可视化大屏设计器的纯前端版本，无后端交互。',
+    date: '2023-01-19',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'create-chart-static',
+    url: 'https://food-billboard.github.io/create-chart/index.html#/',
+    development: true,
+    code: 'https://github.com/food-billboard/create-chart'
+  },
+  {
+    label: '后台服务',
+    description: `后台服务供应了其他项目中需要用到数据的服务接口。  
+    项目使用Node + Koa + MongoDB。  
+    其中存在简单的增删改查，以及文件上传，登录注册等`,
+    date: '2023-01-18',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'node-server',
+    code: 'https://github.com/food-billboard/node-server',
+    development: true,
+  },
+  {
+    label: '工具箱',
+    description: '一个使用相关类库完成的各类实用工具的网站。 其中包括 图片主题色获取、视频转gif、文件MD5获取等等',
+    date: '2022-11-30',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'tool-box',
+    url: 'http://47.97.27.23/api/backend/tool-box/index.html',
+    development: true,
+    code: 'https://github.com/food-billboard/tool-box',
+  },
+  {
+    label: '管理后台',
+    description: '一个对相关项目的数据的一个综合的管理平台。其中包括：聊天Demo、数据可视化大屏、电影推荐h5。',
+    date: '2022-10-04',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'manage',
+    url: 'http://47.97.27.23/api/backend/index.html',
+    development: true,
+    code: 'https://github.com/food-billboard/mini-app-management',
+  },
+  {
+    label: '电影推荐h5',
+    description: '记录一些自己看过的电影的手机网站',
+    date: '2022-08-08',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'movie-weapp',
+    url: 'http://47.97.27.23/api/backend/moviet5/index.html',
+    development: true,
+    code: 'https://github.com/food-billboard/movie-weapp',
+  },
+  {
+    label: '文件分片上传类库',
+    description: '文件分片上传的自实现，功能相对简单，实现了在各个存在es6相关模块API的兼容。（比如小程序）',
+    date: '2022-03-01',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'chunk-file-load',
+    url: 'https://food-billboard.github.io/chunk-file-load',
+    code: 'https://github.com/food-billboard/chunk-file-load',
+  },
+  {
+    label: 'React分片上传组件',
+    description: '基于上面的类库实现的React组件。',
+    date: '2022-01-20',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'chunk-file-load-component',
+    url: 'https://food-billboard.github.io/chunk-file-load-component/#/',
+    code: 'https://github.com/food-billboard/chunk-file-load-component',
+  },
+  {
+    label: 'React状态控制类库',
+    description: `控制React组件的工具，可以对组件的状态进行前进、后退等操作。 
+    支持class和hook组件。  
+    并且对class组件的状态可以选择全量控制或部分控制。`,
+    date: '2022-01-05',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'react-undo-component',
+    url: 'https://food-billboard.github.io/react-undo-component/#/',
+    code: 'https://github.com/food-billboard/react-undo-component',
+  },
+  {
+    label: '简易聊天室',
+    description: `基于socket.io实现的简单聊天室，后台使用的是上面的后台服务。  
+    功能包含群聊和单聊。  
+    可以添加、删除好友。`,
+    date: '2021-11-18',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'chat-demo',
+    url: 'http://47.97.27.23/api/backend/communicate/index.html',
+    code: 'https://github.com/food-billboard/chat-demo',
+  },
+  {
+    label: 'three.js学习',
+    description: '此项目是本人在学习three.js过程中，写得一些简单的Demo。',
+    date: '2021-11-22',
+    image: 'https://www.runoob.com/images/chrome_logo_32.png',
+    key: 'threejs-study',
+    url: 'http://47.97.27.23/api/backend/threejs-study/index.html',
+    code: 'https://github.com/food-billboard/threejs-study-demo',
+  },
 ]
 
 // 我的项目图标
@@ -19,3 +242,22 @@ export const MY_GITHUB_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACA
 // 开始图标
 export const START_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABhElEQVR4Ad3BAW7bRgAEwFlC/9b55VtFJ4SkRcqOoaBoZ/zbYq+In6nX4sDiXJ2rVVFfK+qTxV5MtVdTUav6c7WxOBdTfcNAURsDw81wZrFRaoq9WAWxUVy9MAbDocWJUlOs4qbUmyw2QtyU2ih1U1rqjRYnQtyU+osu9oqE2AjxEOLAB4ZPhofBGI7EXhFTEceKoH4mHi72Yqq9IqhTA1dT/NK6+/hgDIcW52KqLxVXZ65XWocWO60p9mIVxJssTrWmWMVd600WO4m71k7rrqX1RhenEnetb/nAsJW4G4Pr1aGLvSIkdhK/JZ7EK2MwhkOLc3WX+C0x1Ztc7MVUe0VQr8WxOnFxLqb6WrwWU/1Arer/rqaaaqpVUauipqKmoqaiKIp6WDyrvSKmIlZF7AVF7AUxxcPiWbxWxLGgjtWBxdeCoqagVkVMNQVFrOK/oKaaaqpVTUXtFbWqqaaiNhbfV8+CmoogqHOxsXhWx4L6c7UKamPxLM7FXhFTUBSxilV98g9Y7JORWOFW2QAAAABJRU5ErkJggg=="
 
+export const APP_MAP = [
+  {
+    title: 'my project',
+    icon: MY_PROJECT_ICON,
+    key: 'project',
+  },
+  {
+    title: 'my blog',
+    icon: MY_BLOG_ICON,
+    key: 'blog',
+    url: 'https://food-billboard.github.io/'
+  },
+  {
+    title: 'my github',
+    icon: MY_GITHUB_ICON,
+    key: 'github',
+    url: 'https://github.com/food-billboard'
+  }
+]
