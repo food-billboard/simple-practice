@@ -1,6 +1,6 @@
 .home-page-project-window {
   position: absolute !important;
-  width: max(400px, 60vw);
+  width: max(400px, 80vw);
   min-height: 200px;
   top: 10%;
   left: 50%;
