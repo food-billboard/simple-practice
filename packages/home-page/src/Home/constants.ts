@@ -1,24 +1,24 @@
-import createChart from './images/create-chart.jpg'
-import game2048 from './images/2048-game.jpg'
-import bomberMan from './images/bomber-man.jpg'
-import canvasPoint from './images/canvas-point-shake.jpg'
-import canvasRain from './images/canvas-rain.jpg'
-import goldMan from './images/gold-man.jpg'
-import marioGame from './images/mario-game.jpg'
-import summary from './images/summary.jpg'
-import whiteBlock from './images/white-block-game.jpg'
-import toolbox from './images/tool-box.jpg'
-import movieWeapp from './images/movie-weapp.jpg'
-import management from './images/mini-app-management.jpg'
-import chunFileLoad from './images/chunk-file-load.jpg'
-import chunkFileLoadComponent from './images/chunk-file-load-component.jpg'
-import reactUndo from './images/react-undo-component.jpg'
-import chatDemo from './images/chat-demo.jpg'
-import threeStudy from './images/threejs-study.jpg'
-import jdCarousel from './images/jd-carousel.jpg'
-import danmu from './images/danmu.jpg'
-import widthCarousel from './images/width-carousel.jpg'
-import minesweeper from './images/mine-sweeper.jpg'
+import createChart from './images/create-chart.png'
+import game2048 from './images/2048-game.png'
+import bomberMan from './images/bomber-man.png'
+import canvasPoint from './images/canvas-point-shake.png'
+import canvasRain from './images/canvas-rain.png'
+import goldMan from './images/gold-man.png'
+import marioGame from './images/mario-game.png'
+import summary from './images/summary.png'
+import whiteBlock from './images/white-block-game.png'
+import toolbox from './images/tool-box.png'
+import movieWeapp from './images/movie-weapp.png'
+import management from './images/mini-app-management.png'
+import chunFileLoad from './images/chunk-file-load.png'
+import chunkFileLoadComponent from './images/chunk-file-load-component.png'
+import reactUndo from './images/react-undo-component.png'
+import chatDemo from './images/chat-demo.png'
+import threeStudy from './images/threejs-study.png'
+import jdCarousel from './images/jd-carousel.png'
+import danmu from './images/danmu.png'
+import widthCarousel from './images/width-carousel.png'
+import minesweeper from './images/mine-sweeper.png'
 
 const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
@@ -250,7 +250,7 @@ export const PACKAGE_MAP = [
     date: '2021-11-22',
     image: threeStudy,
     key: 'threejs-study',
-    url: 'http://47.97.27.23/api/backend/threejs-study/index.html',
+    url: 'http://47.97.27.23/api/backend/threejs-study/base/index',
     code: 'https://github.com/food-billboard/threejs-study-demo',
   },
 ]
