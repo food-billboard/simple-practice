@@ -1,37 +1,20 @@
 {
   "files": {
     "main.css": "./static/css/main.fe44e8f6.css",
-    "main.js": "./static/js/main.b23a95b6.js",
+    "main.js": "./static/js/main.19fdb703.js",
     "static/js/787.3aa68a5b.chunk.js": "./static/js/787.3aa68a5b.chunk.js",
-    "static/media/threejs-study.jpg": "./static/media/threejs-study.b0f561e8900b8cc53ec2.jpg",
-    "static/media/jd-carousel.jpg": "./static/media/jd-carousel.15e4b31bb6f541483806.jpg",
-    "static/media/width-carousel.jpg": "./static/media/width-carousel.962044139d8d1f9f6201.jpg",
-    "static/media/create-chart.jpg": "./static/media/create-chart.78eea70e2fc26ac8b93e.jpg",
-    "static/media/bomber-man.jpg": "./static/media/bomber-man.6791ee74ec046d398e7c.jpg",
-    "static/media/movie-weapp.jpg": "./static/media/movie-weapp.70ebc5e0feb28a313a57.jpg",
-    "static/media/canvas-point-shake.jpg": "./static/media/canvas-point-shake.3ff65baa509b8dcb126d.jpg",
-    "static/media/mine-sweeper.jpg": "./static/media/mine-sweeper.99fb2219cafaa023dc62.jpg",
-    "static/media/mario-game.jpg": "./static/media/mario-game.780046ba12d648852c30.jpg",
-    "static/media/mini-app-management.jpg": "./static/media/mini-app-management.336ccdff86a5f740bd04.jpg",
-    "static/media/canvas-rain.jpg": "./static/media/canvas-rain.a5c798e401a322a424b1.jpg",
-    "static/media/react-undo-component.jpg": "./static/media/react-undo-component.d61aa0bfeee6b7cee2d8.jpg",
-    "static/media/tool-box.jpg": "./static/media/tool-box.9862b6934f1e1e72255e.jpg",
-    "static/media/chunk-file-load.jpg": "./static/media/chunk-file-load.85361456e1f1f17c1349.jpg",
-    "static/media/2048-game.jpg": "./static/media/2048-game.a34f0aa540f71000fbca.jpg",
-    "static/media/chunk-file-load-component.jpg": "./static/media/chunk-file-load-component.93128d1901d00d76927b.jpg",
-    "static/media/gold-man.jpg": "./static/media/gold-man.1eb81b7484afc9579353.jpg",
-    "static/media/chat-demo.jpg": "./static/media/chat-demo.dbc6020175bbd66cabd3.jpg",
-    "static/media/danmu.jpg": "./static/media/danmu.1f7f8fab5a549d9cbaac.jpg",
-    "static/media/summary.jpg": "./static/media/summary.6ae0ddb054edd544dcb0.jpg",
+    "static/media/movie-weapp.png": "./static/media/movie-weapp.073e6f678c28a757629c.png",
+    "static/media/jd-carousel.png": "./static/media/jd-carousel.9e8c4a12c42a6d6ea061.png",
+    "static/media/width-carousel.png": "./static/media/width-carousel.81b24c9e6e8739516043.png",
     "static/media/ms_sans_serif.woff2": "./static/media/ms_sans_serif.0348082abb503fb6a8c2.woff2",
     "static/media/ms_sans_serif_bold.woff2": "./static/media/ms_sans_serif_bold.7fcf57cc6e87ecddbf64.woff2",
     "index.html": "./index.html",
     "main.fe44e8f6.css.map": "./static/css/main.fe44e8f6.css.map",
-    "main.b23a95b6.js.map": "./static/js/main.b23a95b6.js.map",
+    "main.19fdb703.js.map": "./static/js/main.19fdb703.js.map",
     "787.3aa68a5b.chunk.js.map": "./static/js/787.3aa68a5b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.fe44e8f6.css",
-    "static/js/main.b23a95b6.js"
+    "static/js/main.19fdb703.js"
   ]
 }
