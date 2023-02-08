@@ -6,13 +6,10 @@
 	const ContainerWidth = Container.clientWidth
 	const ContainerHeight = Container.clientHeight
 
+	const BORDER_SIZE = 10
+
 	// ------------images------------
 
-	// 测试图片
-	const TEST_IMAGE =
-		"data:image/jpeg;base64,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"
-	const ANOTHER_TEST_IMAGE =
-		"data:image/jpeg;base64,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"
 	// 九宫格图片
 	const GRID_IMAGES = [
 		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAgVBMVEUAAAC/v7+/v7+/v7+/v7+/v7/AwMC/v7+/v7+/v7/AwMC/v7+/v7/AwMC/v7+/v7+/v7+/v7/BwcG/v7+/v7+/v7+/v7+/v7/AwMDAwMC9vb2+vr6/v7+6urrAwMC/v7/AwMC/v7+/v7+/v7/Gxsa/v7+9vb2/v7/b29u/v7++vr6cwWT9AAAAKXRSTlMAIenXiX/3lk/s37+qMBm5kkI7I/zz3NDLjmhcNBHDnnJhRyoSrKIUB6X+iTQAAAFBSURBVEjH5dTXbsMwDAXQ6yGveMRx9mqapuP6/z+wsQsnKEQx8Wt7XgwZIikJlPAfTCcYK+AbxinIV4yzJV8wTkUGGMWbkzxjjJBXeR+ce3DaT8I9UKDjs1N2h02DMvZ3EMXkFH3umj1zLbKgSQJWkB1WpB8w9zYZf2SbDZmTTOCQkEzZafmLD5eGDu7m+cr6/O2TIWbfrSylyACxHXbm+wwxZVPUUQbLklFFlySQWi6kYiE29oyaVrw+ETUZBKlSglxBsKDGh4Cadg5bSV0pnZhuBsuOup30pui2sNTU1bB47A29b4082KiTX2FNAEEoLOv+J4TAEyfftyJZ062CKBlyt1aleQPZygoYxh9w+Iy0zpcVahfLGqlO1EBzWA97vn3XBzxwSvvJQ0B6wmOXcHmrsgwveE5h4qN/jE2BP+4b3JSRk0KKAk4AAAAASUVORK5CYII=",
@@ -37,8 +34,6 @@
 		"data:image/png;base64,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",
 		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAABZVBMVEUAAAD/0TH/twBgxkldwEX/zy3/tgBGpSxgxkpNsjZFoi1HpSz/1jtgx0r/tgBOsjb9zSpHpS3/twD/xx7/twBn1kxHpi1HpS3/tgBHpiz/yyZl1Uv/uwv/whNGpS3/tQD/twBhxEr/tABapTz/vwBgxkr/vhBOsjb/0jT/0zVgxUpgxUlm1kxm00pizUpKqzNgxkrOuxdgxktPszdHpS1PsjZHpi1gxkpOsjb/twBgx0v/yydn1kxgxUpOsTX/zShl1UtIpS7/tgBl1kz/vhFhx0pn1k1m10v/xx5IpixIpS5Qszb/whZNsjf/wRD/tQD/tABfyEtj1U7/tQD/tQBMszn/vAD/tgD/swD/20Vm1kz/tgBHpS1gxkr/yCJOsjb/0zT/yyf/2UH/2D7/1Tn/whZhy0pfy0X/uQVaxkG1zjacyTJ5xD5YwT5SuDmnzDOPxTL70DHexi2HsShnqCX0whf/vAtkGq37AAAAWXRSTlMAsUrAFdeLf2lWJ/j38N/Z0Mq/u7WvqpWRhoZzVkdGNSwpHQgI9vXz8/Hq4tzY2NjX183JvLm3r6afmpiXlZCOi4uFfHZkY19fXFhQUE8+Pj0zMSYfGxcOCvPHoxoAAAFsSURBVEjH7dRnT8JAGMDxBxXZIhtkKrj33nvvPXrXWqAgCO71+b2ACYGOO18Zjf/X/aU3nhz8zhq+LTaBsd1zKLcUBNZGF0oLmkMnzMQk2k0AHtQH7I2LomkDIQ/TGWybgbQvip39CK1Cg3FmJA60HI6AGeziPUIoON8jDAG9OM9blqfEHCEDgmBrBYZ2eJ4ffECkG0EwgnZmg2/CG4h4ibktE1s9aVLzT5Ex8rmlQki9RqBk4EvlEClHRPsxAJN5KxYKj8WnO0FYB4Z8ry/PEkdKJ1PvwzEW0pzmKqVwIxVcWLmqMtidoJBurqYkdmsLFycri1e0xJ4kJ1Ien2oQvQxQjyCpRJK4SV0ccIrlcZsqaVEmWXykSnTK5BrX/ZMfIPSrPFQlYeaBYR9L9uH3a5CttFykP3BM83lROC/KI5Ow1ooMdoJ2Z121e3deAqUrl1R1JX5gKKTPfK0p1TEdBcbCizrd7FooCn+9T5G5/5WpjkxNAAAAAElFTkSuQmCC",
 	]
-	// 连线图片
-	const LINE_CONNECT_IMAGES = new Array(8).fill(TEST_IMAGE)
 	// 抽奖图片
 	const LUCKY_IMAGES = GRID_IMAGES_ACTIVE
 	// 摆臂
@@ -56,7 +51,11 @@
 	// 障碍点-抽奖
 	const HinderLuckyImage =
 		"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABqlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAFBAAAAAAAAAAHAwAAAAAFBAAIBQAAAAAAAAAAAAAJBQAcFAAOCQAAAAAAAAAMCgAAAAAGBAAAAAAOCwAAAABtWwAAAAAAAAAAAAAAAAAAAAAAAAAQDQAXEACniwAdFwAqHQD/zwD/2ABZSgD/2ABcPQD/1gAAAAD/yAAAAAD/1gD/ywD/2gD/1AArJAD/2wAqGwAAAAAgFQAAAAD/2gA2LQATEAD/2QD/2QCZgwBGPQAKCgD/1wAAAACtkgA6MQD/2gAAAAAAAAAAAAD/2gAAAAD/2wb/zwDfvwD/4Ej/3BTVtgC4nQD/3STpxwD/wwDjwgCqkQBVSAAXEwD/4lz/3R//1gDvzAD/yQD/vgD/ugDZugDIqwDYnQCulQCchQCJdQCAbQBnWABrRwBANwA0LABAKwArJQD/42z/4U7/30H/3jb/2w//1AD00QDtvgD2twDusQDKrQDEqAC/owC8oQCehwDChgCWgACQewCqegCqcgCRbwB5ZwCZZgByYQCIXgBgUgBNQgBIPgBJMQA8KAAzIgAgGwCITxOLAAAASnRSTlMAf1OzmY+GZ0s1D/z5+PLv7Orp5ePX1sGnoXVwcEM6OSAY/fr19fHv6+jn5+Hfzc3Jv7m3s7Kxr6eel5KSjYZxaWllXVRTTC4kCu4GRHIAAAGNSURBVDjLvZPVUgNBEEV3YxDc3d3d3eV2iCckuLu7u8s/s1lCMrsJ8EJxqubpnpquuVPN/T+Byl8EPuynNFPB8THcwPfXE1FceBip/YVBWkUS1VgXnFm3OZTQ3e8jaEJjyjVFELnKi6AUudBY31WWDwEdMDQ5VRwhF5QqYH4Pxo1NHUymmVlKSs1kczXxGCfnEYxGYI5W9l+jQnkmT6DOasA8jU/GgQnbGiuoSqtgXjQDGIabIYkQQG2wr9qFnBx6nF4uCcJyPCMoqN0CHQT0M8J5XLACByHep6ZH802GkW1ImHyJ9Aja8OYCWOxgEEZQEDuiB1h9OoZpcd4tTL0lcl5SqQ/QzwHWdecJ4Fg5w+5dCCPEq2rFlkWMwAUwZqM0pgdqqYDBYIFLGzEAsF1nRwVKikjG6BZEdkYBHFIDJ0EQXAx/tT1LWpnQWzkG6NffzWI+cU4Zsu8mZUeJp4OHSKJBTkoGH90KE0RuSJ3G+UJ8LhUCS4774Dr/KxGnUdBzcGxiLFOynHQK4P6aD3AOeEIE4OPnAAAAAElFTkSuQmCC"
-	// ------------images------------
+  const BottomHinderImage = 'data:image/png;base64,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'
+	const ServeBallImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABblBMVEUAAAAxOTQsQjYtQDYpSzgrRjhzi1omUToxOzROdE09QDlOWkM+QzouPzZOW0RMVkJESj1RXUYzMzMzMzNYZUkrRjdfcU5ZaEoqSThvhVhUYEczMzMtQzd5kl0tQjhbaUt8mV8zMzNme1InUDkzMzN6lF4pTjePsmxkdFAmUjqYumx6kF40NDS//3+t231/UCEzMzMXeUOUuG48QDmDomRVYUdQXUZCSDwoTTk5OTScxHOPsmuNr2mAnWJ2kFxzjFpQW0RIUj8xNjRIQTNXQixQPSrn9Nmwz5CIqWZ9mmBwh1hziFZrgFVofFNea0pDZkUYdkIyZUJKV0IdbUAeaD9HTj8hXz0mVDotQDYuPzY2NzVCPjNqRyVySyTg8c3J6Km+4pe34I2m0nmlz3ihy3Zhck9pdk5ZZ0oxd0g+ckhMaEgsd0ZKW0RCXUMac0IlbUI+WUA/RzssRTcwOjVTSTRNRDNPRDFKPC5mRidROSTTlefwAAAALnRSTlMA8ulLv7CAVzYQ+/b29e/r5uPe2dHQy8nIw7+/tpSTfnt3cHBkYkVCQDU0LiIENS1mrgAAAVVJREFUOMutksV6wmAUROvu7u4yuSE4FKe4O4W6u8vbN6R0QfiBDbM9J5PcL9NQ/zRP1xCGO6rzlcUaBUM7VXHnUuNyZxU+IqhJbWupyAeDOHFZrK9NFXgbnQNHx5obbStbGAtAzL75Nt7LFvqNkuC+D9vYQpe+IBy6BD7TzBQIfyFeO8fiU6qioA4lGxl8g/RFQUF8mnHHgB//uXqI0Zqcz2elh70KAKd0lyp7SY9HJMF3h84KwPvCZ2YYJ6icHMd9XUqHxGUVW6Jg1Dl/8lyezgBNLEylwoLY7PnMFSrsSuAiwr9tlgizFsDs4ApxmAF/hE+3lwjrOkD5IQkHRsDy9Cj7H7uCHgrKifxbJ31kUj6KPhPgsxcKfIA7ymvlu1olA7CXtVMAUAjXqfJVTSb2ABggaomQljoYixNUJqVBaVLRM40yB7E93q0hTVTdNNHeUM/8An3qSs1TL+IqAAAAAElFTkSuQmCC'
+  const StopImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABoVBMVEUAAAA0NDQ1MzQzMzM1MzQzMzMzMzMzMzMzMzMzMzMwMDB2QHFgO15WOVQyMjIzMzM+NTo5MjkxMTE2NjZEREM+QTU+Pj47OzthczdFRURXPlBmeThrPldVNE5POEZUNkp6lThzPm9MOEozMzNGTjVYOktmPGJJUzU1NDVHQT09NTxQOU5OOExENj4zMzNCNT0yMjI0NDQ9MT0zMzMxMTFAQECEQmiEQn4zMzP///S+4k+k0Tw0NDRlLGG7u7R1P143NTU6NjeCgn1/QXlra2dvQ2ZyNWTWwM3AnrG3tq+YmJPmq4t3d3OBQWaVdGRtMmN8QGJnR1l6Y1ZVM1JcOlFmVk1WQE1tYklPO0ZHMEZ3gkP////w8Obdy9bKrr7ExLzHqbrAwLm3t7CwsKmoqKGmpp+meJKSkY2XkorZooV8fHiQVHaOUnWqgm9yP21wbWyHR2ybeWZ4OWWPcGFiOV9wYVhsXFRfRFReRFO2zFJrW1FiPFFnTVB0bUtONktXOkpKSklMQkdEOENpcUF4h0CUtj2GpzprgDhhdDdMVjU6PTRgAj6dAAAANnRSTlMASv1V+fr1qnU2E/3Oy5pmVj8iHP78+vn59/X19PLx7uvp5OPf2dXVxsW/uLOhkIthREM8KgR8wKg+AAABZklEQVQ4y+WRVXPCQBSFQwKF0kJpqbu7y+aGBHd3rbu7u+uvbiCh0Cn0uTP9XvbhfLP37lnsb6EkBL8L0AUj+dNhsRjodkIgzZMXQN0rfDDvFdA2nisXN9M0PKkSbzRdDTnHP9O0TqVSMS+sWPozH4gBwCMrJNgzDhhR9j0vbLRtIXfyhqgP3egfwFUFxFiWIFyZ3EToNnp+rUOwC0sURS1W1mR2mcBnphGLNqRF96suB5Vk3qGBrwn11jnEoYUpoDgMs+UlvDDkRjxXDNjveGHZYGJ6OEGhte6lcp/eCRsmXlgwwTrDvVjaYUMpLpltJ8CaXcNiAPB4aiV8z+kNQmY9sx8IXxyfhAOHep1Zxn/vKH7AGTqSNJr9Z5FY5NS/Q5Jkb7owRZPaa7FYvMEgmU3xYKZLYYM6SfwoK2/BsSwEIiEOuBBajXxslImUWA4EBf3FRWRRZ5+IqymXIpF3yyWEFPtXfALAN1jyg9S8JAAAAABJRU5ErkJggg=='
+
+  // ------------images------------
 
 	// eventemitter
 	const EVENT_EMITTER = new EventEmitter()
@@ -315,7 +314,7 @@
 	// 获取球的尺寸
 	function getBallSize() {
 		return (
-			(ContainerWidth - BottomHinder.WIDTH * 0 - Border.BORDER_SIZE * 2) / 9
+			(ContainerWidth - BORDER_SIZE * 2) / 9
 		)
 	}
 	// 唯一id
@@ -340,10 +339,6 @@
 		Body,
 		Events: MatterEvents,
 		Composite,
-		Composites,
-		Common,
-		MouseConstraint,
-		Mouse,
 		Bodies,
 	} = Matter
 
@@ -407,13 +402,8 @@
 	})
 
 	const ModalLayer = new Konva.Layer()
-	const ButtonLayer = new Konva.Layer()
-
-	ModalLayer.zIndex(2)
-	ButtonLayer.zIndex(1)
 
 	ModalStage.add(ModalLayer)
-	ModalStage.add(ButtonLayer)
 
 	// ------------konva------------
 
@@ -444,6 +434,8 @@
 					render: {
 						sprite: {
 							texture: BallImage,
+							xScale: size / 50,
+							yScale: size / 50
 						},
 					},
 					__internal_type__: "BALL",
@@ -477,8 +469,8 @@
 						position: { x },
 					} = ball
 					const index = Math.floor(
-						(x - Border.BORDER_SIZE) /
-							((ContainerWidth - Border.BORDER_SIZE * 2) / 9)
+						(x - BORDER_SIZE) /
+							((ContainerWidth - BORDER_SIZE * 2) / 9)
 					)
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GRID_LIGHTING, index, true)
 				}
@@ -536,6 +528,7 @@
 
 		instances = {}
 		static UNIT = 0.1
+		static SIZE = Math.max(0.1 * getBallSize(), 5)
 
 		disabled = false
 
@@ -551,8 +544,7 @@
 
 				const __internal_type__ = "HINDER"
 				const __internal_id__ = uuid("HINDER")
-				const unit = getBallSize()
-				const size = Hinder.UNIT * unit
+				const size = Hinder.SIZE
 				// ? 32是图片的尺寸
 				const scale = (size * 2) / 32
 				this.instances[__internal_id__] = Bodies.circle(
@@ -623,8 +615,6 @@
 			this.append()
 		}
 
-		static BORDER_SIZE = 10
-
 		BorderLeft
 		BorderTop
 		BorderRight
@@ -632,9 +622,9 @@
 
 		init() {
 			this.BorderLeft = Bodies.rectangle(
-				Border.BORDER_SIZE / 2,
+				BORDER_SIZE / 2,
 				ContainerHeight / 2,
-				Border.BORDER_SIZE,
+				BORDER_SIZE,
 				ContainerHeight,
 				{
 					isStatic: true,
@@ -644,9 +634,9 @@
 			)
 			this.BorderTop = Bodies.rectangle(
 				ContainerWidth / 2,
-				Border.BORDER_SIZE / 2,
+				BORDER_SIZE / 2,
 				ContainerWidth,
-				Border.BORDER_SIZE,
+				BORDER_SIZE,
 				{
 					isStatic: true,
 					render: { fillStyle: "#060a19" },
@@ -654,9 +644,9 @@
 				}
 			)
 			this.BorderRight = Bodies.rectangle(
-				ContainerWidth - Border.BORDER_SIZE / 2,
+				ContainerWidth - BORDER_SIZE / 2,
 				ContainerHeight / 2,
-				Border.BORDER_SIZE,
+				BORDER_SIZE,
 				ContainerHeight,
 				{
 					isStatic: true,
@@ -666,9 +656,9 @@
 			)
 			this.BorderBottom = Bodies.rectangle(
 				ContainerWidth / 2,
-				ContainerHeight - Border.BORDER_SIZE / 2,
+				ContainerHeight - BORDER_SIZE / 2,
 				ContainerWidth,
-				Border.BORDER_SIZE,
+				BORDER_SIZE,
 				{
 					isStatic: true,
 					render: { fillStyle: "#060a19" },
@@ -689,12 +679,16 @@
 
 	// 底部挡板
 	class BottomHinder {
+
+		static WIDTH = 5
+		static HEIGHT = getBallSize() * 2.2 
+		static Y = ContainerHeight - getBallSize() * 2.2 / 2 
+
 		constructor() {
 			this.create()
 			this.append()
 		}
 
-		static WIDTH = 5
 		instances = {}
 
 		create() {
@@ -702,17 +696,24 @@
 				const __internal_type__ = "BOTTOM_HINDER"
 				const __internal_id__ = uuid("BOTTOM_HINDER")
 				const unit = getBallSize()
-				const height = unit * 2.2
+				const height = BottomHinder.HEIGHT
+				const width = BottomHinder.WIDTH
 				this.instances[__internal_id__] = Bodies.rectangle(
-					unit * (index + 1) + Border.BORDER_SIZE,
+					unit * (index + 1) + BORDER_SIZE,
 					ContainerHeight - height / 2,
-					BottomHinder.WIDTH,
+					width,
 					height,
 					{
 						__internal_type__,
 						__internal_id__,
 						isStatic: true,
-						render: { fillStyle: "#060a19" },
+						render: { 
+              sprite: {
+                texture: BottomHinderImage,
+								yScale: height / 113,
+								xScale: Math.max(width / 58, 0.3) 
+              }
+            },
 					}
 				)
 			})
@@ -756,7 +757,7 @@
 			const leftX =
 				ContainerWidth / 2 -
 				(ballSize + TopHinder.WIDTH) / TopHinder.HINDER_HEIGHT_UNIT
-			const leftY = Border.BORDER_SIZE + height / 3
+			const leftY = BORDER_SIZE + height / 3
 			const rightX =
 				ContainerWidth / 2 +
 				(ballSize + TopHinder.WIDTH) / TopHinder.HINDER_HEIGHT_UNIT
@@ -770,7 +771,7 @@
 				{
 					__internal_center_top_pos__: {
 						x: leftX,
-						y: Border.BORDER_SIZE,
+						y: BORDER_SIZE,
 					},
 					isStatic: true,
 					render: {
@@ -788,7 +789,7 @@
 				{
 					__internal_center_top_pos__: {
 						x: rightX,
-						y: Border.BORDER_SIZE,
+						y: BORDER_SIZE,
 					},
 					isStatic: true,
 					render: {
@@ -871,7 +872,7 @@
 			const textHeight = height / 2
 			return {
 				x: ContainerWidth / 2 - width / 2,
-				y: startY + (LineConnect.COUNT + 1) * opHeight + textHeight,
+				y: startY + opHeight * 2 + textHeight,
 				width,
 				height,
 			}
@@ -889,7 +890,7 @@
 					// 文字
 					const text = new Konva.Text({
 						x: ContainerWidth / 2 - (width / 2) * 2,
-						y: startY + (LineConnect.COUNT + 1) * opHeight,
+						y: startY + opHeight * 2,
 						align: "center",
 						text: "开启幸运抽奖",
 						width: width * 2,
@@ -1106,7 +1107,7 @@
 		onGridLighting(index, needNext) {
 			this.stateChange(true, index)
 			this.lineConnectJudge(needNext)
-			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_SCORE, GAME_DATA.gridLightScore)
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_SCORE, GAME_DATA.gridLightScore + GAME_DATA.score)
 		}
 
 		eventBind() {
@@ -1143,9 +1144,9 @@
 			} = GridBlock.getTargetInfo()
 
 			return {
-				width: size * 2.5,
-				height: size / 1.5,
-				startX: blockStartX + size * 4,
+				width: size * 3,
+				height: size * 3,
+				startX: blockStartX + size * 3.5,
 				startY: blockStartY,
 			}
 		}
@@ -1166,19 +1167,63 @@
 
 			const { width, height, startX, startY } = LineConnect.getTargetInfo()
 
-			new Array(LineConnect.COUNT).fill(0).forEach((_, index) => {
-				loader(LINE_CONNECT_IMAGES[index], (image) => {
-					const instance = new Konva.Image({
-						x: startX,
-						y: startY + index * height,
-						width,
-						height,
-						image,
-					})
-					this.instances.push(instance)
-					Layer.add(instance)
-				})
+			const wrapper = new Konva.Group({
+				x: startX,
+				y: startY,
+				width,
+				height,
 			})
+			const commonConfig = {
+				stroke: 'gray',
+			}
+			const line1 = new Konva.Line({
+				points: [0, 0, width, 0],
+				...commonConfig,
+			})
+			const line2 = new Konva.Line({
+				points: [0, height / 2, width, height / 2],
+				...commonConfig,
+			})
+			const line3 = new Konva.Line({
+				points: [0, height, width, height],
+				...commonConfig,
+			})
+
+			const line4 = new Konva.Line({
+				points: [0, 0, 0, height],
+				...commonConfig,
+			})
+			const line5 = new Konva.Line({
+				points: [width / 2, 0, width / 2, height],
+				...commonConfig,
+			})
+			const line6 = new Konva.Line({
+				points: [width, 0, width, height],
+				...commonConfig,
+			})
+
+			const line7 = new Konva.Line({
+				points: [0, 0, width, height],
+				...commonConfig,
+			})
+			const line8 = new Konva.Line({
+				points: [width, 0, 0, height],
+				...commonConfig,
+			})
+
+			wrapper.add(line1)
+			wrapper.add(line2)
+			wrapper.add(line3)
+			wrapper.add(line4)
+			wrapper.add(line5)
+			wrapper.add(line6)
+			wrapper.add(line7)
+			wrapper.add(line8)
+
+			this.instances.push(line1, line2, line3, line4, line5, line6, line7, line8)
+
+
+			Layer.add(wrapper)
 		}
 
 		// 重置
@@ -1191,9 +1236,7 @@
 		}
 
 		stateChange(isNormal, index) {
-			loader(isNormal ? TEST_IMAGE : ANOTHER_TEST_IMAGE, (image) => {
-				this.instances[index].image(image)
-			})
+			this.instances[index].stroke(isNormal ? 'gray' : 'rgb(201, 233, 150)')
 		}
 
 		// 触发连线
@@ -1206,10 +1249,9 @@
 			!!this.connectCounter &&
 				EVENT_EMITTER.emit(
 					EVENT_EMITTER_NAME.ON_SCORE,
-					addCount * GAME_DATA.lineConnectScore[this.connectCounter - 1] || 0
+					addCount * GAME_DATA.lineConnectScore[this.connectCounter - 1] || 0 + GAME_DATA.score
 				)
-			// 是否需要触发ON_NEXT事件
-			!!needNext && EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_NEXT)
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_NEXT, !!needNext)
 		}
 
 		onDataGet() {
@@ -1239,23 +1281,24 @@
 	// 积分
 	class Score {
 		constructor() {
+			this.init()
 			this.eventBind()
 		}
 
 		instance
 
 		fillText() {
-			return `当前分数：${GAME_DATA.score}`
+			return `🏆 ：${GAME_DATA.currentStep + 1} 📝 ：${GAME_DATA.score}`
 		}
 
 		init() {
 			if (!this.instance) {
 				this.instance = new Konva.Text({
 					x: 0,
-					y: Border.BORDER_SIZE * 2,
+					y: BORDER_SIZE * 2,
 					align: "right",
 					text: this.fillText(),
-					width: ContainerWidth - Border.BORDER_SIZE * 2,
+					width: ContainerWidth - BORDER_SIZE * 2,
 					fontSize: ContainerWidth / 25,
 				})
 				Layer.add(this.instance)
@@ -1265,7 +1308,7 @@
 		}
 
 		onScore(score) {
-			GAME_DATA.score += score
+			GAME_DATA.score = score
 			StorageInstance.setValue({
 				score: GAME_DATA.score,
 			})
@@ -1276,7 +1319,7 @@
 		onLuckyDone({ value, type }) {
 			switch (type) {
 				case LUCKY_TYPE_MAP.SCORE:
-					this.onScore(value)
+					this.onScore(value + GAME_DATA.score)
 					break
 				case LUCKY_TYPE_MAP.GRID_LIGHT:
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GRID_LIGHTING, value)
@@ -1587,53 +1630,25 @@
 		}
 
 		guide = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		gameComplete = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		gameOver = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		gameStop = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		gameWin = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		nextBll = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 		luckyDone = {
-			images: [],
 			instance: null,
-			children: [],
-			tick: 1,
-			visible: false,
 		}
 
 		serveBallInstance = new ServeBall()
@@ -1665,7 +1680,7 @@
 			clearTimeout(this.serveBallTimer)
 			this.ServeBallButton.opacity(1)
 			this.serveBallTimer = setTimeout(() => {
-				this.ServeBallButton.opacity(0.5)
+				this.ServeBallButton.opacity(0.7)
 			}, 100)
 
 			this.serveBallInstance.serverBall()
@@ -1676,7 +1691,7 @@
 			clearTimeout(this.startTimer)
 			this.StartButton.opacity(1)
 			this.startTimer = setTimeout(() => {
-				this.StartButton.opacity(0.5)
+				this.StartButton.opacity(0.7)
 			}, 100)
 
 			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_STOP)
@@ -1685,11 +1700,11 @@
     // 跑马灯
     initCarousel() {
       const fontSize = ContainerWidth / 40
-      const width = ContainerWidth - Border.BORDER_SIZE * 2
+      const width = ContainerWidth - BORDER_SIZE * 2
       const height = fontSize * 2
       const wrapper = new Konva.Group({
-        x: Border.BORDER_SIZE,
-				y: Border.BORDER_SIZE,
+        x: BORDER_SIZE,
+				y: BORDER_SIZE,
 				width,
 				height,
       })
@@ -1717,45 +1732,111 @@
 
 		// 按钮
 		initButtonGroup() {
-			const size = getBallSize() * 2
+      const fontSize = ContainerWidth / 30
+			const size = getBallSize() * 1.5
 			const { startY, height: opHeight } = LineConnect.getTargetInfo()
-			const y = startY + (LineConnect.COUNT + 1) * opHeight
+			const eY = BottomHinder.Y - BottomHinder.HEIGHT / 2
+			const sY = startY + opHeight
+			const y = (eY - sY) / 2 + sY
+      this.ServeBallButton = new Konva.Group({
+        width: size,
+        height: size,
+        x: ContainerWidth / 5 - size / 2,
+        y,
+        opacity: 0.7,
+      })
+      this.ServeBallButton.on("click", this.handleServeBall)
+			this.ServeBallButton.on("tap", this.handleServeBall)
 
-			loader(Tree, (image) => {
-				this.ServeBallButton = new Konva.Image({
+      this.StartButton = new Konva.Group({
+        width: size,
+        height: size,
+        x: (ContainerWidth / 5) * 4 - size / 2,
+        y,
+        opacity: 0.7,
+      })
+      this.StartButton.on("click", this.handleStop)
+			this.StartButton.on("tap", this.handleStop)
+
+			loader(ServeBallImage, (image, { width, height }) => {
+				const realWidth = Math.min(getBallSize(), 32) 
+				const realHeight = height * realWidth / width 
+				const icon = new Konva.Image({
+					width: realWidth,
+					height: realHeight,
+					x: size - realWidth / 2,
+					y: 0,
+					image,
+				})
+        const text = new Konva.Text({
+          fontSize,
+          width: size,
+          height: size,
+          align: 'center',
+          verticalAlign: 'middle',
+          text: '发射',
+          x: 0,
+          y: 0,
+        })
+				const background = new Konva.Circle({
+					fill: 'rgb(201, 233, 150)',
+					x: size / 2,
+					y:  size / 2,
 					width: size,
 					height: size,
-					x: ContainerWidth / 5 - size / 2,
-					y,
-					image,
-					opacity: 0.5,
 				})
-				this.ServeBallButton.on("click", this.handleServeBall)
-				ButtonLayer.add(this.ServeBallButton)
+				
+				this.ServeBallButton.add(background)
+        this.ServeBallButton.add(icon)
+        this.ServeBallButton.add(text)
+				ModalLayer.add(this.ServeBallButton)
 			})
-			loader(Tree, (image) => {
-				this.StartButton = new Konva.Image({
+			loader(StopImage, (image, { width, height }) => {
+				const realWidth = Math.min(getBallSize(), 32) 
+				const realHeight = height * realWidth / width 
+				const icon = new Konva.Image({
+					width: realWidth,
+					height: realHeight,
+					x: size - realWidth / 2,
+					y: 0,
+					image,
+				})
+        const text = new Konva.Text({
+          fontSize,
+          width: size,
+          height: size,
+          align: 'center',
+          verticalAlign: 'middle',
+          text: '暂停',
+          x: 0,
+          y: 0,
+        })
+				const background = new Konva.Circle({
+					fill: 'rgb(201, 233, 150)',
+					x: size / 2,
+					y: size / 2,
 					width: size,
 					height: size,
-					x: (ContainerWidth / 5) * 4 - size / 2,
-					y,
-					image,
-					opacity: 0.5,
 				})
-				this.StartButton.on("click", this.handleStop)
-				ButtonLayer.add(this.StartButton)
+
+				this.StartButton.add(background)
+				this.StartButton.add(icon)
+        this.StartButton.add(text)
+				ModalLayer.add(this.StartButton)
 			})
 		}
 
 		// 提示框的group
 		generateWrapper(modalOptions={}) {
-      const { action, children=[], fruitIcon } = modalOptions
+      const { action, children={}, fruitIcon } = modalOptions
+			let title 
+			let content
 			const wrapper = new Konva.Group({
 				x: 0,
 				y: 0,
 				width: ContainerWidth,
 				height: ContainerHeight,
-				visible: true,
+				visible: false,
 			})
 			const mask = new Konva.Rect({
 				width: ContainerWidth,
@@ -1772,33 +1853,85 @@
 				...modalSizeInfo,
         ...this.modalOptions,
 			})
-      if(action) modal.on('click', action)
-      children.forEach(child => modal.add(child))
+      if(action) {
+				modal.on('click', action)
+				modal.on('tap', action)
+			}
+
+			const getText = (content) => typeof content === 'function' ? content() : content 
+
+			const update = () => {
+				if(typeof children.title === 'function') title.text(getText(children.text))
+				if(typeof children.content === 'function') content.text(getText(children.content))
+			}
+
+			if(children.title) {
+				const fontSize = ContainerWidth / 25
+				title = new Konva.Text({
+					width: modalSizeInfo.width,
+					text: getText(children.title),
+					align: 'center',
+					verticalAlign: 'middle',
+					fontSize,
+					height: fontSize * 2,
+					x: modalSizeInfo.x,
+					y: modalSizeInfo.y,
+					fillStyle: '#000'
+				})
+			}
+			if(children.content) {
+				const fontSize = ContainerWidth / 35
+				content = new Konva.Text({
+					width: modalSizeInfo.width,
+					text: getText(children.content),
+					align: 'center',
+					verticalAlign: 'middle',
+					fontSize,
+					height: modalSizeInfo.height - ContainerWidth / 20 * 4,
+					x: modalSizeInfo.x,
+					y: modalSizeInfo.y + ContainerWidth / 20 * 2,
+					fillStyle: '#000'
+				})
+			}
+
       // 水果图标
       loader(fruitIcon, (image, { width, height }) => {
+				const realWidth = getBallSize()
+				const realHeight = height * realWidth / width 
         const icon = new Konva.Image({
-          width,
-          height,
+          width: realWidth,
+          height: realHeight,
           image,
-          x: modalSizeInfo.x + modalSizeInfo.width - width / 1.5, 
-          y: modalSizeInfo.y - height / 3
+          x: modalSizeInfo.x + modalSizeInfo.width - realWidth / 1.5, 
+          y: modalSizeInfo.y - realHeight / 3
         })
         wrapper.add(icon)
       })
 
 			wrapper.add(mask)
       wrapper.add(modal)
-			return wrapper
+			title && wrapper.add(title)
+			content && wrapper.add(content)
+			return {
+				instance: wrapper,
+				title: title,
+				content: content,
+				update
+			}
 		}
 
 		// 游戏通过可以点击重玩
 		initGameComplete() {
-			this.gameComplete.instance = this.generateWrapper({
+			this.gameComplete = this.generateWrapper({
         action: () => {
           GameInstance.gameRePlay()
           this.gameComplete.instance.visible(false)
         },
-        fruitIcon: GRID_IMAGES_ACTIVE[1]
+        fruitIcon: GRID_IMAGES_ACTIVE[1],
+				children: {
+					title: '恭喜通关',
+					content: '点击重玩~'
+				}
       })
 			ModalLayer.add(this.gameComplete.instance)
 		}
@@ -1806,50 +1939,65 @@
 		// 游戏失败可以点击重玩
 		// 从本关开始且积分不清0
 		initGameOver() {
-			this.gameOver.instance = this.generateWrapper({
+			this.gameOver = this.generateWrapper({
         action: () => {
           GameInstance.gameRePlay()
           this.gameOver.instance.visible(false)
         },
-        fruitIcon: GRID_IMAGES_ACTIVE[2]
+        fruitIcon: GRID_IMAGES_ACTIVE[2],
+				children: {
+					title: '失败',
+					content: () => '点击继续~'
+				}
       })
 			ModalLayer.add(this.gameOver.instance)
 		}
 
 		// 游戏暂停可以重新继续
 		initGameStop() {
-			this.gameStop.instance = this.generateWrapper({
+			this.gameStop = this.generateWrapper({
         action: () => {
           EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
           this.gameStop.instance.visible(false)
         },
-        fruitIcon: GRID_IMAGES_ACTIVE[3]
+        fruitIcon: GRID_IMAGES_ACTIVE[3],
+				children: {
+					title: '暂停',
+					content: '点击继续~'
+				}
       })
 			ModalLayer.add(this.gameStop.instance)
 		}
 
 		initGameWin() {
-			this.gameWin.instance = this.generateWrapper({
-        fruitIcon: GRID_IMAGES_ACTIVE[4]
+			this.gameWin = this.generateWrapper({
+        fruitIcon: GRID_IMAGES_ACTIVE[4],
+				children: {
+					title: '恭喜过关',
+					content: '即将进入下一关~'
+				}
       })
 			ModalLayer.add(this.gameWin.instance)
 		}
 
 		initNextBall() {
-			this.nextBll.instance = this.generateWrapper({
+			this.nextBll = this.generateWrapper({
         fruitIcon: GRID_IMAGES_ACTIVE[5]
       })
 			ModalLayer.add(this.nextBll.instance)
 		}
 
 		initLuckyDone() {
-			this.luckyDone.instance = this.generateWrapper({
+			this.luckyDone = this.generateWrapper({
         fruitIcon: GRID_IMAGES_ACTIVE[6]
       })
 			ModalLayer.add(this.luckyDone.instance)
 		}
 
 		init() {
+
+			this.initButtonGroup()
+
 			this.initGameComplete()
 			this.initGameOver()
 			this.initGameStop()
@@ -1857,7 +2005,6 @@
 			this.initNextBall()
 			this.initLuckyDone()
 
-			this.initButtonGroup()
       // this.initCarousel()
 		}
 
@@ -1872,16 +2019,19 @@
 		// 游戏通关
 		onGameComplete() {
 			GameInstance.gameInfoReset()
+			this.gameComplete.update()
 			this.gameComplete.instance.visible(true)
 		}
 
 		// 游戏结束
 		onGameOver() {
+			this.gameComplete.update()
 			this.gameOver.instance.visible(true)
 		}
 
 		// 游戏暂停
 		onGameStop() {
+			this.gameComplete.update()
 			this.gameStop.instance.visible(true)
 		}
 
@@ -1891,6 +2041,7 @@
 			if (value.currentStep + 1 === GAME_DATA.step.length) {
 				this.onGameComplete()
 			} else {
+				this.gameComplete.update()
 				this.gameWin.instance.visible(true)
 				const newStep = value.currentStep + 1
 				setTimeout(() => {
@@ -1900,7 +2051,7 @@
 					GAME_DATA.currentStep = newStep
 					this.gameWin.instance.visible(false)
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_RESET)
-				}, 1000)
+				}, 2000)
 			}
 		}
 
@@ -1911,12 +2062,12 @@
 		}
 
 		// 下一步
-		onNext() {
+		onNext(needNext) {
 			// 判断一下是否游戏可以下一关
 			GAME_DATA.step[GAME_DATA.currentStep].isWin().then((isWin) => {
 				if (isWin) {
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_WIN)
-				} else {
+				} else if(needNext) {
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_NEXT_BALL)
 				}
 			})
@@ -1986,6 +2137,7 @@
 	class Game {
 		constructor() {
 			this.eventBind()
+			this.gameInfoInit()
 		}
 
 		animation
