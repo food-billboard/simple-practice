@@ -19,6 +19,7 @@ import jdCarousel from './images/jd-carousel.png'
 import danmu from './images/danmu.png'
 import widthCarousel from './images/width-carousel.png'
 import minesweeper from './images/mine-sweeper.png'
+import fuitAlliance from './images/fruit-alliance.png'
 
 const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
@@ -125,14 +126,14 @@ export const PACKAGE_MAP = [
     code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/summary'
   },
   {
-    label: '西游联盟',
+    label: '水果联盟',
     description: '游戏厅里看到的一款有趣的投球连线游戏',
-    date: '2099-12-31',
-    image: BASE_ICON,
-    key: 'western-travel-alliance',
-    url: internalUrl('western-travel-alliance'),
+    date: '2023-02-08',
+    image: fuitAlliance,
+    key: 'fruit-alliance',
+    url: internalUrl('fruit-alliance'),
     development: true,
-    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/western-travel-alliance'
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/fruit-alliance'
   },
   {
     label: '别踩白块儿',
