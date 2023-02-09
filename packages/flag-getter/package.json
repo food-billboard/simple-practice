@@ -1,21 +1,25 @@
 {
   "name": "flag-getter",
+  "private": true,
   "version": "0.0.0",
-  "homepage": ".",
-  "description": "新年flag收集小游戏",
+  "type": "module",
   "scripts": {
-    "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "preview": "vite preview"
   },
-  "license": "MIT",
   "devDependencies": {
-    "typescript": "^4.9.5",
-    "vite": "^4.1.1",
-    "vite-plugin-solid": "^2.5.0"
+    "@sveltejs/vite-plugin-svelte": "^2.0.2",
+    "svelte": "^3.55.1",
+    "vite": "^4.1.0"
   },
   "dependencies": {
-    "solid-js": "^1.6.10"
+    "@smui/button": "^7.0.0-beta.0",
+    "@smui/dialog": "^7.0.0-beta.0",
+    "@smui/fab": "^7.0.0-beta.0",
+    "@smui/icon-button": "^7.0.0-beta.0",
+    "@smui/radio": "^7.0.0-beta.0",
+    "@smui/snackbar": "^7.0.0-beta.0",
+    "@smui/textfield": "^7.0.0-beta.0"
   }
 }
