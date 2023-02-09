@@ -1,0 +1,50 @@
+#flag-getter-caontainer {
+  width: 60vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 2px solid black;
+}
+#flag-getter-starter {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 12px;
+}
+
+#flag-getter-starter h4 {
+  font-size: 24px;
+}
+.flag-getter-word-cloud {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.flag-getter-word-cloud div {
+  text-align: center;
+  padding: 0 .1em;
+  animation: zoomIn;
+  cursor: pointer;
+  transform-origin: center center;
+  transition: transform .2s;
+}
+.flag-getter-word-cloud div:hover {
+  transform: scale(1.2);
+  font-weight: bold;
+}
+
+#flag-getter-main {
+  width: 100%;
+  height: 100%;
+}
+.flag-getter-score {
+  position: absolute;
+  z-index: 1;
+  right: 1em;
+  top: 1em;
+}
