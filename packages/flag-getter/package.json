@@ -13,6 +13,8 @@
     "debounce": "^1.2.1",
     "eventemitter3": "^5.0.0",
     "matter-js": "^0.18.0",
+    "pathseg": "^1.2.1",
+    "poly-decomp": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rsuite": "^5.26.1"
