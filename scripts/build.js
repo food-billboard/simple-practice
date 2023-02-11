@@ -55,7 +55,8 @@ new Promise((resolve, reject) => {
 .then(() => {
   return fsPromise.readdir(packagesDirname)
 })
-.then(async (dirList) => {
+.then(async (_dirList) => {
+  const dirList = _dirList.filter(dir => !dir.startsWith('_'))
   console.log(chalk.green(`read the packages dir ${dirList.join(',')}`))
   for(let i = 0; i < dirList.length; i ++) {
     const dir = dirList[i]
