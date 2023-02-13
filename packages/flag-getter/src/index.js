@@ -1,3 +1,8 @@
+/**
+ * 新年falg收集小游戏
+ * flappy bird小游戏的魔改
+ */
+
 (function () {
 	// constants
 	const Container = document.querySelector("#app")
@@ -222,6 +227,81 @@
 
 	// ------------event------------
 
+
+	// 祝福语
+	class Text {
+
+		constructor(text) {
+			this.init(text)
+			this.eventBind()
+		}
+
+		instance 
+
+		position = {
+			x: 0,
+			y: 0,
+			unit: 1
+		}
+
+		timing = {
+			value: 1,
+			current: 0 
+		}
+
+		init(text) {
+			const unit = random(2, 1.1)
+			this.position = {
+				unit,
+				x: ContainerWidth,
+				y: random(ContainerHeight - 50 - Bird.HEIGHT, Bird.HEIGHT)
+			}
+			let realText = text 
+			if(!text) {
+				realText = '送上我的新年祝福'
+			}else if(realText.length > 4) {
+				realText = text 
+			}else {
+				realText = `祝你新的一年--${text}`
+			}
+			 
+			this.instance = new Konva.Text({
+				x: this.position.x,
+				y: this.position.y,
+				text: realText,
+				fill: 'white',
+				fontStyle: 'bold'
+			})
+			InteractiveLayer.add(this.instance)
+		}
+
+		animation = () => {
+			// 动画执行
+			if(this.timing.current === 0 && this.instance) {
+				this.position.x -= this.position.unit
+				this.instance.x(this.position.x)
+	
+				 if(this.position.x + 48 <= 0) {
+					this.instance.destroy()
+					this.eventUnBind()
+				}
+			}
+
+			this.timing.current ++ 
+			this.timing.current %= this.timing.value
+
+		}	
+
+		eventBind() {
+			EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_COLUMN_MOVE, this.animation, this)
+		}
+
+		eventUnBind() {
+			EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_COLUMN_MOVE, this.animation)
+		}
+
+	}
+
 	// 分数
 	class Score {
 
@@ -230,7 +310,6 @@
 			this.eventBind()
 		}
 
-		instance 
 		scoreInstances = []
 		restartInstance 
 		chartContext = ScoreContainer.getContext('2d')
@@ -271,7 +350,17 @@
 
 		update(text) {
 			this.updateScore()
-			this.updateChart(text)
+			// this.updateChart(text)
+			this.updateText(text)
+		}
+
+		updateText(text) {
+			new Text(text)
+			if(!text) {
+				setTimeout(() => {
+					new Text('建议在PC端游玩~')
+				}, 100)
+			}
 		}
 
 		updateChart(text) {
@@ -452,15 +541,20 @@
 
 		onMouseMove = (e) => {
 			if(this.disabled || !this.instance) return
-			const clienX = e.clientX
+			let clientX
+			if(IS_MOBILE) {
+				clientX = e.touches[0].clientX
+			}else {
+				clientX = e.clientX
+			}
 			const prevClientX = this.prevClientX
-			this.prevClientX = clienX
+			this.prevClientX = clientX
 			if(prevClientX === -999) {
 				return 
 			}
 
 			const prevInstanceY = this.instance.y()
-			const rest = clienX - prevClientX
+			const rest = clientX - prevClientX
 			const unit = 1 * MouseScale
 			const move = rest / unit
 			let newY = prevInstanceY + move
@@ -509,7 +603,7 @@
 		}
 
 		eventBind() {
-			window.addEventListener('mousemove', this.onMouseMove)
+			window.addEventListener(IS_MOBILE ? 'touchmove' : 'mousemove', this.onMouseMove)
 
 			EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_PLAY, this.onGamePlay, this)
 			EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_OVER, this.onGameOver, this)
@@ -517,7 +611,7 @@
 		}
 
 		eventUnBind() {
-			window.removeEventListener('mousemove', this.onMouseMove)
+			window.removeEventListener(IS_MOBILE ? 'touchmove' : 'mousemove', this.onMouseMove)
 
 			EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_PLAY, this.onGamePlay)
 			EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_OVER, this.onGameOver)
@@ -641,8 +735,8 @@
 
 			const realContainerHeight = ContainerHeight - Background.height
 
-			const max = realContainerHeight / 2 - Bird.HEIGHT * .5
-			const min = realContainerHeight / 2 - Bird.HEIGHT * 4
+			const max = realContainerHeight - Bird.HEIGHT * 4
+			const min = Bird.HEIGHT * 4
 			this.position.x = ContainerWidth + this.width * 2.5
 
 			const height = random(max, min)
@@ -664,8 +758,8 @@
 					})
 					Layer.add(this.instanceTop)
 				})
-				if(height <= realContainerHeight - Bird.HEIGHT * 4) {
-					this.bottomHeight = random(realContainerHeight - height - Bird.HEIGHT * 1.5, Bird.HEIGHT * 3)
+				if(height < (max - Bird.HEIGHT * 1.5)) {
+					this.bottomHeight = random(realContainerHeight - height - Bird.HEIGHT * 1.5, min)
 					loader(COLUMN_BOTTOM_IMAGE, (image, { width, height }) => {
 						this.position.y = realContainerHeight - this.bottomHeight
 						this.instanceBottom = new Konva.Image({
@@ -703,8 +797,8 @@
 					})
 					Layer.add(this.instanceBottom)
 				})
-				if(height <= realContainerHeight - Bird.HEIGHT * 4) {
-					this.topHeight = random(realContainerHeight - height - Bird.HEIGHT, Bird.HEIGHT * 3)
+				if(height <= max - Bird.HEIGHT * 1.5) {
+					this.topHeight = random(realContainerHeight - height - Bird.HEIGHT * 1.5, min)
 					loader(COLUMN_TOP_IMAGE, (image, { width: columnWidth, height: columnHeight }) => {
 						this.instanceTop = new Konva.Image({
 							x: this.position.x,
