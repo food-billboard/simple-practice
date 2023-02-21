@@ -17,11 +17,19 @@ export default class DataBus {
   }
 
   reset() {
+    // 难度
+    this.difficulty = 0
+    // 介绍页还是游戏页
+    this.gameStep = 1
+    // 游戏时间
     this.gameTime = 0 
     this.frame = 0
+    // 分数
     this.score = 0
+    // 数独块
     this.blocks = []
     this.animations = []
+    // 是否游戏结束
     this.gameOver = false
   }
 

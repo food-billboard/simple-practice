@@ -1,60 +1,39 @@
-import Sprite from '../base/sprite'
+import cax from '../libs/cax'
 
-const screenWidth = window.innerWidth
-const screenHeight = window.innerHeight
+const info = wx.getSystemInfoSync()
+const screenWidth = info.windowWidth
+const screenHeight = info.windowHeight
 
 const BG_IMG_SRC = 'images/bg.jpg'
 const BG_WIDTH = 512
 const BG_HEIGHT = 512
 
-/**
- * 游戏背景类
- * 提供update和render函数实现无限滚动的背景功能
- */
-export default class BackGround extends Sprite {
-  constructor(ctx) {
-    super(BG_IMG_SRC, BG_WIDTH, BG_HEIGHT)
+export default class BackGround extends cax.Group {
+  constructor () {
+    super()
 
-    this.top = 0
+    this.bgUp = new cax.Bitmap(BG_IMG_SRC)
+    this.bgDown = new cax.Bitmap(BG_IMG_SRC)
 
-    this.render(ctx)
+    this.bgDown.y = screenHeight * -1
+    this.bgUp.y = -1
+
+    this.bgDown.scaleX = this.bgUp.scaleX = screenWidth / BG_WIDTH
+    this.bgDown.scaleY = this.bgUp.scaleY = screenHeight / BG_HEIGHT
+
+    this.add(this.bgUp, this.bgDown)
   }
 
-  update() {
-    this.top += 2
+  update () {
+    this.bgDown.y += 2
+    this.bgUp.y += 2
 
-    if (this.top >= screenHeight) this.top = 0
-  }
+    if (this.bgUp.y >= screenHeight) {
+      this.bgUp.y = this.bgDown.y - screenHeight
+    }
 
-  /**
-   * 背景图重绘函数
-   * 绘制两张图片，两张图片大小和屏幕一致
-   * 第一张漏出高度为top部分，其余的隐藏在屏幕上面
-   * 第二张补全除了top高度之外的部分，其余的隐藏在屏幕下面
-   */
-  render(ctx) {
-    ctx.drawImage(
-      this.img,
-      0,
-      0,
-      this.width,
-      this.height,
-      0,
-      -screenHeight + this.top,
-      screenWidth,
-      screenHeight
-    )
-
-    ctx.drawImage(
-      this.img,
-      0,
-      0,
-      this.width,
-      this.height,
-      0,
-      this.top,
-      screenWidth,
-      screenHeight
-    )
+    if (this.bgDown.y >= screenHeight) {
+      this.bgDown.y = this.bgUp.y - screenHeight
+    }
   }
 }
