@@ -14,6 +14,8 @@
 /packages/**/node_modules
 /packages/**/build 
 /packages/**/dist 
+/packages/**/.umi 
+/packages/**/.umi-production
 
 # misc
 .DS_Store
