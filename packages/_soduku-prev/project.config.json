@@ -1,5 +1,5 @@
 {
-  "description": "flappy bird",
+  "description": "数独小游戏",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -41,7 +41,7 @@
   "compileType": "game",
   "libVersion": "2.20.1",
   "appid": "wx3babe9b23d7be47b",
-  "projectname": "flappy-bird",
+  "projectname": "_soduku",
   "packOptions": {
     "ignore": [
       {
