@@ -12,7 +12,7 @@ const BIRD_IMAGE = "images/bird.png"
 
 const BIRD_BASE_HEIGHT = 32
 const BIRD_BASE_WIDTH = 46
-const SCALE = ContainerWidth / 375
+const SCALE = ContainerWidth / 750
 export const BIRD_HEIGHT = BIRD_BASE_HEIGHT * SCALE
 export const BIRD_WIDTH = BIRD_BASE_WIDTH * SCALE
 export const BIRD_START_X = 100
@@ -28,8 +28,8 @@ export default class Bird extends cax.Group {
 	instance
 
 	defaultPosition = {
-		x: 100,
-		y: ContainerHeight / 2 - BIRD_HEIGHT / 2,
+		x: ContainerWidth / 2,
+		y: ContainerHeight / 2,
 	}
 
 	timing = {
@@ -41,7 +41,7 @@ export default class Bird extends cax.Group {
 		current: "bottom",
 		top: {
 			g: 5,
-			gDefault: 6,
+			gDefault: 5,
 			unit: -0.3,
 			angleLimit: -30,
 			angleUnit: -10,
@@ -55,6 +55,7 @@ export default class Bird extends cax.Group {
 		},
 	}
 
+	starting = false 
 	disabled = true
 	selfDie = false 
 
@@ -77,25 +78,39 @@ export default class Bird extends cax.Group {
 		})
 		this.instance.x = this.defaultPosition.x
 		this.instance.y = this.defaultPosition.y
-		console.log(this.instance, 222)
 		this.instance.originX = BIRD_BASE_WIDTH / 2
 		this.instance.originY = BIRD_BASE_HEIGHT / 2
 		this.instance.scaleX = this.instance.scaleY = SCALE
 		this.add(this.instance)
 	}
 
-	onClick = () => {
+	handleTop() {
 		this.moveActionInfo.top.g = this.moveActionInfo.top.gDefault
 		this.moveActionInfo.current = "top"
 	}
 
+	onClick = () => {
+		if(this.disabled && this.starting) return 
+		if(!this.starting) {
+			this.handleTop()
+			this.starting = true 
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_PLAY)
+		}else {
+			this.handleTop()
+		}
+	}
+
+	onGamePlayBefore() {
+		this.starting = false  
+		this.selfDie = false 
+		this.instance.x = this.defaultPosition.x
+		this.instance.y = this.defaultPosition.y
+		this.instance.rotation = 0 
+		this.instance.gotoAndPlay("normal")
+	}
+
 	onGamePlay() {
 		this.disabled = false
-		this.selfDie = false 
-		if (this.instance) {
-			this.instance.x = this.defaultPosition.x
-			this.instance.y = this.defaultPosition.y
-		}
 	}
 
 	onGameOver() {
@@ -106,8 +121,8 @@ export default class Bird extends cax.Group {
 	onColumnKnock(objects) {
 		if(this.disabled) return 
 		const target = {
-			x: this.instance.x,
-			y: this.instance.y,
+			x: this.instance.x - BIRD_WIDTH / 2,
+			y: this.instance.y - BIRD_HEIGHT / 2,
 			width: BIRD_WIDTH,
 			height: BIRD_HEIGHT,
 		}
@@ -120,16 +135,22 @@ export default class Bird extends cax.Group {
 			})
 		})
 
-		if (isKnock && false) {
-			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER)
+		if (isKnock) {
+			this.onGameOver()
+			this.moveActionInfo.current = 'bottom'
+			this.moveActionInfo.bottom.g = 0
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER_BEFORE)
 		}
 	}
 
 	onAnimation() {
+
+		if(!this.starting) return 
+
 		if (this.timing.current === 0) {
 			// 上升
 			if (this.moveActionInfo.current === "top") {
-				if (this.instance.y > 0) {
+				if (this.instance.y > BIRD_HEIGHT / 2) {
 					this.instance.y -= this.moveActionInfo.top.g
 				}
 				if (this.instance.rotation > this.moveActionInfo.top.angleLimit) {
@@ -141,7 +162,7 @@ export default class Bird extends cax.Group {
 					this.moveActionInfo.bottom.g = 0
 				}
 			} else {
-				if (this.instance.y + BIRD_HEIGHT >= BACKGROUND_NORMAL_HEIGHT) {
+				if (this.instance.y + BIRD_HEIGHT / 2 >= BACKGROUND_NORMAL_HEIGHT) {
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER)
 					return
 				}
@@ -161,6 +182,11 @@ export default class Bird extends cax.Group {
 	eventBind() {
 		wx.onTouchStart(this.onClick)
 
+		EVENT_EMITTER.addListener(
+			EVENT_EMITTER_NAME.ON_GAME_PLAY_BEFORE,
+			this.onGamePlayBefore,
+			this
+		)
 		EVENT_EMITTER.addListener(
 			EVENT_EMITTER_NAME.ON_ANIMATION,
 			this.onAnimation,
@@ -186,6 +212,10 @@ export default class Bird extends cax.Group {
 	eventUnBind() {
 		wx.offTouchStart(this.onClick)
 
+		EVENT_EMITTER.removeListener(
+			EVENT_EMITTER_NAME.ON_GAME_PLAY_BEFORE,
+			this.onGamePlayBefore
+		)
 		EVENT_EMITTER.removeListener(
 			EVENT_EMITTER_NAME.ON_GAME_PLAY,
 			this.onGamePlay

@@ -5,15 +5,21 @@ export const BASE_STAGE = new cax.Stage()
 
 const info = wx.getSystemInfoSync()
 export const ContainerWidth = info.windowWidth
-export const ContainerHeight = info.windowHeight
+const _ContainerHeight = info.windowHeight
+export const BANNER_HEIGHT = _ContainerHeight * 0.2 
+export const ContainerHeight = _ContainerHeight * 0.8
 
 export const EVENT_EMITTER = new EventEmitter()
 
 export const EVENT_EMITTER_NAME = {
 	// 游戏结束
 	ON_GAME_OVER: "ON_GAME_OVER",
+	// 游戏结算
+	ON_GAME_OVER_BEFORE: "ON_GAME_OVER_BEFORE",
 	// 游戏开始
 	ON_GAME_PLAY: "ON_GAME_PLAY",
+	// 游戏开始前
+	ON_GAME_PLAY_BEFORE: "ON_GAME_PLAY_BEFORE",
 	// 动画
 	ON_ANIMATION: "ON_ANIMATION",
 	// 柱子移动

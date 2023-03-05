@@ -7,7 +7,7 @@ import { random, uuid } from '../utils'
 const COLUMN_BOTTOM_IMAGE = 'images/pipe.png'
 const COLUMN_TOP_IMAGE = 'images/pipe-top.png'
 
-const MIN_PIPE_HEIGHT = BIRD_HEIGHT * 6
+const MIN_PIPE_HEIGHT = BIRD_HEIGHT * 5
 const MIN_PIPE_RANGE = BIRD_HEIGHT * 3
 const PIPE_WIDTH = 138
 const PIPE_HEIGHT = 793
@@ -23,6 +23,7 @@ class ColumnObject {
 		this.isShow = isShow
 		this.add = add 
 		this.init()
+		this.addChild()
 		this.eventBind()
 		return this
 	}
@@ -47,6 +48,9 @@ class ColumnObject {
 	scoreInfo = {}
 
 	init() {
+		this.isShow = false 
+		this.scored = false 
+
 		this.scoreInfo = {
 			value: 1,
 			text: FLAG_MAP[Math.floor(Math.random() * FLAG_MAP.length)],
@@ -95,6 +99,9 @@ class ColumnObject {
 			}
 		}
 
+	}
+
+	addChild() {
 		if(this.instanceTop) {
 			this.instanceTop.scaleX = this.instanceTop.scaleY = PIPE_SCALE
 			this.add(this.instanceTop)
@@ -103,7 +110,6 @@ class ColumnObject {
 			this.instanceBottom.scaleX = this.instanceBottom.scaleY = PIPE_SCALE
 			this.add(this.instanceBottom)
 		}
-
 	}
 
 	animation = () => {
@@ -143,7 +149,7 @@ class ColumnObject {
 		// 隐藏
 		else if (this.position.x + SCALE_PIPE_WIDTH <= 0) {
 			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_COLUMN_HIDDEN, this.id)
-			this.instanceTop && this.instanceTop.destroy()
+			this.instanceTop && this.instanceTop.destroy() 
 			this.instanceBottom && this.instanceBottom.destroy()
 			this.eventUnBind()
 		}
@@ -182,10 +188,12 @@ export default class ColumnFactory extends cax.Group {
 		value: 1,
 		current: 0,
 	}
+	starting = false 
 
 	instances = {}
 
 	animation() {
+		if(!this.starting) return 
 		// 动画执行
 		if (this.timing.current === 0) {
 			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_COLUMN_MOVE)
@@ -212,6 +220,10 @@ export default class ColumnFactory extends cax.Group {
 		this.onColumnShow()
 	}
 
+	onGamePlayBefore() {
+		this.starting = true 
+	}
+
 	onDestroy() {
 		Object.values(this.instances).forEach((instance) => {
 			instance.onDestroy()
@@ -220,6 +232,11 @@ export default class ColumnFactory extends cax.Group {
 	}
 
 	eventBind() {
+		EVENT_EMITTER.addListener(
+			EVENT_EMITTER_NAME.ON_GAME_PLAY_BEFORE,
+			this.onGamePlayBefore,
+			this
+		)
 		EVENT_EMITTER.addListener(
 			EVENT_EMITTER_NAME.ON_DESTROY,
 			this.onDestroy,
@@ -248,6 +265,10 @@ export default class ColumnFactory extends cax.Group {
 	}
 
 	eventUnBind() {
+		EVENT_EMITTER.removeListener(
+			EVENT_EMITTER_NAME.ON_GAME_PLAY_BEFORE,
+			this.onGamePlayBefore
+		)
 		EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_DESTROY, this.onDestroy)
 		EVENT_EMITTER.removeListener(
 			EVENT_EMITTER_NAME.ON_GAME_PLAY,

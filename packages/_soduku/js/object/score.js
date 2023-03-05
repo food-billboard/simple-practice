@@ -1,7 +1,6 @@
 import cax from '../libs/cax'
 import { ContainerWidth, ContainerHeight, EVENT_EMITTER, EVENT_EMITTER_NAME, GAME_DATA } from '../databus'
 // import Text from './text'
-import { BIRD_HEIGHT } from './bird'
 
 const SCORE_IMAGE = new Array(10).fill(0).map((_, index) => `images/${index}.png`)
 const RESTART = 'images/restart.png'
@@ -42,15 +41,20 @@ export default class Score extends cax.Group {
 		this.reset()
 	}
 
-	reset() {
+	destroyScore() {
 		const scoreInstances = [...this.scoreInstances]
-		scoreInstances.forEach((item) => item.destroy())
+		scoreInstances.forEach((item) => {
+			item.destroy()
+		})
 		this.scoreInstances = []
-
-		this.update()
 	}
 
-	update(text) {
+	reset() {
+		this.destroyScore()
+		this.updateData()
+	}
+
+	updateData(text) {
 		this.updateScore()
 		this.updateText(text)
 	}
@@ -60,6 +64,33 @@ export default class Score extends cax.Group {
 	}
 
 	updateScore() {
+		this.destroyScore()
+
+		const value = GAME_DATA.score.toString()
+		const numbers = value.split("")
+		const numbersLength = numbers.length
+		let newScoreTemp = []
+		const REAL_SCALE_SCORE_WIDTH = SCALE_SCORE_WIDTH * 1.1
+		const startX = ContainerWidth / 2 - (numbersLength * REAL_SCALE_SCORE_WIDTH) / 2
+
+		new Array(numbersLength).fill(0).forEach((_, index) => {
+			const targetNumber = numbers[index]
+			const newObject = new cax.Bitmap(SCORE_IMAGE[targetNumber])
+			newObject.x = startX + index * REAL_SCALE_SCORE_WIDTH
+			newObject.y = ContainerHeight * 0.2 
+			newObject.scaleX = newObject.scaleY = SCALE
+			newScoreTemp[index] = newObject
+
+			this.add(newObject)
+
+		})
+
+		this.scoreInstances.push(...newScoreTemp)
+
+	}
+
+	// ? 之前用的版本
+	_updateScore() {
 		const value = GAME_DATA.score.toString()
 		const numbers = value.split("")
 		const length = this.scoreInstances.length
@@ -78,8 +109,9 @@ export default class Score extends cax.Group {
 			new Array(numbers.length - length).fill(0).forEach((_, index) => {
 				const targetNumber = numbers[index]
 				const newObject = new cax.Bitmap(SCORE_IMAGE[targetNumber])
+				console.log(targetNumber, SCORE_IMAGE[targetNumber], newObject.img.src,22222)
 				newObject.x = startX + index * REAL_SCALE_SCORE_WIDTH
-				newObject.y = BIRD_HEIGHT 
+				newObject.y = ContainerHeight * 0.2 
 				newObject.scaleX = newObject.scaleY = SCALE
 				newScoreTemp[index] = newObject
 
@@ -98,11 +130,11 @@ export default class Score extends cax.Group {
 		GAME_DATA.score += value
 		if (!GAME_DATA.data[text]) GAME_DATA.data[text] = 0
 		GAME_DATA.data[text] += value
-		this.update(text)
+		this.updateData(text)
 	}
 
 	onGameOver() {
-		this.restartInstance.alpha = 1
+		this.restartInstance.alpha = 1  
 	}
 
 	onDestroy() {
