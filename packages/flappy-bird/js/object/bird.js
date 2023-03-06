@@ -13,7 +13,7 @@ const BIRD_IMAGE = "images/bird.png"
 
 const BIRD_BASE_HEIGHT = 32
 const BIRD_BASE_WIDTH = 46
-const SCALE = ContainerWidth / 750 * 1.5
+const SCALE = ContainerWidth / 750 * 1.8
 export const BIRD_HEIGHT = BIRD_BASE_HEIGHT * SCALE
 export const BIRD_WIDTH = BIRD_BASE_WIDTH * SCALE
 export const BIRD_START_X = ContainerWidth / 2 - BIRD_WIDTH / 2
@@ -52,13 +52,13 @@ export default class Bird extends cax.Group {
 			gDefault: 9.8,
 			unit: 0.2,
 			angleLimit: 70,
-			angleUnit: 5,
+			angleUnit: 3,
 		},
 	}
 
 	starting = false 
 	disabled = true
-	selfDie = false 
+	selfDie = true  
 
 	init() {
 		this.instance = new cax.Sprite({
@@ -105,7 +105,7 @@ export default class Bird extends cax.Group {
 
 	onGamePlayBefore() {
 		this.starting = false  
-		this.selfDie = false 
+		this.selfDie = true  
 		this.instance.x = this.defaultPosition.x
 		this.instance.y = this.defaultPosition.y
 		this.instance.rotation = 0 
@@ -141,6 +141,7 @@ export default class Bird extends cax.Group {
 		if (isKnock) {
 			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_BIRD_KNOCK_COLUMN)
 			if(!GAME_DATA.life) {
+				this.selfDie = false 
 				this.onGameOver()
 				this.moveActionInfo.current = 'bottom'
 				this.moveActionInfo.bottom.g = 0
@@ -169,6 +170,7 @@ export default class Bird extends cax.Group {
 				}
 			} else {
 				if (this.instance.y + BIRD_HEIGHT / 2 >= BACKGROUND_NORMAL_HEIGHT) {
+					if(this.selfDie) EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_BIRD_KNOCK_COLUMN)
 					EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER)
 					return
 				}

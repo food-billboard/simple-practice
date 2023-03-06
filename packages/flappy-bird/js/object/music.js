@@ -24,14 +24,14 @@ export default class Music {
   }
 
   onBirdFly() {
-    if(this.birdFlyPlay) return 
-    this.birdFlyPlay = true 
+    // if(this.birdFlyPlay) return 
+    // this.birdFlyPlay = true 
     this.flyInstance.play()
   }
 
   onKnock() {
-    if(this.knockPlay) return 
-    this.knockPlay = true 
+    // if(this.knockPlay) return 
+    // this.knockPlay = true 
     this.knockInstance.play()
   }
 
@@ -44,15 +44,15 @@ export default class Music {
   }
 
   eventBind() {
-    this.flyInstance.onEnded(this.onBirdFlyEnd)
-    this.knockInstance.onEnded(this.onKnockEnd)
+    // this.flyInstance.onEnded(this.onBirdFlyEnd)
+    // this.knockInstance.onEnded(this.onKnockEnd)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_BIRD_FLY, this.onBirdFly, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_BIRD_KNOCK_COLUMN, this.onKnock, this)
   }
 
   eventUnBind() {
-    this.flyInstance.offEnded(this.onBirdFlyEnd)
-    this.knockInstance.offEnded(this.onKnockEnd)
+    // this.flyInstance.offEnded(this.onBirdFlyEnd)
+    // this.knockInstance.offEnded(this.onKnockEnd)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_BIRD_FLY, this.onBirdFly)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_BIRD_KNOCK_COLUMN, this.onKnock)
   }

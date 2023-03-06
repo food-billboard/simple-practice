@@ -7,22 +7,22 @@ import { random, uuid } from '../utils'
 const COLUMN_BOTTOM_IMAGE = 'images/pipe.png'
 const COLUMN_TOP_IMAGE = 'images/pipe-top.png'
 
-const MIN_PIPE_HEIGHT = BIRD_HEIGHT * 2
+const MIN_PIPE_HEIGHT = BIRD_HEIGHT * 4
 const MIN_PIPE_RANGE = BIRD_HEIGHT * 4
 const MAX_PIPE_HEIGHT = BACKGROUND_NORMAL_HEIGHT - MIN_PIPE_HEIGHT
-const PIPE_WIDTH = 100
-const PIPE_HEIGHT = 575
+const PIPE_WIDTH = 138
+const PIPE_HEIGHT = 1093
 const PIPE_SCALE = MAX_PIPE_HEIGHT / PIPE_HEIGHT
 const SCALE_PIPE_WIDTH = PIPE_SCALE * PIPE_WIDTH
 const SCALE_PIPE_HEIGHT = MAX_PIPE_HEIGHT
 
 // 柱子
 class ColumnObject {
-	constructor({ id, isShow, add }) {
+	constructor({ id, isShow, add, first }) {
 		this.id = id
 		this.isShow = isShow
 		this.add = add 
-		this.init()
+		this.init(first)
 		this.addChild()
 		this.eventBind()
 		return this
@@ -37,7 +37,7 @@ class ColumnObject {
 	position = {
 		x: 0,
 		y: 0,
-		unit: 1,
+		unit: 1.5,
 	}
 
 	bottomHeight = 0
@@ -47,7 +47,7 @@ class ColumnObject {
 
 	scoreInfo = {}
 
-	init() {
+	init(first) {
 		this.isShow = false 
 		this.scored = false 
 
@@ -60,7 +60,7 @@ class ColumnObject {
 
 		const max = MAX_PIPE_HEIGHT
 		const min = MIN_PIPE_HEIGHT
-		this.position.x = ContainerWidth + SCALE_PIPE_WIDTH * 3
+		this.position.x = ContainerWidth + SCALE_PIPE_WIDTH * (first ? 0.5 : 4)
 
 		const height = random(max, min)
 
@@ -189,6 +189,7 @@ export default class ColumnFactory extends cax.Group {
 		current: 0,
 	}
 	starting = false 
+	first = true 
 
 	instances = {}
 
@@ -207,8 +208,10 @@ export default class ColumnFactory extends cax.Group {
 		const id = uuid()
 		this.instances[id] = new ColumnObject({
 			id,
-			add: this.add.bind(this)
+			add: this.add.bind(this),
+			first: this.first
 		})
+		this.first = false 
 	}
 
 	onColumnHidden(id) {
@@ -222,6 +225,7 @@ export default class ColumnFactory extends cax.Group {
 
 	onGamePlayBefore() {
 		this.starting = true 
+		this.first = true 
 	}
 
 	onDestroy() {
