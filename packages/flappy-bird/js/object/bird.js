@@ -4,6 +4,7 @@ import {
 	ContainerHeight,
 	EVENT_EMITTER,
 	EVENT_EMITTER_NAME,
+	GAME_DATA
 } from "../databus"
 import { knockJudge } from "../utils"
 import { BACKGROUND_NORMAL_HEIGHT } from "./background"
@@ -12,10 +13,10 @@ const BIRD_IMAGE = "images/bird.png"
 
 const BIRD_BASE_HEIGHT = 32
 const BIRD_BASE_WIDTH = 46
-const SCALE = ContainerWidth / 750
+const SCALE = ContainerWidth / 750 * 1.5
 export const BIRD_HEIGHT = BIRD_BASE_HEIGHT * SCALE
 export const BIRD_WIDTH = BIRD_BASE_WIDTH * SCALE
-export const BIRD_START_X = 100
+export const BIRD_START_X = ContainerWidth / 2 - BIRD_WIDTH / 2
 
 // 鸟
 export default class Bird extends cax.Group {
@@ -89,13 +90,15 @@ export default class Bird extends cax.Group {
 		this.moveActionInfo.current = "top"
 	}
 
-	onClick = () => {
+	onClick = (e) => {
+		if(e.stageY > ContainerHeight) return 
 		if(this.disabled && this.starting) return 
 		if(!this.starting) {
 			this.handleTop()
 			this.starting = true 
 			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_PLAY)
 		}else {
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_BIRD_FLY)
 			this.handleTop()
 		}
 	}
@@ -136,10 +139,13 @@ export default class Bird extends cax.Group {
 		})
 
 		if (isKnock) {
-			this.onGameOver()
-			this.moveActionInfo.current = 'bottom'
-			this.moveActionInfo.bottom.g = 0
-			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER_BEFORE)
+			EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_BIRD_KNOCK_COLUMN)
+			if(!GAME_DATA.life) {
+				this.onGameOver()
+				this.moveActionInfo.current = 'bottom'
+				this.moveActionInfo.bottom.g = 0
+				EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_OVER_BEFORE)
+			}
 		}
 	}
 

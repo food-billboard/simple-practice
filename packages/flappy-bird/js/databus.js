@@ -6,12 +6,16 @@ export const BASE_STAGE = new cax.Stage()
 const info = wx.getSystemInfoSync()
 export const ContainerWidth = info.windowWidth
 const _ContainerHeight = info.windowHeight
-export const BANNER_HEIGHT = _ContainerHeight * 0.2 
-export const ContainerHeight = _ContainerHeight * 0.8
+// export const BANNER_HEIGHT = _ContainerHeight * 0.2 
+// export const ContainerHeight = _ContainerHeight * 0.8
+export const BANNER_HEIGHT = _ContainerHeight * 0 
+export const ContainerHeight = _ContainerHeight * 1
 
 export const EVENT_EMITTER = new EventEmitter()
 
 export const EVENT_EMITTER_NAME = {
+	// 点击小鸟飞行
+	ON_BIRD_FLY: "ON_BIRD_FLY",
 	// 游戏结束
 	ON_GAME_OVER: "ON_GAME_OVER",
 	// 游戏结算
@@ -30,6 +34,12 @@ export const EVENT_EMITTER_NAME = {
 	ON_COLUMN_HIDDEN: "ON_COLUMN_HIDDEN",
 	// 柱子碰撞判断
 	ON_COLUMN_KNOCK: "ON_COLUMN_KNOCK",
+	// 小鸟碰到柱子
+	ON_BIRD_KNOCK_COLUMN: "ON_BIRD_KNOCK_COLUMN",
+	// 看广告
+	ON_AD_START: "ON_AD_START",
+	// 看完广告
+	ON_AD_END: "ON_AD_END",
 	// 重新开始
 	ON_GAME_RESTART: "ON_GAME_RESTART",
 	// 分数刷新
@@ -66,8 +76,13 @@ export const FLAG_MAP = [
 ]
 
 class GameData {
+	// 分数
 	score = 0
+	// 数据
 	data = {}
+	// 生命
+	life = 0
+	maxLife = 3
 }
 // game info
 export const GAME_DATA = new GameData()

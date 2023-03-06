@@ -4,6 +4,8 @@ import Bird from './object/bird'
 import ColumnFactory from './object/pipe'
 import Score from './object/score'
 import Banner from './object/banner'
+import Life from './object/life'
+import Music from './object/music'
 
 // 动画定时器
 class Animation {
@@ -54,11 +56,15 @@ class Game {
 		const bird = new Bird()
 		const score = new Score()
 		const banner = new Banner()
+		const life = new Life()
+
+		new Music()
 
     BASE_STAGE.add(background)
 		BASE_STAGE.add(columnFactory)
 		BASE_STAGE.add(bottomBackground)
 		BASE_STAGE.add(score)
+		BASE_STAGE.add(life)
     BASE_STAGE.add(bird)
 		BASE_STAGE.add(banner)
 

@@ -51,9 +51,9 @@
     ],
     "include": []
   },
-  "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "condition": {}
 }
