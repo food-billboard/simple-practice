@@ -1,0 +1,77 @@
+1.初始化界面 
+	点击开始游戏按钮 start();
+2.跳入loading界面
+	延时定时器启动	timeout();
+3.定时器结束
+4.正式进入游戏	
+	界面初始化:init();
+		1.人物初始化:person
+		2.场景初始化:scene
+		3.定时器启动:timerGoing
+	按键点击移动：
+		1.walk();
+			前进 go
+				检测视口是否需要向后 checkChange
+					yes？goLeft
+					no？不动
+				碰撞检测 impact
+					yes？物体检测 object
+							怪物 monster
+							墙 wall
+							坑 hole
+							宝物 mystery
+								金钱 money
+									数据++
+								物品
+								     蘑菇
+									level++
+								     花
+									level++
+									变成cooker
+									攻击键解锁
+										按下攻击键isAttack
+											yes？弹性运动
+												碰撞检测
+												数据++
+											no？不做处理
+											
+								     星星
+									变成无敌 unmatched
+									碰撞检测
+										墙
+										坑
+										怪物 直接弄死
+							吃到宝物 isEat
+								yes？升级
+								no？不变
+								
+					no？前进
+			后退 back
+				碰撞检测
+					界限？
+					yes？无法继续后退
+					no？怪物 墙 坑 宝物
+			蹲 down
+			跳jump
+				碰撞检测
+				 	墙 怪物 宝物
+							长出宝物grow
+				是否按下了前进后者后退键 isPress
+					yes？右上跳 rightUp
+						碰撞检测
+							是否碰到旗帜处 isEnd	
+								yes？ 位置判断 checkHeight
+									弹出分数
+									游戏结束
+								no？不做处理	
+					no？ 左上跳 leftUp
+						碰撞检测
+
+
+canvasPos: canvas 下绘制的元素;
+
+			
+		
+	
+				
+	

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-compatible" content="IE=edge" />
+  <meta content="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta content="x5-orientation" content="portrait" />
+  <meta content="format-detection" content="telephone=no, email=no" />
+  <title>超级玛丽</title>
+  <link rel="stylesheet" type="text/css" href="./css/特殊类.css" />
+  <link rel="stylesheet" type="text/css" href="./css/默认样式清除.css" />
+  <link rel="stylesheet" type="text/css" href="./css/主样式.css" />
+  <script src="./canvas/图形绘制.js"></script>
+  <script src="./js/loading.js"></script>
+  <script src="./js/operation.js"></script>
+ </head>
+ <body>
+	<div id="content">
+		<div id="score">	<!--顶部数据区域-->
+			<ul class="score_data">
+				<li>
+					<span>Mario</span>
+					<span class="score">000000</span>
+				</li>
+				<li>
+					<span>00</span>
+				</li>
+				<li>
+					<span>World</span>
+					<span>1-1</span>
+				</li>
+				<li>
+					<span>Time</span>
+					<span class="Time"></span>
+				</li>
+			</ul>
+		</div>
+		<div id="start">	<!--准备开始界面-->
+			<img src="./pic/startPic.jpg" class="start_pic" />
+			<p class="start_year">@2002-9-3</p>
+			<h2 class="start_game">
+				<img class="start_key" src="./pic/mushroom.jpg" />
+				<span class="start_single">单人游戏</span>
+			</h2>
+			<img src="./pic/child.png" class="child" />
+			<img src="./pic/green1.jpg" class="green1" />
+			<img src="./pic/green2.jpg" class="green2" />
+			<div class="floor"></div>
+		</div>
+		<div id="loading">	<!--游戏loading界面-->
+			<div class="loading">
+				<h1 class="loading_round">WORLD 1-1</h1>
+				<p class="loading_degree">
+					<img src="./pic/child.png" />
+					<span></span>
+				</p>
+			</div>
+		</div>	
+		<div id="main">	<!--游戏主界面-->
+			<div class="main">
+				<div class="floor1"></div>
+				<div class="floor2"></div>
+				<div class="floor3"></div>
+				<div class="floor4"></div>
+				<canvas class="main_person" width="25" height="32">This is a canvas!</canvas>
+				<canvas class="main_detail" width="6650px" height="436px">This ia canvas</canvas>
+				<div class="main_brick">	<!--砖头集合-->
+					<p>
+						<span class="mystery low first money"></span>
+						<span class="usual low fifth"></span>
+						<span class="mystery low sixth mushroom"></span>
+						<span class="usual low seventh"></span>
+						<span class="mystery low eighth money"></span>
+						<span class="usual low ninth"></span>
+						<span class="mystery high seventh money"></span>
+					</p>
+					<p>
+						<span class="usual low first"></span>
+						<span class="mystery low second flower"></span>
+						<span class="usual low third"></span>
+					</p>
+					<p>
+						<span class="usual high first"></span>
+						<span class="usual high second"></span>
+						<span class="usual high third"></span>
+						<span class="usual high forth"></span>
+						<span class="usual high fifth"></span>
+						<span class="usual high sixth"></span>
+					</p>
+					<p>
+						<span class="usual high first"></span>
+						<span class="usual high second"></span>
+						<span class="usual high third"></span>
+						<span class="usual high forth"></span>
+					</p>
+					<p>
+						<span class="usual low first special"></span>	<!--特殊方块-->
+					</p>
+					<p>
+						<span class="usual low first"></span>
+						<span class="mystery low second star"></span>
+					</p>
+					<p>
+						<span class="mystery low first money"></span>
+						<span class="mystery low forth money"></span>
+						<span class="mystery low seventh money"></span>
+						<span class="mystery high forth flower"></span>
+					</p>
+					<p>
+						<span class="usual low first"></span>
+						<span class="usual high forth"></span>
+						<span class="usual high fifth"></span>
+						<span class="usual high sixth"></span>
+					</p>
+					<p>
+						<span class="usual low second"></span>
+						<span class="usual low third"></span>
+						<span class="usual high first"></span>
+						<span class="mystery high second money"></span>
+						<span class="mystery high third money"></span>
+						<span class="usual high forth"></span>
+					</p>
+					<ul class="slop">
+						<li class="one pos"></li>
+						<li class="two pos"></li>
+						<li class="three pos"></li>
+						<li class="four pos"></li>
+					</ul>
+
+					<ul class="slop">
+						<li class="one"></li>
+						<li class="two"></li>
+						<li class="three"></li>
+						<li class="four"></li>
+					</ul>
+					
+					<ul class="slop">
+						<li class="two pos"></li>
+						<li class="three pos"></li>
+						<li class="four pos"></li>
+						<li class="five pos"></li>
+					</ul>
+
+					<ul class="slop">
+						<li class="one"></li>
+						<li class="two"></li>
+						<li class="three"></li>
+						<li class="four"></li>
+					</ul>
+					<p>
+						<span class="usual low first"></span>
+						<span class="usual low second"></span>
+						<span class="mystery low third money"></span>
+						<span class="usual low forth"></span>
+					</p>
+					<ul class="slop">
+						<li class="two pos"></li>
+						<li class="three pos"></li>
+						<li class="four pos"></li>
+						<li class="five pos"></li>
+						<li class="six pos"></li>
+						<li class="seven pos"></li>
+						<li class="eight pos"></li>
+					</ul>
+					<ul class="flag">
+						<li></li>
+						<li></li>	<!--旗杆位置: left: 6219, top: 115-->
+						<li></li>
+					</ul>
+				</div>
+				<p class="main_home"></p>
+				<!--<div class="main_background">
+					<ul>
+						<li class="green1"></li>
+						<li class="green2"></li>
+						<li class="cloud"></li>
+						<li class="cloud"></li>
+						<li class="green2"></li>
+						<li class="green2"></li>
+						<li class="green1"></li>
+						<li class="cloud"></li>
+						<li class="green2"></li>
+						<li class="green1"></li>
+						<li class="cloud"></li>
+					</ul>
+				</div>-->
+			</div>
+		</div>	
+		<div id="direction">
+			<ul class="key">
+				<li>
+					<img src="./pic/down.png" width="75" height="70" />
+					<span>S</span>
+				</li>
+				<li>
+					<img src="./pic/right.png" width="75" height="70" />
+					<span>D</span>
+				</li>
+				<li>
+					<img src="./pic/left.png" width="75" height="70" />
+					<span>A</span>
+				</li>
+				<li>
+					<img src="./pic/up.png" width="75" height="70" />
+					<span>J</span>
+				</li>
+				<li>
+					<img src="./pic/start.png" width="75" height="70" />
+					<span>H</span>
+				</li>
+				<li>
+					<img src="./pic/attack.png" width="75" height="70" />
+					<span>K</span>
+				</li>
+			</ul>
+			<p>
+				<audio class="music_main" src="./music/main.mp3" loop="loop">This is a bgMusic!</audio>
+				<audio class="music_operation">This is a bgMusic!</audio>
+			</p>
+		</div>
+	</div>
+ </body>
+</html>
+
