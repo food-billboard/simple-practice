@@ -6,7 +6,6 @@
 }
 .home-page-project-detail-window-main {
   display: flex;
-  align-items: center;
 }
 .home-page-project-detail-window-main > img {
   width: 30%;

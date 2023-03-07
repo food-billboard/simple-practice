@@ -22,12 +22,23 @@ import minesweeper from './images/mine-sweeper.png'
 import fuitAlliance from './images/fruit-alliance.png'
 import flagGetter from './images/flag-getter.png'
 import flappyBird from './images/flappy-bird.png'
+import myBlog from './images/my-blog.png'
 
 const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
 const BASE_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADZUlEQVR4Ae3B4Y0bVxaE0e+NGQgVSZUi69uZVUX2PBySbsEwsF7ZgH7snsP/vMWfzMzmP5iZxb/kxg9mZh/Hwd+wZ2bxL/iNl5nZx3EAi/Y79/s32u/c799ov3O/f6P9zv3+jbWG+/0+SU7+od/4NDP7OA5g0QbJtEEybZBMGyTTBsmsNdzv90ly8g+smdm2+VlJ+Bkzs/h045MkfpYkfsbMbGDd+MOiDZJpg2TaIJk2SOY8h7/DNpJpg2TaIJk2SKYNMzDDvvHSBsm0QTJtkEwbJNMGCMdxcFnA5rJoQxIgSKYNkmmDZNogmYQvN14k0wbJtEEybUhCMkB4OM+TywAnD8dxABsox3FwnicQJNMGybRBMm0A83DjpQ2SaYNk2iCZZDiOg8sCNpdFG87z5DgObPOjJEimDZJpg2QSvnzwIpk2SKYNkmnDZfG0eVo8bR6O4+A8T/be7A1JeJBMGyTTBsm04e3GSxsk0wbJtEEyyfC0eVrABjZPC5s/zAx7b6A8tEEybZBMGyST8OXGi2TaIJk2SKYNEJ4WsGmDc/IWh70FLNpgG1hAeJBMGyTTBsm0AczDBy9tkEwbJNMGyVw2bXHC8DY4oS2wuWze2iCZNkimDZJ5++BFMm2QTBsk04bLwgmxGT7NAQwwJAEWf0UybZBMGyTThrcPXtogmTZIpg2SuWweJBEbZsEAs5nh0+ayeGuDZNogmTZI5u2DF8m0QTJtkEwbLouHtiThy/CDxWXzJpk2SKYNkmnD2wcvbZBMGyTTBslcNgPYYubgyxzAydPmr7RBMm2QTBsk8/bBi2TaIJk2SKYNl4Vt4OTLDHACQ2JgcVm8SaYNkmmDZNrw9sFLGyTTBsm0QTKXjSQSAwsYYEiCJGBz2by1QTJtkEwbJPN240UybZBMGyTTBghPC9hIYu8NLGBzWUD4M8m0QTJtkEwbwDx88NIGybRBMm2QzGXztHjaPC2eNm9rLWzz0AbJtEEybZDM240XybRBMm2QTBsgtOUSoFwClB8lQTJtkEwbJNMGybQBzMONlzZIpg2SaYNkbP5rkmmDZNogmTZIpg2SSfhy40UybZBMGyTThr1NGyTTBsm0QTJtkEwbJNMGybRBMm2QTBsk0wbJtAHMw5qZDcOvMAOLp82vsfi/X+13k89g6r2xEdsAAAAASUVORK5CYII="
 
 export const PACKAGE_MAP = [
+  {
+    label: '我的blog',
+    description: '关于平时碰到的技术问题的记录blog',
+    date: '2021-10-25',
+    image: myBlog,
+    key: 'my-blog',
+    url: 'https://food-billboard.github.io/',
+    development: true,
+    code: 'https://github.com/food-billboard/food-billboard.github.io/tree/hexo'
+  },
   {
     label: 'flappy bird小游戏',
     description: '复刻的flappy bird',
