@@ -56,7 +56,7 @@ new Promise((resolve, reject) => {
   return fsPromise.readdir(packagesDirname)
 })
 .then(async (_dirList) => {
-  const dirList = _dirList.filter(dir => !dir.startsWith('_'))
+  const dirList = _dirList.filter(dir => !dir.startsWith('_') && !['.DS_Store', 'flappy-bird'].includes(dir))
   console.log(chalk.green(`read the packages dir ${dirList.join(',')}`))
   for(let i = 0; i < dirList.length; i ++) {
     const dir = dirList[i]
