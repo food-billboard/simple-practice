@@ -1,8 +1,36 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import EventEmitter from 'eventemitter3'
-import { useGetState, useSize } from 'ahooks'
+import { useGetState } from 'ahooks'
+import { noop } from 'lodash'
 import { CARD } from './constants'
 import './index.css'
+
+function sleep(timeout=1000) {
+  return new Promise(resolve => setTimeout(resolve, timeout))
+}
+
+type MessageType = {
+  key: string 
+  // 文字内容
+  content: ReactNode
+  // 延迟 -1 表示自定义延迟
+  interval?: number  
+}
+
+const TRANSFORM_MAP = [
+
+]
+
+const INTRODUCE_MAP: MessageType[] = [
+  {
+    key: '1',
+    content: 'hello',
+  }
+]
+
+const MESSAGE_MAP: MessageType[] = [
+
+]
 
 const CARD_KEYS = Object.keys(CARD)
 const CARD_NORMAL_KEYS = CARD_KEYS.filter(item => !['0', '14'].includes(item))
@@ -15,20 +43,22 @@ const EVENT_EMITTER_NAME = {
   ON_GAME_OVER: "ON_GAME_OVER",
   // 重新生成牌
   ON_CARD_RESTART: "ON_CARD_RESTART",
-  // 可以翻牌
-  ON_CARD_OPEN_START: "ON_CARD_OPEN_START",
-  // 翻牌结束
-  ON_CARD_OPEN_END: "ON_CARD_OPEN_END",
+  // 牌创建完成
+  ON_CARD_RESTART_COMPLETE: "ON_CARD_RESTART_COMPLETE",
   // 翻牌
   ON_CARD_OPEN: "ON_CARD_OPEN",
   // 位置变换
   ON_CARD_POSITION_CHANGE: "ON_CARD_POSITION_CHANGE",
   // 卡片关闭
-  ON_CARD_CLOSE: "ON_CARD_CLOSE"
+  ON_CARD_CLOSE: "ON_CARD_CLOSE",
 }
 const GAME_INFO = {
-  // 是否可以点击翻拍
-  canClick: false
+  // 是否可以点击翻牌
+  canClick: false,
+  // 宫格数据
+  data: [],
+  // 是否是第一次
+  isFist: true 
 }
 
 const generateCard = ({
@@ -58,7 +88,7 @@ const generateCard = ({
   }
 }
 
-const BACKG_CARD_PROPS = generateCard({ isBack: true })
+const BACK_CARD_PROPS = generateCard({ isBack: true })
 
 const Card = (props: {
   x: number
@@ -99,6 +129,7 @@ const Card = (props: {
       const result = generateCard({ isJoker })
       cardValue.current = result.value
       setFrontProps(result)
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_RESTART_COMPLETE, getPosition(), result)
     }
     // 卡片位置改变
     const onCardPositionChange = (type: string) => {
@@ -144,7 +175,7 @@ const Card = (props: {
       <div className={"home-page-card-front"} style={frontProps?.style}>
 
       </div>
-      <div className={"home-page-card-back"} style={BACKG_CARD_PROPS.style}>
+      <div className={"home-page-card-back"} style={BACK_CARD_PROPS.style}>
 
       </div>
     </div>
@@ -154,8 +185,60 @@ const Card = (props: {
 
 const RightMessage = () => {
 
+  const [ infoList, setInfoList ] = useState<(MessageType & {
+    nextLoop?: () => void 
+  })[]>([])
+
+  useEffect(() => {
+
+    const message = async () => {
+      setInfoList(() => [])
+      let messageList: MessageType[] = []
+      // 第一次
+      if(GAME_INFO.isFist) {
+        messageList.push(...INTRODUCE_MAP)
+      }
+      messageList.push(...MESSAGE_MAP)
+    
+      for(let i = 0; i < messageList.length; i ++) {
+        const { interval } = messageList[i]
+        await new Promise(resolve => {
+          setInfoList(prev => {
+            prev.unshift({
+              ...messageList[i],
+              nextLoop: interval === -1 ? resolve : noop
+            })
+            if(prev.length > 10) {
+              return prev.slice(0, 10)
+            }
+            return prev 
+          })
+          if(interval !== -1) sleep(interval).then(resolve)
+        })
+      }
+    
+    }
+
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, message)
+
+    return () => {
+      EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, message)
+    }
+  }, [])
+
   return (
-    <div>2222</div>
+    <div>
+      {
+        infoList.map(item => {
+          return (
+            <div>
+              <div>avatar</div>
+              <div>message</div>
+            </div>
+          )
+        })
+      }
+    </div>
   )
 
 }
@@ -207,6 +290,10 @@ const Home = () => {
     return () => {
       window.removeEventListener('resize', onResize)
     }
+  }, [])
+
+  useEffect(() => {
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
   }, [])
 
   return (

@@ -6,14 +6,15 @@
   width: 100%;
   height: 100%;
   overflow: auto;
+  text-align: center;
 }
 .home-page-main {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  /* position: relative;
+  position: relative;
   top: 50%;
-  transform: translateY(-50%); */
+  transform: translateY(-50%);
 }
 .home-page-left {
   width: 100%;
