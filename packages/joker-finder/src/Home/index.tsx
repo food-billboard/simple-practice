@@ -34,6 +34,7 @@ type MessageType = {
   } | void>
   // 跳过
   skip?: number 
+  origin?: any 
 }
 
 function restartGame(resolve: any) {
@@ -50,6 +51,7 @@ const TRANSFORM_MAP = [
     title: '第1行和第2行交换',
     action: async () => {
       const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
       let changePosition: [number, number, number, number][] = []
       new Array(4).fill(0).forEach((_, index) => {
         changePosition.push([
@@ -65,340 +67,375 @@ const TRANSFORM_MAP = [
       await sleep(1000)
     }
   },
-  // {
-  //   title: '第2行和第3行交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, 1,
-  //         index, 2
-  //       ])
-  //       let temp = data[index + 4] 
-  //       data[index + 4] = data[index + 4 * 2]
-  //       data[index + 4 * 2] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第3行和第4行交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, 2,
-  //         index, 3
-  //       ])
-  //       let temp = data[index + 4 * 2] 
-  //       data[index + 4 * 2] = data[index + 4 * 3]
-  //       data[index + 4 * 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第1行和第3行交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, 0,
-  //         index, 2
-  //       ])
-  //       let temp = data[index] 
-  //       data[index] = data[index + 4 * 2]
-  //       data[index + 4 * 2] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第1行和第4行交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, 0,
-  //         index, 3
-  //       ])
-  //       let temp = data[index] 
-  //       data[index] = data[index + 4 * 3]
-  //       data[index + 4 * 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第2行和第4行交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, 1,
-  //         index, 3
-  //       ])
-  //       let temp = data[index + 4] 
-  //       data[index + 4] = data[index + 4 * 3]
-  //       data[index + 4 * 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第1列和第2列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         0, index,
-  //         1, index
-  //       ])
-  //       let temp = data[index * 4] 
-  //       data[index * 4] = data[index * 4 + 1]
-  //       data[index * 4 + 1] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第2列和第3列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         1, index,
-  //         2, index
-  //       ])
-  //       let temp = data[index * 4 + 1] 
-  //       data[index * 4 + 1] = data[index * 4 + 2]
-  //       data[index * 4 + 2] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第3列和第4列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         2, index,
-  //         3, index
-  //       ])
-  //       let temp = data[index * 4 + 2] 
-  //       data[index * 4 + 2] = data[index * 4 + 3]
-  //       data[index * 4 + 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第1列和第3列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         0, index,
-  //         2, index
-  //       ])
-  //       let temp = data[index * 4] 
-  //       data[index * 4] = data[index * 4 + 2]
-  //       data[index * 4 + 2] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第1列和第4列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         0, index,
-  //         3, index
-  //       ])
-  //       let temp = data[index * 4] 
-  //       data[index * 4] = data[index * 4 + 3]
-  //       data[index * 4 + 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '第2列和第4列交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         1, index,
-  //         3, index
-  //       ])
-  //       let temp = data[index * 4 + 1] 
-  //       data[index * 4 + 1] = data[index * 4 + 3]
-  //       data[index * 4 + 3] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '顺时针旋转90度',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
+  {
+    title: '第2行和第3行交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, 1,
+          index, 2
+        ])
+        let temp = data[index + 4] 
+        data[index + 4] = data[index + 4 * 2]
+        data[index + 4 * 2] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第3行和第4行交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, 2,
+          index, 3
+        ])
+        let temp = data[index + 4 * 2] 
+        data[index + 4 * 2] = data[index + 4 * 3]
+        data[index + 4 * 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第1行和第3行交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, 0,
+          index, 2
+        ])
+        let temp = data[index] 
+        data[index] = data[index + 4 * 2]
+        data[index + 4 * 2] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第1行和第4行交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, 0,
+          index, 3
+        ])
+        let temp = data[index] 
+        data[index] = data[index + 4 * 3]
+        data[index + 4 * 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第2行和第4行交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, 1,
+          index, 3
+        ])
+        let temp = data[index + 4] 
+        data[index + 4] = data[index + 4 * 3]
+        data[index + 4 * 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第1列和第2列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          0, index,
+          1, index
+        ])
+        let temp = data[index * 4] 
+        data[index * 4] = data[index * 4 + 1]
+        data[index * 4 + 1] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第2列和第3列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          1, index,
+          2, index
+        ])
+        let temp = data[index * 4 + 1] 
+        data[index * 4 + 1] = data[index * 4 + 2]
+        data[index * 4 + 2] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第3列和第4列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          2, index,
+          3, index
+        ])
+        let temp = data[index * 4 + 2] 
+        data[index * 4 + 2] = data[index * 4 + 3]
+        data[index * 4 + 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第1列和第3列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          0, index,
+          2, index
+        ])
+        let temp = data[index * 4] 
+        data[index * 4] = data[index * 4 + 2]
+        data[index * 4 + 2] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第1列和第4列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          0, index,
+          3, index
+        ])
+        let temp = data[index * 4] 
+        data[index * 4] = data[index * 4 + 3]
+        data[index * 4 + 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '第2列和第4列交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          1, index,
+          3, index
+        ])
+        let temp = data[index * 4 + 1] 
+        data[index * 4 + 1] = data[index * 4 + 3]
+        data[index * 4 + 3] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '顺时针旋转90度',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
 
-  //     let changePosition: [number, number, number, number][] = []
+      let changePosition: [number, number, number, number][] = []
 
-  //     const verticalRef = new Array(4).fill(0).map((_, index) => {
-  //       return new Array(4).fill(0).map((_, ind) => {
-  //         return {
-  //           value: data[index + ind * 4],
-  //           position: [ index, ind ]
-  //         }
-  //       })
-  //     })
-  //     const newData = verticalRef.reduce<string[]>((acc, cur, index) => {
-  //       const temp = [...cur].reverse()
-  //       temp.forEach((item, ind) => {
-  //         const { value, position } = item 
-  //         const currentPosition = [ind, index]
-  //         // 发生改变
-  //         if(!isEqual(position, currentPosition)) {
-  //           const isExists = changePosition.some(item => {
-  //             return (
-  //               (isEqual(item.slice(0, 2), position) && isEqual(item.slice(2), currentPosition)) || 
-  //               (isEqual(item.slice(0, 2), currentPosition) && isEqual(item.slice(2), position))
-  //             )
-  //           })
-  //           if(!isExists) changePosition.push([...position, ...currentPosition] as [number, number, number, number])
-  //         }
-  //         acc.push(value)
-  //       })
-  //       return acc 
-  //     }, [])
+      const verticalRef = new Array(4).fill(0).map((_, index) => {
+        return new Array(4).fill(0).map((_, ind) => {
+          return {
+            value: data[index + ind * 4],
+            position: [ index, ind ]
+          }
+        })
+      })
+      const newData = verticalRef.reduce<string[]>((acc, cur, index) => {
+        const temp = [...cur].reverse()
+        temp.forEach((item, ind) => {
+          const { value, position } = item 
+          const currentPosition = [ind, index]
+          // 发生改变
+          if(!isEqual(position, currentPosition)) {
+            const isExists = changePosition.some(item => {
+              return (
+                (isEqual(item.slice(0, 2), position) && isEqual(item.slice(2), currentPosition)) || 
+                (isEqual(item.slice(0, 2), currentPosition) && isEqual(item.slice(2), position))
+              )
+            })
+            if(!isExists) changePosition.push([...position, ...currentPosition] as [number, number, number, number])
+          }
+          acc.push(value)
+        })
+        return acc 
+      }, [])
 
-  //     GAME_INFO.data = newData 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition, true)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '逆时针旋转90度',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
+      GAME_INFO.data = newData 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition, true)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '逆时针旋转90度',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
 
-  //     let changePosition: [number, number, number, number][] = []
+      let changePosition: [number, number, number, number][] = []
 
-  //     const verticalRef = new Array(4).fill(0).map((_, index) => {
-  //       return new Array(4).fill(0).map((_, ind) => {
-  //         return {
-  //           value: data[index + ind * 4],
-  //           position: [ index, ind ]
-  //         }
-  //       })
-  //     })
-  //     const newData = verticalRef.reduceRight<string[]>((acc, cur, index) => {
-  //       cur.forEach((item, ind) => {
-  //         const { value, position } = item 
-  //         const currentPosition = [ind, 3 - index]
-  //         // 发生改变
-  //         if(!isEqual(position, currentPosition)) {
-  //           const isExists = changePosition.some(item => {
-  //             return (
-  //               (isEqual(item.slice(0, 2), position) && isEqual(item.slice(2), currentPosition)) || 
-  //               (isEqual(item.slice(0, 2), currentPosition) && isEqual(item.slice(2), position))
-  //             )
-  //           })
-  //           if(!isExists) changePosition.push([...position, ...currentPosition] as [number, number, number, number])
-  //         }
-  //         acc.push(value)
-  //       })
-  //       return acc 
-  //     }, [])
+      const verticalRef = new Array(4).fill(0).map((_, index) => {
+        return new Array(4).fill(0).map((_, ind) => {
+          return {
+            value: data[index + ind * 4],
+            position: [ index, ind ]
+          }
+        })
+      })
+      const newData = verticalRef.reduceRight<string[]>((acc, cur, index) => {
+        cur.forEach((item, ind) => {
+          const { value, position } = item 
+          const currentPosition = [ind, 3 - index]
+          // 发生改变
+          if(!isEqual(position, currentPosition)) {
+            const isExists = changePosition.some(item => {
+              return (
+                (isEqual(item.slice(0, 2), position) && isEqual(item.slice(2), currentPosition)) || 
+                (isEqual(item.slice(0, 2), currentPosition) && isEqual(item.slice(2), position))
+              )
+            })
+            if(!isExists) changePosition.push([...position, ...currentPosition] as [number, number, number, number])
+          }
+          acc.push(value)
+        })
+        return acc 
+      }, [])
 
-  //     GAME_INFO.data = newData 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition, true)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '正反斜角交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = []
-  //     new Array(4).fill(0).forEach((_, index) => {
-  //       changePosition.push([
-  //         index, index,
-  //         3 - index, index
-  //       ])
-  //       let temp = data[index * 4 + index] 
-  //       data[index * 4 + index] = data[index * 4 + 3 - index]
-  //       data[index * 4 + 3 - index] = temp 
-  //     })
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // },
-  // {
-  //   title: '正反斜角上下交换',
-  //   action: async () => {
-  //     const { data } = GAME_INFO
-  //     let changePosition: [number, number, number, number][] = [
-  //       [ 0, 0, 0, 3 ],
-  //       [ 1, 1, 1, 2 ],
-  //       [ 3, 0, 3, 3 ],
-  //       [ 2, 1, 2, 2 ]
-  //     ]
+      GAME_INFO.data = newData 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition, true)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '正反斜角交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = []
+      new Array(4).fill(0).forEach((_, index) => {
+        changePosition.push([
+          index, index,
+          3 - index, index
+        ])
+        let temp = data[index * 4 + index] 
+        data[index * 4 + index] = data[index * 4 + 3 - index]
+        data[index * 4 + 3 - index] = temp 
+      })
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  {
+    title: '正反斜角上下交换',
+    action: async () => {
+      const { data } = GAME_INFO
+      GAME_INFO.history.push([...data])
+      let changePosition: [number, number, number, number][] = [
+        [ 0, 0, 0, 3 ],
+        [ 1, 1, 1, 2 ],
+        [ 3, 0, 3, 3 ],
+        [ 2, 1, 2, 2 ]
+      ]
 
-  //     changePosition.forEach(item => {
-  //       const [ x1, y1, x2, y2 ] = item 
-  //       let temp = data[y1 * 4 + x1] 
-  //       data[y1 * 4 + x1] = data[y2 * 4 + x2]
-  //       data[y2 * 4 + x2] = temp 
-  //     })
+      changePosition.forEach(item => {
+        const [ x1, y1, x2, y2 ] = item 
+        let temp = data[y1 * 4 + x1] 
+        data[y1 * 4 + x1] = data[y2 * 4 + x2]
+        data[y2 * 4 + x2] = temp 
+      })
 
-  //     GAME_INFO.data = data 
-  //     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
-  //     await sleep(1000)
-  //   }
-  // }
+      GAME_INFO.data = data 
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, changePosition)
+      await sleep(1000)
+    }
+  },
+  ...new Array(4).fill(0).map((item, index) => {
+    const ind = index + 1
+    return {
+      title: `忽略前${ind}步`,
+      necessary: ind,
+      // 生成时验证
+      validate: (currentDataSource: MessageType[]) => {
+        return currentDataSource.reduce((acc, cur) => {
+          acc += (1 - (cur.origin.necessary || 0))
+          return acc 
+        }, 0) > ind
+      },
+      action: async () => {
+        const [ target ] = GAME_INFO.history.splice(-ind, ind)
+        GAME_INFO.data = [...target]
+
+        EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_RECALL, target)
+      }
+    }
+  }),
 ]
 
 // 介绍的信息
-const _INTRODUCE_MAP: MessageType[] = [
+const INTRODUCE_MAP: MessageType[] = [
   {
     key: '1',
     content: '你好啊！',
@@ -424,7 +461,6 @@ const _INTRODUCE_MAP: MessageType[] = [
     content: '你能正确找到joker的位置吗?',
   }
 ]
-const INTRODUCE_MAP: MessageType[] = []
 
 // 开头的信息
 const MESSAGE_MAP: MessageType[] = [
@@ -433,9 +469,9 @@ const MESSAGE_MAP: MessageType[] = [
     content: '那么正式开始吧!',
     wait: async () => {
       return new Promise(resolve => {
-        const onCardCreateComplete = (position: { x: number, y: number }, value: string) => {
+        const onCardCreateComplete = (position: { x: number, y: number }, value: ReturnType<typeof generateCard>) => {
           const { x, y } = position
-          GAME_INFO.data[y * 4 + x] = value 
+          GAME_INFO.data[y * 4 + x] = value.value
 
           if(GAME_INFO.data.length === 16) {
             EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_CARD_RESTART_COMPLETE, onCardCreateComplete)
@@ -455,7 +491,7 @@ const MESSAGE_MAP: MessageType[] = [
   {
     key: '8',
     content: '首先花8秒记住现在joker的位置!',
-    interval: 1000
+    interval: 8000
   },
   {
     key: '9',
@@ -512,7 +548,9 @@ const GAME_END_MAP: MessageType[] = [
             EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_OPEN_CHANGE, true)
             sleep(1000)
             .then(() => {
-              EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_OPEN_REVIEW)
+              return new Promise(resolve => {
+                EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_OPEN_REVIEW, resolve)
+              })
             })
             .then(() => {
               resolve({
@@ -526,7 +564,7 @@ const GAME_END_MAP: MessageType[] = [
           onClick: (resolve) => {
             restartGame(() => {
               resolve({
-                skip: 1
+                skip: 2
               })
             })
           }
@@ -537,6 +575,19 @@ const GAME_END_MAP: MessageType[] = [
   {
     key: '14',
     content: '恭喜你，猜对了！',
+    skip: 1,
+    condition: {
+      value: [
+        {
+          title: '点我重新开始',
+          onClick: restartGame
+        }
+      ]
+    }
+  },
+  {
+    key: '15',
+    content: '明牌操作结束！',
     condition: {
       value: [
         {
@@ -549,7 +600,7 @@ const GAME_END_MAP: MessageType[] = [
 ]
 
 const CARD_KEYS = Object.keys(CARD)
-const CARD_NORMAL_KEYS = CARD_KEYS.filter(item => !['0', '14'].includes(item))
+const CARD_NORMAL_KEYS = CARD_KEYS.filter(item => !~['0', '14'].indexOf(item))
 
 const EVENT_EMITTER = new EventEmitter()
 const EVENT_EMITTER_NAME = {
@@ -568,19 +619,23 @@ const EVENT_EMITTER_NAME = {
   // 卡片代码翻牌变化
   ON_CARD_OPEN_CHANGE: "ON_CARD_OPEN_CHANGE",
   // 明牌
-  ON_CARD_OPEN_REVIEW: "ON_CARD_OPEN_REVIEW"
+  ON_CARD_OPEN_REVIEW: "ON_CARD_OPEN_REVIEW",
+  // 步骤回溯
+  ON_CARD_RECALL: "ON_CARD_RECALL"
 }
 const GAME_INFO: {
   canClick: boolean 
   data: string[] 
   isFist: boolean 
+  history: string[][]
 } = {
   // 是否可以点击翻牌
   canClick: false,
   // 宫格数据
   data: [],
   // 是否是第一次
-  isFist: true 
+  isFist: true,
+  history: []
 }
 
 // 生成卡片
@@ -617,17 +672,25 @@ const generateCard = ({
 }
 
 // 生成步骤
-const generateStep: () => MessageType[] = (counter=1) => {
+const generateStep: () => MessageType[] = (counter=15) => {
   const prefix = `${Date.now()}${Math.random()}${Math.random()}`
-  return new Array(counter).fill(0).map((item, ind) => {
-    const index = Math.floor(Math.random() * TRANSFORM_MAP.length)
-    const target = TRANSFORM_MAP[index]
-    return {
-      key: `${prefix}_${ind}`, 
-      content: target.title,
-      wait: target.action
+  return new Array(counter).fill(0).reduce((acc, item, ind) => {
+    let result: any
+    while(!result) {
+      const index = Math.floor(Math.random() * TRANSFORM_MAP.length)
+      result = TRANSFORM_MAP[index]
+      if(result.validate) {
+        result = result.validate(acc, counter) ? result : undefined
+      }
     }
-  })
+    acc.push({
+      key: `${prefix}_${ind}`, 
+      content: result!.title,
+      wait: result!.action,
+      origin: result 
+    })
+    return acc 
+  }, [])
 }
 
 const BACK_CARD_PROPS = generateCard({ isBack: true })
@@ -641,6 +704,7 @@ const Card = (props: {
 
   const [frontProps, setFrontProps] = useState<ReturnType<typeof generateCard>>()
   const [currentFront, setCurrentFront] = useState(false)
+  const [ currentRotate, setCurrentRotate ] = useState(false)
   const [position, setPosition, getPosition] = useGetState({
     x,
     y,
@@ -668,6 +732,17 @@ const Card = (props: {
   }, [])
 
   useEffect(() => {
+    // 回溯
+    const onCardRecall = (target: string[]) => {
+      const { x, y } = getPosition()
+      const targetItem = target[y * 4 + x]
+      if(targetItem !== cardValue.current) {
+        const result = generateCard({ custom: targetItem })
+        cardValue.current = targetItem
+        setFrontProps(result)
+      }
+      setCurrentRotate(prev => !prev)
+    }
     // 卡片值改变
     const onCardChange = (position: { x: number, y: number }) => {
       const { x, y } = getPosition()
@@ -724,12 +799,14 @@ const Card = (props: {
       setCurrentFront(isOpen)
     }
 
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_CARD_RECALL, onCardRecall)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_CARD_OPEN_CHANGE, onCardRotate)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, onGameStart)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_CARD_RESTART, onCardChange)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_CARD_POSITION_CHANGE, onCardPositionChange)
 
     return () => {
+      EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_CARD_RECALL, onCardRecall)
       EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_CARD_OPEN_CHANGE, onCardRotate)
       EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, onGameStart)
       EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_CARD_RESTART, onCardChange)
@@ -742,7 +819,7 @@ const Card = (props: {
       className="home-page-card"
       ref={instance}
       style={{
-        transform: `translateX(${position.x * 100}%) translateY(${position.y * 100}%) rotateY(${currentFront ? 0 : 180}deg)`
+        transform: `translateX(${position.x * 100}%) translateY(${position.y * 100}%) rotateZ(${currentRotate ? 0 : 180}deg) rotateY(${currentFront ? 0 : 180}deg)`
       }}
       onClick={handleClick}
     >
@@ -808,11 +885,12 @@ const RightMessage = () => {
     }
 
     // 明牌
-    const onCardOpenReview = async () => {
+    const onCardOpenReview = async (callback: any) => {
       EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_OPEN_CHANGE, true)
       await sleep()
       setInfoList(() => [])
       await messageDeal(gameList.current)
+      callback()
     }
 
     // 一开始的文字提示
@@ -821,6 +899,7 @@ const RightMessage = () => {
       let messageList: MessageType[] = []
       // 第一次
       if(GAME_INFO.isFist) {
+        GAME_INFO.isFist = false 
         messageList.push(...INTRODUCE_MAP)
       }
       gameList.current = generateStep()
@@ -893,6 +972,7 @@ const Home = () => {
     return new Array(16).fill(0).map((item, index) => {
       return (
         <Card
+          // @ts-ignore 
           key={index}
           x={index % 4}
           y={Math.floor(index / 4)}
@@ -933,7 +1013,14 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
+    const onGameStart = () => {
+      GAME_INFO.history = []
+    }
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, onGameStart)
     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
+    return () => {
+      EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, onGameStart)
+    }
   }, [])
 
   return (
