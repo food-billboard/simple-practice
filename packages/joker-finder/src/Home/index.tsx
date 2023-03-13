@@ -429,6 +429,7 @@ const TRANSFORM_MAP = [
         GAME_INFO.data = [...target]
 
         EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CARD_RECALL, target)
+        await sleep()
       }
     }
   }),
