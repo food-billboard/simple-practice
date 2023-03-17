@@ -1,5 +1,5 @@
 import cax from '../../libs/cax'
-import DataBus from '../../databus'
+import DataBus, { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import BlockGroup from './block-group'
 import Header from './header'
 import Number from './number'
@@ -52,7 +52,10 @@ export default class Game extends cax.Group {
 
   update () {
     if(dataBus.gameStep === 1) {
-      if(!this.visible) this.visible = true 
+      if(!this.visible) {
+        this.visible = true 
+        EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
+      }
     }else if(this.visible) {
       this.visible = false 
     }

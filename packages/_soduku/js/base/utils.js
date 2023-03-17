@@ -9,18 +9,6 @@ export function uuid(prefix='soduku') {
   return `${prefix}_${Date.now()}_${new Array(5).fill(0).map(item => keys[Math.floor(Math.random() * keys.length)]).join('_')}_${Math.random()}`
 }
 
-const DEFAULT_SODUKU_LIST = [
-  [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-  [ 2, 3, 4, 5, 6, 7, 8, 9, 1 ],
-  [ 3, 4, 5, 6, 7, 8, 9, 1, 2 ],
-  [ 4, 5, 6, 7, 8, 9, 1, 2, 3 ],
-  [ 5, 6, 7, 8, 9, 1, 2, 3, 4 ],
-  [ 6, 7, 8, 9, 1, 2, 3, 4, 5 ],
-  [ 7, 8, 9, 1, 2, 3, 4, 5, 6 ],
-  [ 8, 9, 1, 2, 3, 4, 5, 6, 7 ],
-  [ 9, 1, 2, 3, 4, 5, 6, 7, 8 ]
-]
-
 function randomIndexFunc(count=2) {
 
   const base = [
@@ -49,29 +37,78 @@ function randomIndexFunc(count=2) {
 }
 
 export function generateSoduku() {
-  let tempSoduku = [...DEFAULT_SODUKU_LIST]
-  // 行打乱
-  tempSoduku.sort(() => Math.random() - 0.5)
-  console.log(tempSoduku, 2222)
-  // 列打乱
-  const [ randomIndex, randomIndexAfter ] = randomIndexFunc()
-  tempSoduku.forEach((_, index) => {
-    const temp = tempSoduku[index][randomIndex]
-    tempSoduku[index][randomIndex] = tempSoduku[index][randomIndexAfter]
-    tempSoduku[index][randomIndexAfter] = temp 
-  })
-  console.log(tempSoduku, 33333)
-  // 掏空格子
-  // 先设置每行两个格子
-  tempSoduku = tempSoduku.map(item => {
-    const emptyIndex = randomIndexFunc()
-    return item.map((item, index) => {
-      if(emptyIndex.includes(index)) return -1
-      return item
-    })
-  })
-  console.log(tempSoduku)
-  return tempSoduku
-}
+  const baseDataSource = []
 
-generateSoduku()
+  class Block {
+
+    constructor([value, ...condition]) {
+      this.value = value 
+      this.condition = condition
+    }
+
+    value 
+    condition 
+
+    replaceCondition() {
+      this.value = this.condition.splice(0, 1)[0]
+      return this.value
+    }
+
+  }
+  const BASE_DATA = new Array(9).fill(0).map((_, index) => index + 1)
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      // 第一行
+      if (i === 0) {
+        baseDataSource.push(
+          ...new Array(9)
+            .fill(0)
+            .map((_, index) => index + 1)
+            .sort(() => (Math.random() > 0.5 ? 1 : -1))
+            .map((item) => new Block([item])),
+        );
+        break;
+      } else {
+        const currentIndex = i * 9 + j;
+
+        let block = baseDataSource[currentIndex];
+        if (block) {
+          block.replaceCondition()
+        } else {
+          const currentRowBlock = baseDataSource
+            .slice(i * 9, i * 9 + j)
+            .map((item) => item.value);
+          const prevColumnBlock = [];
+          for (let q = (i % 3) - 1; q >= 0; q--) {
+            const start = Math.floor(j / 3) * 3;
+            for (let p = start; p < start + 3; p++) {
+              prevColumnBlock.push(baseDataSource[q * 9 + p].value);
+            }
+          }
+          const condition = BASE_DATA.filter(
+            (item) =>
+              !currentRowBlock.includes(item) && !prevColumnBlock.includes(item),
+          ).sort(() => (Math.random() > 0.5 ? -1 : 1));
+          block = new Block(condition);
+        }
+
+        if (typeof block.value === 'number') {
+          baseDataSource[currentIndex] = block;
+        } else {
+          if (j === 0) {
+            i -= 2;
+            baseDataSource.splice(currentIndex, 9)
+            break 
+          } else {
+            j -= 2;
+            baseDataSource[currentIndex] = undefined
+          }
+        }
+      }
+    }
+  }
+
+  return baseDataSource.map(item => item.value)
+
+}

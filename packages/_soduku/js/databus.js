@@ -1,4 +1,13 @@
 import Pool from './base/pool'
+import EventEmitter from './base/event-emitter'
+
+export const EVENT_EMITTER = new EventEmitter()
+export const EVENT_EMITTER_NAME = {
+  // 游戏开始
+  ON_GAME_START: "ON_GAME_START",
+  // 游戏结束
+  ON_GAME_END: "ON_GAME_END"
+}
 
 let instance
 
