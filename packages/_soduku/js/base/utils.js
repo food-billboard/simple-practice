@@ -9,6 +9,43 @@ export function uuid(prefix='soduku') {
   return `${prefix}_${Date.now()}_${new Array(5).fill(0).map(item => keys[Math.floor(Math.random() * keys.length)]).join('_')}_${Math.random()}`
 }
 
+export class Interval {
+
+  constructor(options) {
+    const { onChange } = options
+    this.onChange = onChange
+  }
+
+  counter = 0 
+  timestamps = -1 
+  timer 
+  onChange
+
+  reset() {
+    this.counter = 0 
+    this.timestamps = - 1
+  }
+
+  stop() {
+    clearTimeout(this.timer)
+  }
+
+  update = (first=false) => {
+    if(!first) {
+      this.counter ++ 
+      let hour = Math.floor(this.counter / 60 / 60)
+      let minute = Math.floor((this.counter - hour * 60 * 60) / 60)
+      let second = Math.floor(this.counter - hour * 60 * 60 - minute * 60)
+      hour = hour > 9 ? hour : `0${hour}`
+      minute = minute > 9 ? minute : `0${minute}`
+      second = second > 9 ? second : `0${second}`
+      this.onChange(`${hour}:${minute}:${second}`)
+    }
+    this.timer = setTimeout(this.update, 1000)
+  }
+
+}
+
 function randomIndexFunc(count=2) {
 
   const base = [
@@ -36,6 +73,7 @@ function randomIndexFunc(count=2) {
   return result
 }
 
+// 数独生成
 export function generateSoduku() {
   const baseDataSource = []
 

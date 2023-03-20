@@ -6,7 +6,21 @@ export const EVENT_EMITTER_NAME = {
   // 游戏开始
   ON_GAME_START: "ON_GAME_START",
   // 游戏结束
-  ON_GAME_END: "ON_GAME_END"
+  ON_GAME_END: "ON_GAME_END",
+  // 填入内容错误
+  ON_INPUT_ERROR: "ON_INPUT_ERROR",
+  // 填入数字
+  ON_INPUT: "ON_INPUT",
+  // 清除
+  ON_CLEAR: "ON_CLEAR",
+  // 撤销
+  ON_UNDO: "ON_UNDO",
+  // 重玩
+  ON_RESTART: "ON_RESTART",
+  // 笔记
+  ON_SUMMARY: "ON_SUMMARY",
+  // 提示
+  ON_MEMO: "ON_MEMO"
 }
 
 let instance
@@ -30,28 +44,12 @@ export default class DataBus {
     this.difficulty = 0
     // 介绍页还是游戏页
     this.gameStep = 1
-    // 游戏时间
-    this.gameTime = 0 
-    this.frame = 0
+    // 容错次数
+    this.errorCount = 3 
     // 分数
     this.score = 0
-    // 数独块
-    this.blocks = []
-    this.animations = []
     // 是否游戏结束
     this.gameOver = false
-  }
-
-  /**
-   * 回收数独块
-   * 此后不进入帧循环
-   */
-  removeBlocks(block) {
-    const temp = this.blocks.shift()
-
-    temp.visible = false
-
-    this.pool.recover('block', block)
   }
 
 }
