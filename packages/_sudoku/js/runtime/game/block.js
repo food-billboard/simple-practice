@@ -55,7 +55,7 @@ export default class Block {
   }
 
   handleJudge() {
-    const dataSource = databus.sodukuData
+    const dataSource = databus.sudokuData
     const columnData = dataSource.slice((this.y) * 9, (this.y + 1) * 9)
     const startY = Math.floor(this.y / 3)
     const startX = Math.floor(this.x / 3)
@@ -75,7 +75,7 @@ export default class Block {
     if(!!this.numberValue) return 
     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT, (number) => {
       if(!!~number) {
-        databus.setSodukuData([[this.index, number]])
+        databus.setSudokuData([[this.index, number]])
         this.init(number)
         this.numberValue = number 
         // 验证

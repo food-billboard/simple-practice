@@ -41,7 +41,7 @@ export default class DataBus {
     this.reset()
   }
 
-  sodukuData = []
+  sudokuData = []
 
   reset() {
     // 难度
@@ -56,13 +56,13 @@ export default class DataBus {
     this.gameOver = false 
   }
 
-  initSodukuData(value) {
-    this.sodukuData = value 
+  initSudokuData(value) {
+    this.sudokuData = value 
   }
 
-  setSodukuData(value) {
+  setSudokuData(value) {
     value.forEach(item => {
-      this.sodukuData[item[0]] = item[1]
+      this.sudokuData[item[0]] = item[1]
     })
   }
 

@@ -5,7 +5,7 @@ const keys = [
   'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6',
   '7', '8', '9'
 ]
-export function uuid(prefix='soduku') {
+export function uuid(prefix='sudoku') {
   return `${prefix}_${Date.now()}_${new Array(5).fill(0).map(item => keys[Math.floor(Math.random() * keys.length)]).join('_')}_${Math.random()}`
 }
 
@@ -82,7 +82,7 @@ function randomIndexFunc(count=2) {
 }
 
 // 数独生成
-export function generateSoduku() {
+export function generateSudoku() {
   const baseDataSource = []
 
   class Block {
@@ -126,7 +126,7 @@ export function generateSoduku() {
             .slice(i * 9, i * 9 + j)
             .map((item) => item.value);
           const prevColumnBlock = [];
-          for (let q = (i % 3) - 1; q >= 0; q--) {
+          for (let q = Math.floor(i / 3) * 3; q <= i; q++) {
             const start = Math.floor(j / 3) * 3;
             for (let p = start; p < start + 3; p++) {
               prevColumnBlock.push(baseDataSource[q * 9 + p].value);

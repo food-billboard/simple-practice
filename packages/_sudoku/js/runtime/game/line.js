@@ -1,7 +1,7 @@
 import cax from '../../libs/cax'
 import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import Block from './block'
-import { generateSoduku } from '../../base/utils'
+import { generateSudoku } from '../../base/utils'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
