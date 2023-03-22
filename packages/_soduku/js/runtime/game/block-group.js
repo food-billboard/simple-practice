@@ -3,9 +3,9 @@ import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import Block from './block'
 import Line from './line'
 import { generateSoduku } from '../../base/utils'
+import DataBus from '../../databus'
 
-const info = wx.getSystemInfoSync()
-const screenWidth = info.windowWidth
+const databus = new DataBus() 
 
 const line = new Line()
 export default class BlockGroup extends cax.Group {
@@ -18,12 +18,8 @@ export default class BlockGroup extends cax.Group {
       this[key] = value 
     })
 
-    this.rect = new cax.Rect(screenWidth, screenWidth, {
-      fillStyle: 'yellow'
-    })
-
-    this.add(this.rect, line)
     this.initBlock()
+    this.add(line)
    
   }
 
@@ -34,6 +30,8 @@ export default class BlockGroup extends cax.Group {
       const block = new Block({
         x: index % 9,
         y: Math.floor(index / 9)
+      }, {
+        index
       })
       return block 
     })
@@ -42,14 +40,10 @@ export default class BlockGroup extends cax.Group {
   }
 
   init() {
-    const dataSource = generateSoduku()
+    databus.initSodukuData(generateSoduku().slice(0, -2))
     this.instances.forEach((block, index) => {
-      block.init(dataSource[index])
+      block.init(databus.sodukuData[index])
     })
-  }
-
-  update () {
-    
   }
 
   onGameStart() {

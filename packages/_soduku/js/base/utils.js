@@ -9,6 +9,14 @@ export function uuid(prefix='soduku') {
   return `${prefix}_${Date.now()}_${new Array(5).fill(0).map(item => keys[Math.floor(Math.random() * keys.length)]).join('_')}_${Math.random()}`
 }
 
+// 去重
+export function duplicateRemoval(array) {
+  return array.reduce((acc, cur) => {
+    if(!acc.includes(cur)) acc.push(cur)
+    return acc 
+  }, [])
+}
+
 export class Interval {
 
   constructor(options) {

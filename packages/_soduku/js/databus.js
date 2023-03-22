@@ -20,7 +20,9 @@ export const EVENT_EMITTER_NAME = {
   // 笔记
   ON_SUMMARY: "ON_SUMMARY",
   // 提示
-  ON_MEMO: "ON_MEMO"
+  ON_MEMO: "ON_MEMO",
+  // 单元格点击
+  ON_BLOCK_TAP: "ON_BLOCK_TAP"
 }
 
 let instance
@@ -39,6 +41,8 @@ export default class DataBus {
     this.reset()
   }
 
+  sodukuData = []
+
   reset() {
     // 难度
     this.difficulty = 0
@@ -49,7 +53,17 @@ export default class DataBus {
     // 分数
     this.score = 0
     // 是否游戏结束
-    this.gameOver = false
+    this.gameOver = false 
+  }
+
+  initSodukuData(value) {
+    this.sodukuData = value 
+  }
+
+  setSodukuData(value) {
+    value.forEach(item => {
+      this.sodukuData[item[0]] = item[1]
+    })
   }
 
 }
