@@ -7,6 +7,12 @@ export const EVENT_EMITTER_NAME = {
   ON_GAME_START: "ON_GAME_START",
   // 游戏结束
   ON_GAME_END: "ON_GAME_END",
+  // 游戏暂停
+  ON_GAME_STOP: "ON_GAME_STOP",
+  // 游戏继续
+  ON_GAME_CONTINUE: "ON_GAME_CONTINUE",
+  // 强制退出
+  ON_GAME_QUITE: "ON_GAME_QUITE",
   // 填入内容错误
   ON_INPUT_ERROR: "ON_INPUT_ERROR",
   // 填入数字

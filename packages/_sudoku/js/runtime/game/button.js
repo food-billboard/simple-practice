@@ -9,6 +9,10 @@ export default class Button extends cax.Group {
   background
   title
 
+  updateText(title) {
+    this.title.text = title 
+  }
+
   init(options) {
 
     const { width, height, title, onClick, buttonProps={}, titleProps={} } = options 

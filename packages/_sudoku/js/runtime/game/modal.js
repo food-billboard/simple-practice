@@ -1,3 +1,4 @@
+import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
 import Button from './button'
 import IconButton from './icon-button'
@@ -13,7 +14,11 @@ export default class Modal extends cax.Group {
   constructor () {
     super()
     this.init()
+    this.eventBind()
   }
+
+  // 是否为游戏结束
+  isGameEnd = false 
 
   container 
   mask 
@@ -23,6 +28,7 @@ export default class Modal extends cax.Group {
   exitButton 
   restartButton 
   score 
+  scoreInfo = []
 
   initScore() {
     const container = new cax.Group() 
@@ -40,13 +46,38 @@ export default class Modal extends cax.Group {
     bg.x = 2 
     bg.y = 2
 
+    this.updateInfo(container)
     container.add(deepBg, bg)
 
     return container
   }
 
+  updateInfo(_container) {
+    const container = _container || this.score
+    const data = []
+    const startY = 4 
+    const startX = 4 
+    if(this.scoreInfo.length || data.length !== this.scoreInfo.length) {
+      this.scoreInfo = data.map((item, index) => {
+        const text = new cax.Text(item, {
+          font: '16px Arial',
+          color: '#ff7700',
+          baseline: 'middle'
+        })
+        text.x = startX
+        text.y = startY + index * 16 
+        return text 
+      })
+      container.add(...this.scoreInfo)
+    }else {
+      data.forEach((item, index) => {
+        this.scoreInfo[index].text = item 
+      })
+    }
+  }
+
   init() {
-    
+    this.visible = false 
     this.mask = new cax.Rect(screenWidth, screenHeight, {
       fillStyle: 'rgba(0, 0, 0, 0.5)'
     })
@@ -76,7 +107,9 @@ export default class Modal extends cax.Group {
       width: containerWidth * 0.6,
       height: buttonHeight,
       title: '继续',
-      onClick: () => {}
+      onClick: () => {
+        
+      }
     })
     this.button.x = containerWidth * 0.2 
     this.button.y = containerHeight * 0.7
@@ -93,7 +126,7 @@ export default class Modal extends cax.Group {
     this.exitButton = new IconButton({
       ...commonProps,
       image: exitImage,
-      onClick: () => {},
+      onClick: this.handleExit,
       title: '主页',
     })
     this.exitButton.x = containerWidth * 0.3 
@@ -101,7 +134,7 @@ export default class Modal extends cax.Group {
     this.restartButton = new IconButton({
       ...commonProps,
       image: restartImage,
-      onClick: () => {},
+      onClick: this.handleContinue,
       title: '重玩',
     })
     this.restartButton.x = containerWidth * 0.6 
@@ -113,6 +146,48 @@ export default class Modal extends cax.Group {
 
     this.add(this.mask, this.container)
 
+  }
+
+  // 回到主页
+  handleExit() {
+    this.handleHidden()
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_QUITE)
+  }
+
+  // 继续游戏
+  handleContinue() {
+    if(this.isGameEnd) {
+      // 如果是结束游戏
+      // 就重新开始游戏
+    }
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_CONTINUE)
+  }
+
+  // 游戏暂停
+  onGameStop() {
+    this.visible = true 
+  }
+
+  // 隐藏
+  handleHidden() {
+    this.visible = false 
+    this.button.visible = true 
+  }
+
+  // 游戏结束
+  onGameEnd() {
+    this.button.visible = false 
+    this.visible = true 
+  }
+
+  eventBind() {
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_END, this.onGameEnd, this)
+  }
+
+  eventUnBind() {
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop)
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_END, this.onGameEnd)
   }
 
 }
