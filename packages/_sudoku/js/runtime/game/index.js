@@ -5,6 +5,7 @@ import Header from './header'
 import Number from './number'
 import Toolbar from './toolbar'
 import Info from './info'
+import Modal from './modal'
 import { BANNER_HEIGHT } from '../banner'
 
 const dataBus = new DataBus()
@@ -45,8 +46,9 @@ export default class Game extends cax.Group {
       height: unitHeight,
       y: unitHeight * 3 + screenWidth
     })
+    const modal = new Modal()
 
-    this.add(header, number, toolbar, info, blockGroup)
+    this.add(header, number, toolbar, info, blockGroup, modal)
 
   }
 

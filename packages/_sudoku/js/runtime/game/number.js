@@ -21,16 +21,11 @@ export default class Number extends cax.Group {
    
   }
 
-  activeIndex = -1 
   instances = [] 
   texts = [] 
 
   onClickNumber(value) {
-    if(this.activeIndex !== value) {
-      if(!!~this.activeIndex) this.texts[this.activeIndex - 1].color = NORMAL_COLOR
-      this.texts[value - 1].color = ACTIVE_COLOR
-    }
-    this.activeIndex = value 
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT, value)
   }
 
   init() {
@@ -67,16 +62,12 @@ export default class Number extends cax.Group {
     this.add(...this.instances)
   }
 
-  onInput(callback) {
-    callback(this.activeIndex)
-  }
-
   eventBind() {
-    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput, this)
+    
   }
 
   eventUnBind() {
-    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput, this)
+    
   }
 
 }

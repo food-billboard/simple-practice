@@ -41,7 +41,10 @@ export default class DataBus {
     this.reset()
   }
 
+  // 数独的数据
   sudokuData = []
+  // 点击数独时的关联单元格集合
+  tapRelationBlocks = [] 
 
   reset() {
     // 难度

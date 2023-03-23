@@ -15,7 +15,7 @@ export default class BlockGroup extends cax.Group {
   init() {
     
     const horizontalLines = new Array(10).fill(0).map((_, index) => {
-      const line = new cax.Rect(screenWidth, 1, {
+      const line = new cax.Rect(screenWidth, index % 3 === 0 ? 2 : 1, {
         fillStyle: 'red'
       })
       line.x = 0 
@@ -23,7 +23,7 @@ export default class BlockGroup extends cax.Group {
       return line 
     })
     const verticalLines = new Array(10).fill(0).map((_, index) => {
-      const line = new cax.Rect(1, screenWidth, {
+      const line = new cax.Rect(index % 3 === 0 ? 2 : 1, screenWidth, {
         fillStyle: 'red'
       })
       line.x = index * (screenWidth / 9) 

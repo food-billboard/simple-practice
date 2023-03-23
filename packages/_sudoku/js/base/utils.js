@@ -126,15 +126,19 @@ export function generateSudoku() {
             .slice(i * 9, i * 9 + j)
             .map((item) => item.value);
           const prevColumnBlock = [];
+          const prevRowBlock = new Array(i).fill(0).map((_, index) => {
+            return baseDataSource[index * 9 + j].value 
+          })
           for (let q = Math.floor(i / 3) * 3; q <= i; q++) {
             const start = Math.floor(j / 3) * 3;
             for (let p = start; p < start + 3; p++) {
-              prevColumnBlock.push(baseDataSource[q * 9 + p].value);
+              const target = baseDataSource[q * 9 + p]
+              if(target) prevColumnBlock.push(target.value);
             }
           }
           const condition = BASE_DATA.filter(
             (item) =>
-              !currentRowBlock.includes(item) && !prevColumnBlock.includes(item),
+              !currentRowBlock.includes(item) && !prevColumnBlock.includes(item) && !prevRowBlock.includes(item),
           ).sort(() => (Math.random() > 0.5 ? -1 : 1));
           block = new Block(condition);
         }

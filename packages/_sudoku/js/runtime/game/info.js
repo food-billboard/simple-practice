@@ -87,10 +87,10 @@ export default class Info extends cax.Group {
   }
 
   onInputError() {
-    this.errorModal[3 - DataBus.errorCount].visible = false 
-    DataBus.errorCount -- 
+    this.errorModal[3 - databus.errorCount].visible = false 
+    databus.errorCount -- 
     // 游戏结束
-    if(!DataBus.errorCount) {
+    if(!databus.errorCount) {
       EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_END)
     }
   }
