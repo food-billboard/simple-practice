@@ -1,3 +1,4 @@
+import { ColorStyleManage } from '../databus'
 import cax from '../libs/cax'
 
 const info = wx.getSystemInfoSync()
@@ -15,12 +16,12 @@ export default class Banner extends cax.Group {
     this.height = BANNER_HEIGHT
 
     this.rect = new cax.Rect(screenWidth, BANNER_HEIGHT, {
-      fillStyle: 'gray'
+      fillStyle: ColorStyleManage.bannerColor
     })
 
     this.text = new cax.Text('广告位招租', {
       font: '20px Arial',
-      color: '#ff7700',
+      color: ColorStyleManage.fontColor,
       baseline: 'middle',
       textAlign: 'center'
     })

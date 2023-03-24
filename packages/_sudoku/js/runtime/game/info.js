@@ -1,7 +1,8 @@
 import cax from '../../libs/cax'
-import DataBus, { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
-import Image from '../../base/image'
-import { Interval } from '../../base/utils'
+import DataBus, { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
+import Image from './components/image'
+import { Interval } from '../../base/utils/index'
+import ErrorCount from '../../base/utils/error-count'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
@@ -15,20 +16,18 @@ export default class Info extends cax.Group {
     Object.entries(options).forEach(([key, value]) => {
       this[key] = value 
     })
-    this.fillStyle = 'red'
 
+    Interval.onChange((value) => {
+      if(this.timeoutText) {
+        this.timeoutText.text = value 
+      }
+    })
     this.init()
     this.eventBind()
   }
 
   // 定时器
-  interval = new Interval({
-    onChange: (value) => {
-      if(this.timeoutText) {
-        this.timeoutText.text = value 
-      }
-    }
-  })
+  interval = new Interval()
   // 内部group 
   group 
   // 难度
@@ -43,7 +42,7 @@ export default class Info extends cax.Group {
   init() {
     this.level = new cax.Text(`难度: ${databus.difficulty}`, {
       font: '16px Arial',
-      color: '#ff7700',
+      color: ColorStyleManage.defaultFontColor,
       baseline: 'middle'
     })
     this.level.x = 20 
@@ -51,7 +50,7 @@ export default class Info extends cax.Group {
 
     this.timeoutText = new cax.Text('00:00:00', {
       font: '16px Arial',
-      color: '#ff7700',
+      color: ColorStyleManage.defaultFontColor,
       baseline: 'middle',
       textAlign: 'right',
     })
@@ -78,30 +77,41 @@ export default class Info extends cax.Group {
     this.add(this.level, this.timeoutText, ...this.errorModal)
   }
 
+  // 游戏开始
   onGameStart() {
     this.level.text = `难度: ${databus.difficulty}`
     this.errorModal.forEach(object => {
       object.visible = true  
     })
+    ErrorCount.start() 
+    if(this.timeoutText) this.timeoutText.text = '00:00:00'
     this.interval.update(true)
   }
 
+  // 游戏暂停
+  onGameStop() {
+    this.interval.stop()
+  }
+
+  // 游戏继续
+  onGameContinue() {
+    this.interval.update()
+  }
+
   onInputError() {
-    this.errorModal[3 - databus.errorCount].visible = false 
-    databus.errorCount -- 
-    // 游戏结束
-    if(!databus.errorCount) {
-      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_END)
-    }
+    ErrorCount.errored(this.errorModal)
   }
 
   eventBind() {
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_CONTINUE, this.onGameContinue, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError, this)
   }
 
   eventUnBind() {
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart)
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError)
   }
 

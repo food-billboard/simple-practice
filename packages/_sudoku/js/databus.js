@@ -21,8 +21,6 @@ export const EVENT_EMITTER_NAME = {
   ON_CLEAR: "ON_CLEAR",
   // 撤销
   ON_UNDO: "ON_UNDO",
-  // 重玩
-  ON_RESTART: "ON_RESTART",
   // 笔记
   ON_SUMMARY: "ON_SUMMARY",
   // 提示
@@ -32,6 +30,7 @@ export const EVENT_EMITTER_NAME = {
 }
 
 let instance
+let colorManage 
 
 /**
  * 全局状态管理器
@@ -57,8 +56,6 @@ export default class DataBus {
     this.difficulty = 0
     // 介绍页还是游戏页
     this.gameStep = 1
-    // 容错次数
-    this.errorCount = 3 
     // 分数
     this.score = 0
     // 是否游戏结束
@@ -76,3 +73,79 @@ export default class DataBus {
   }
 
 }
+
+// 颜色管理
+class _ColorStyleManage {
+  constructor() {
+    if (colorManage) return colorManage
+
+    colorManage = this
+  }
+
+  get backgroundColor() {
+    return '#eee'
+  }
+
+  // 边框的颜色
+  get borderColor() {
+    return '#ff7700'
+  }
+
+  // 默认文字颜色
+  get defaultFontColor() {
+    return '#000'
+  }
+
+  // active文字颜色
+  get activeFontColor() {
+    return '#ff7700'
+  }
+
+  // 错误的文字颜色
+  get errorFontColor() {
+    return '#f00'
+  }
+
+  // 选中的背景颜色
+  get activeBackgroundColor() {
+    return '#999' 
+  }
+
+  // 普通的背景颜色
+  get defaultBackgroundColor() {
+    return '#eee'
+  }
+
+  // 普通二级背景颜色
+  get nextBackgroundColor() {
+    return '#ddd'
+  }
+
+  // 广告位的颜色
+  get bannerColor() {
+    return 'gray'
+  }
+
+  // 一级标题
+  get titleFontSize() {
+    return 28 
+  }
+
+  // 正文
+  get contentFontSize() {
+    return 16 
+  }
+
+  // 大按钮
+  get primaryButtonSize() {
+    return 20 
+  }
+
+  // 普通按钮
+  get defaultButtonSize() {
+    return 16 
+  }
+
+}
+
+export const ColorStyleManage = new _ColorStyleManage() 

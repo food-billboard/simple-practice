@@ -1,4 +1,4 @@
-import cax from '../libs/cax'
+import cax from '../../../libs/cax'
 
 export default class Image extends cax.Group {
 

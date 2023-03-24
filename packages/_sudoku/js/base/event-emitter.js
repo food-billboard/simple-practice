@@ -1,4 +1,4 @@
-import { uuid } from './utils'
+import { uuid } from './utils/index'
 
 const EMITTER_NAME_MAP = {}
 let instance 

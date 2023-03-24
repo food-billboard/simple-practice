@@ -50,6 +50,8 @@ export default class Game extends cax.Group {
 
     this.add(header, number, toolbar, info, blockGroup, modal)
 
+    this.eventBind()
+
   }
 
   update () {
@@ -61,6 +63,15 @@ export default class Game extends cax.Group {
     }else if(this.visible) {
       this.visible = false 
     }
+  }
+
+  // 退出游戏
+  onGameQuite() {
+    dataBus.gameStep = 0
+  }
+
+  eventBind() {
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_QUITE, this.onGameQuite, this)
   }
 
 }

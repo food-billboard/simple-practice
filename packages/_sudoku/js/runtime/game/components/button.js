@@ -1,4 +1,5 @@
-import cax from '../../libs/cax'
+import { ColorStyleManage } from '../../../databus'
+import cax from '../../../libs/cax'
 
 export default class Button extends cax.Group {
   constructor (options) {
@@ -18,11 +19,11 @@ export default class Button extends cax.Group {
     const { width, height, title, onClick, buttonProps={}, titleProps={} } = options 
 
     this.background = new cax.Rect(width, height, {
-      fillStyle: '#ff7700',
+      fillStyle: ColorStyleManage.activeFontColor,
       ...buttonProps
     })
     this.title = new cax.Text(title, {
-      font: '18px Arial',
+      font: `${ColorStyleManage.primaryButtonSize}px Arial`,
       baseline: 'middle',
       textAlign: 'center',
       ...titleProps

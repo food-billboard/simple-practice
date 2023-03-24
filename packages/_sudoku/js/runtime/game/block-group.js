@@ -2,7 +2,7 @@ import cax from '../../libs/cax'
 import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import Block from './block'
 import Line from './line'
-import { generateSudoku } from '../../base/utils'
+import { generateSudoku } from '../../base/utils/index'
 import DataBus from '../../databus'
 
 const databus = new DataBus() 
@@ -40,7 +40,7 @@ export default class BlockGroup extends cax.Group {
   }
 
   init() {
-    databus.initSudokuData(generateSudoku().slice(0, -2))
+    databus.initSudokuData(generateSudoku().slice(0, -4))
     this.instances.forEach((block, index) => {
       block.init(databus.sudokuData[index])
     })

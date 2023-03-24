@@ -1,8 +1,6 @@
+import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
-
-
-const info = wx.getSystemInfoSync()
-const screenWidth = info.windowWidth
+import IconButton from './components/icon-button'
 
 export default class Header extends cax.Group {
   constructor (options) {
@@ -12,15 +10,31 @@ export default class Header extends cax.Group {
       this[key] = value 
     })
 
-    this.rect = new cax.Rect(screenWidth, options.height, {
-      fillStyle: 'red'
-    })
-
-    this.add(this.rect)
+    this.init() 
    
   }
 
-  update () {
-    
+  stopButton
+
+  init() {
+
+    this.stopButton = new IconButton({
+      image: 'images/stop.png',
+      width: this.height * 0.8,
+      height: this.height * 0.8,
+      originWidth: 128,
+      originHeight: 128,
+      onClick: this.handleStop,
+    })
+    this.stopButton.x = 12 
+    this.stopButton.y = this.height * 0.1
+
+    this.add(this.stopButton)
+
   }
+
+  handleStop() {
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_STOP)
+  }
+
 }

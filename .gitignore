@@ -16,6 +16,7 @@
 /packages/**/dist 
 /packages/**/.umi 
 /packages/**/.umi-production
+/packages/**/.history  
 
 # misc
 .DS_Store

@@ -1,4 +1,4 @@
-import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
+import { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
 
 
@@ -38,7 +38,7 @@ export default class Number extends cax.Group {
       const group = new cax.Group()
 
       const rect = new cax.Rect(size, size, {
-        fillStyle: 'pink',
+        fillStyle: ColorStyleManage.activeBackgroundColor,
       })
       rect.x = startX + (size + space) * index 
       rect.y = startY

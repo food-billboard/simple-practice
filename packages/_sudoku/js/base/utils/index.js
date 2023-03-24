@@ -19,15 +19,14 @@ export function duplicateRemoval(array) {
 
 export class Interval {
 
-  constructor(options) {
-    const { onChange } = options
-    this.onChange = onChange
+  static onChangeList = [] 
+  static onChange(callback) {
+    this.onChangeList.push(callback)
   }
 
   counter = 0 
   timestamps = -1 
   timer 
-  onChange
 
   reset() {
     this.counter = 0 
@@ -47,7 +46,9 @@ export class Interval {
       hour = hour > 9 ? hour : `0${hour}`
       minute = minute > 9 ? minute : `0${minute}`
       second = second > 9 ? second : `0${second}`
-      this.onChange(`${hour}:${minute}:${second}`)
+      Interval.onChangeList.forEach(callback => callback(`${hour}:${minute}:${second}`))
+    }else {
+      this.reset()
     }
     this.timer = setTimeout(this.update, 1000)
   }

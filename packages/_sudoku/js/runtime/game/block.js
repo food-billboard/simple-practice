@@ -1,19 +1,19 @@
 import cax from '../../libs/cax'
-import { uuid } from '../../base/utils'
-import DataBus, { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
+import { uuid } from '../../base/utils/index'
+import DataBus, { EVENT_EMITTER, EVENT_EMITTER_NAME, ColorStyleManage } from '../../databus'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
 
 const databus = new DataBus() 
 
-const NORMAL_BACKGROUND = '#fff'
-const NORMAL_TEXT = '#000' 
+const NORMAL_BACKGROUND = ColorStyleManage.defaultBackgroundColor
+const NORMAL_TEXT = ColorStyleManage.defaultFontColor
 
-const ACTIVE_BACKGROUND = '#666' 
-const ACTIVE_TEXT = '#ff0' 
+const ACTIVE_BACKGROUND = ColorStyleManage.activeBackgroundColor
+const ACTIVE_TEXT = ColorStyleManage.activeFontColor
 
-const ERROR_TEXT = '#f00'
+const ERROR_TEXT = ColorStyleManage.errorFontColor
 
 export default class Block {
   constructor (position, options) {
@@ -40,7 +40,9 @@ export default class Block {
   text 
   background  
   numberValue 
+  // 是否是被点击的
   active = false 
+  // 是否是输入错误的
   error = false 
 
   init(value=0) {
@@ -68,6 +70,7 @@ export default class Block {
     }
   }
 
+  // 计算是否发生冲突
   handleJudge() {
     const duplicate = databus.tapRelationBlocks.reduce((acc, cur) => {
       const [ x, y ] = cur.split(',')
@@ -83,6 +86,7 @@ export default class Block {
     }
   }
 
+  // 计算点击关联的单元格
   calRelation() {
     const startX = Math.floor(this.x / 3) * 3
     const startY = Math.floor(this.y / 3) * 3
@@ -121,7 +125,9 @@ export default class Block {
 
   // 响应点击关联
   onBlockTap(config) {
-    const { value } = config
+    const { value, index } = config
+
+    this.active = this.index === index
 
     // 相同数字高亮文字
     if(!this.error) {
@@ -158,13 +164,25 @@ export default class Block {
     }
   }
 
+  // 游戏开始
+  onGameStart() {
+    if(this.active || this.error) {
+      this.active = false 
+      this.error = false 
+      this.text.color = NORMAL_TEXT
+    }
+    this.background.option.fillStyle = NORMAL_BACKGROUND
+  }
+
   eventBind() {
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_BLOCK_TAP, this.onBlockTap, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError, this)
   }
 
   eventUnBind() {
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_BLOCK_TAP, this.onBlockTap)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError)

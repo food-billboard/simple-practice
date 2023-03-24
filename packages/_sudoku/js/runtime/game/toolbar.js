@@ -1,4 +1,4 @@
-import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
+import { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
 
 
@@ -26,7 +26,7 @@ export default class Toolbar extends cax.Group {
   }
 
   onRestart() {
-    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_RESTART)
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
   }
 
   onSummary() {
@@ -74,7 +74,7 @@ export default class Toolbar extends cax.Group {
 
       const text = new cax.Text(value, {
         font: '16px Arial',
-        color: '#ff7700',
+        color: ColorStyleManage.activeFontColor,
         baseline: 'middle',
         textAlign: 'center'
       })

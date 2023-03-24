@@ -1,11 +1,16 @@
-import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
+import { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
-import Button from './button'
-import IconButton from './icon-button'
+import Button from './components/button'
+import IconButton from './components/icon-button'
+import ListItem from './components/list-item'
+import DataBus from '../../databus'
+import { Interval } from '../../base/utils/index'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
 const screenHeight = info.windowHeight 
+
+const databus = new DataBus() 
 
 const exitImage = 'images/home.png'
 const restartImage = 'images/restart.png'
@@ -13,12 +18,15 @@ const restartImage = 'images/restart.png'
 export default class Modal extends cax.Group {
   constructor () {
     super()
+    Interval.onChange((timeText) => {
+      this.timeText = timeText
+    })
     this.init()
     this.eventBind()
   }
 
-  // 是否为游戏结束
-  isGameEnd = false 
+  // 倒计时文字
+  timeText
 
   container 
   mask 
@@ -32,46 +40,48 @@ export default class Modal extends cax.Group {
 
   initScore() {
     const container = new cax.Group() 
-    container.x = screenWidth * 0.1 
+    container.x = screenWidth * 0.8 * 0.1 
     container.y = 72 
 
     const wrapperWidth = screenWidth * 0.8 * 0.8
     const wrapperHeight = wrapperWidth * 0.5 
     const deepBg = new cax.Rect(wrapperWidth, wrapperHeight, {
-      fillStyle: '#ff7700'
+      fillStyle: ColorStyleManage.borderColor
     }) 
     const bg = new cax.Rect(wrapperWidth - 4, wrapperHeight - 4, {
-      fillStyle: '#eee'
+      fillStyle: ColorStyleManage.defaultBackgroundColor
     }) 
     bg.x = 2 
     bg.y = 2
 
-    this.updateInfo(container)
     container.add(deepBg, bg)
+    this.updateInfo(container, { width: wrapperWidth, height: wrapperHeight })
 
     return container
   }
 
-  updateInfo(_container) {
+  updateInfo(_container, options) {
     const container = _container || this.score
-    const data = []
+    const data = [
+      ['难度', databus.difficulty], 
+      ['时间', this.timeText], 
+      ['完成度', `${databus.sudokuData.filter(item => !!item).length}/${databus.sudokuData.length}`]
+    ]
     const startY = 4 
     const startX = 4 
-    if(this.scoreInfo.length || data.length !== this.scoreInfo.length) {
+    if(!this.scoreInfo.length || data.length !== this.scoreInfo.length) {
       this.scoreInfo = data.map((item, index) => {
-        const text = new cax.Text(item, {
+        const text = new ListItem(item, {
           font: '16px Arial',
-          color: '#ff7700',
-          baseline: 'middle'
-        })
+        }, options)
         text.x = startX
-        text.y = startY + index * 16 
+        text.y = startY + index * 32
         return text 
       })
       container.add(...this.scoreInfo)
     }else {
       data.forEach((item, index) => {
-        this.scoreInfo[index].text = item 
+        this.scoreInfo[index].updateText(item) 
       })
     }
   }
@@ -79,27 +89,27 @@ export default class Modal extends cax.Group {
   init() {
     this.visible = false 
     this.mask = new cax.Rect(screenWidth, screenHeight, {
-      fillStyle: 'rgba(0, 0, 0, 0.5)'
+      fillStyle: 'rgba(0, 0, 0, 0.7)'
     })
     const containerWidth = screenWidth * 0.8 
-    const containerHeight = containerWidth * 1.2 
+    const containerHeight = containerWidth * 1
     this.container = new cax.Group() 
     this.container.x = screenWidth * 0.1 
     this.container.y = (screenHeight - containerHeight) / 2 
 
     this.background = new cax.Rect(containerWidth, containerHeight, {
-      fillStyle: '#fff'
+      fillStyle: ColorStyleManage.nextBackgroundColor
     })
     this.title = new cax.Text('暂停', {
-      font: '36px Arial',
-      color: '#ff7700',
+      font: '28px Arial',
+      color: ColorStyleManage.defaultFontColor,
       baseline: 'middle',
       textAlign: 'center',
     })
     this.title.x = containerWidth / 2 
     this.title.y = 36
     this.button = new cax.Rect(containerWidth * 0.6, 36, {
-      fillStyle: '#ff7700'
+      fillStyle: ColorStyleManage.activeFontColor
     })
 
     const buttonHeight = 36 
@@ -107,9 +117,7 @@ export default class Modal extends cax.Group {
       width: containerWidth * 0.6,
       height: buttonHeight,
       title: '继续',
-      onClick: () => {
-        
-      }
+      onClick: this.handleContinue
     })
     this.button.x = containerWidth * 0.2 
     this.button.y = containerHeight * 0.7
@@ -130,15 +138,15 @@ export default class Modal extends cax.Group {
       title: '主页',
     })
     this.exitButton.x = containerWidth * 0.3 
-    this.exitButton.y = containerHeight * 0.7 + buttonHeight * 1.5
+    this.exitButton.y = containerHeight * 0.7 + buttonHeight * 1.2
     this.restartButton = new IconButton({
       ...commonProps,
       image: restartImage,
-      onClick: this.handleContinue,
+      onClick: this.handleRestart,
       title: '重玩',
     })
-    this.restartButton.x = containerWidth * 0.6 
-    this.restartButton.y = containerHeight * 0.7 + buttonHeight * 1.5
+    this.restartButton.x = containerWidth * 0.7 -  commonProps.width
+    this.restartButton.y = containerHeight * 0.7 + buttonHeight * 1.2
 
     this.score = this.initScore() 
 
@@ -149,22 +157,26 @@ export default class Modal extends cax.Group {
   }
 
   // 回到主页
-  handleExit() {
+  handleExit = () => {
     this.handleHidden()
     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_QUITE)
   }
 
   // 继续游戏
-  handleContinue() {
-    if(this.isGameEnd) {
-      // 如果是结束游戏
-      // 就重新开始游戏
-    }
+  handleContinue = () => {
+    this.handleHidden()
     EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_CONTINUE)
+  }
+
+  // 重玩
+  handleRestart = () => {
+    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_START)
+    this.handleHidden() 
   }
 
   // 游戏暂停
   onGameStop() {
+    this.updateInfo()
     this.visible = true 
   }
 
@@ -177,6 +189,7 @@ export default class Modal extends cax.Group {
   // 游戏结束
   onGameEnd() {
     this.button.visible = false 
+    this.updateInfo()
     this.visible = true 
   }
 

@@ -1,5 +1,5 @@
 import cax from '../../libs/cax'
-import DataBus from '../../databus'
+import DataBus, { ColorStyleManage } from '../../databus'
 import { BANNER_HEIGHT } from '../banner'
 
 const info = wx.getSystemInfoSync()
@@ -30,7 +30,7 @@ function createLevel(options) {
 
   const textInstance = new cax.Text(text, {
     font: '20px Arial',
-    color: '#ff7700',
+    color: ColorStyleManage.activeFontColor,
     baseline: 'middle',
     textAlign: 'center',
     ...fontOptions
