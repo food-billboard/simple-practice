@@ -15,6 +15,8 @@ const ACTIVE_TEXT = ColorStyleManage.activeFontColor
 
 const ERROR_TEXT = ColorStyleManage.errorFontColor
 
+const PRIMARY_ACTIVE_BACKGROUND = ColorStyleManage.primaryActiveBackgroundColor
+
 export default class Block {
   constructor (position, options) {
     this.index = options.index 
@@ -71,8 +73,11 @@ export default class Block {
   }
 
   // 计算是否发生冲突
-  handleJudge() {
-    const duplicate = databus.tapRelationBlocks.reduce((acc, cur) => {
+  handleJudge(needCal) {
+
+    const relation = needCal ? this.calRelation() : databus.tapRelationBlocks
+
+    const duplicate = relation.reduce((acc, cur) => {
       const [ x, y ] = cur.split(',')
       const number = databus.sudokuData[+x + y * 9]
       if(!!number && this.numberValue === number) {
@@ -81,9 +86,7 @@ export default class Block {
       return acc 
     }, [])
 
-    if(duplicate.length) {
-      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT_ERROR, duplicate)
-    }
+    return duplicate
   }
 
   // 计算点击关联的单元格
@@ -138,7 +141,9 @@ export default class Block {
       }
     }
     // 关联单元格高亮背景
-    if(databus.tapRelationBlocks.includes(`${this.x},${this.y}`)) {
+    if(this.active) {
+      this.background.option.fillStyle = PRIMARY_ACTIVE_BACKGROUND
+    }else if(databus.tapRelationBlocks.includes(`${this.x},${this.y}`)) {
       this.background.option.fillStyle = ACTIVE_BACKGROUND
     }else {
       this.background.option.fillStyle = NORMAL_BACKGROUND
@@ -152,21 +157,39 @@ export default class Block {
       this.init(number)
       this.numberValue = number 
       // 验证
-      this.handleJudge()
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT_JUDGE, this.index, this.handleJudge(false))
+      EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT_END, this.index, number)
+      this.handleTap()
+
+      // 判断是否游戏结束
+      if(databus.isSudokuComplete()) {
+        EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_GAME_COMPLETE)
+      }
     }
   }
 
-  // 输入错误
-  onInputError(duplicate) {
-    if(duplicate.includes(`${this.x},${this.y}`)) {
-      this.error = true 
+  // 输入判断
+  onInputJudge(currentInputIndex, _duplicate) {
+
+    const duplicate = _duplicate || this.handleJudge(true)
+
+    if(duplicate.includes(`${this.x},${this.y}`) && duplicate.length > 1) {
+      this.error = true  
       this.text.color = ERROR_TEXT
+      if(currentInputIndex === this.index) {
+        EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT_ERROR)
+      }
+    }else if(!_duplicate) {
+      if(this.error) {
+        this.error = false 
+      }
+      this.text.color = NORMAL_TEXT
     }
   }
 
   // 游戏开始
   onGameStart() {
-    if(this.active || this.error) {
+    if(this.active || this.error || this.text.color !== NORMAL_TEXT) {
       this.active = false 
       this.error = false 
       this.text.color = NORMAL_TEXT
@@ -174,18 +197,34 @@ export default class Block {
     this.background.option.fillStyle = NORMAL_BACKGROUND
   }
 
+  // 清除内容
+  onClear(judge) {
+    if(this.active && judge(this.index)) {
+      // 清除内容
+      this.numberValue = undefined 
+      this.text.text = '' 
+      databus.setSudokuData([[this.index, 0]])
+      // 清除错误提示
+      if(this.error) {
+        EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_INPUT_JUDGE)
+      }
+    }
+  }
+
   eventBind() {
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_BLOCK_TAP, this.onBlockTap, this)
-    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_INPUT_JUDGE, this.onInputJudge, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_CLEAR, this.onClear, this)
   }
 
   eventUnBind() {
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_START, this.onGameStart)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT, this.onInput)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_BLOCK_TAP, this.onBlockTap)
-    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT_ERROR, this.onInputError)
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_INPUT_JUDGE, this.onInputJudge)
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_CLEAR, this.onClear, this)
   }
 
 }

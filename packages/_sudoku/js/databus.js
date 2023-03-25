@@ -7,16 +7,24 @@ export const EVENT_EMITTER_NAME = {
   ON_GAME_START: "ON_GAME_START",
   // 游戏结束
   ON_GAME_END: "ON_GAME_END",
+  // 游戏完成
+  ON_GAME_COMPLETE: "ON_GAME_COMPLETE",
   // 游戏暂停
   ON_GAME_STOP: "ON_GAME_STOP",
   // 游戏继续
   ON_GAME_CONTINUE: "ON_GAME_CONTINUE",
   // 强制退出
   ON_GAME_QUITE: "ON_GAME_QUITE",
+  // 填入内容校验
+  ON_INPUT_JUDGE: "ON_INPUT_JUDGE",
   // 填入内容错误
   ON_INPUT_ERROR: "ON_INPUT_ERROR",
+  // 填入错误内容重置
+  ON_INPUT_ERROR_RESET: "ON_INPUT_ERROR_RESET",
   // 填入数字
   ON_INPUT: "ON_INPUT",
+  // 填入完成
+  ON_INPUT_END: "ON_INPUT_END",
   // 清除
   ON_CLEAR: "ON_CLEAR",
   // 撤销
@@ -46,6 +54,8 @@ export default class DataBus {
     this.reset()
   }
 
+  // 游戏完成总数
+  sudokuCompleteTotal = 81 
   // 数独的数据
   sudokuData = []
   // 点击数独时的关联单元格集合
@@ -70,6 +80,10 @@ export default class DataBus {
     value.forEach(item => {
       this.sudokuData[item[0]] = item[1]
     })
+  }
+
+  isSudokuComplete() {
+    return this.sudokuData.filter(item => !!item).length === 81 
   }
 
 }
@@ -104,6 +118,11 @@ class _ColorStyleManage {
   // 错误的文字颜色
   get errorFontColor() {
     return '#f00'
+  }
+
+  // 顶级选中背景颜色
+  get primaryActiveBackgroundColor() {
+    return '#777'
   }
 
   // 选中的背景颜色

@@ -65,7 +65,7 @@ export default class Modal extends cax.Group {
     const data = [
       ['难度', databus.difficulty], 
       ['时间', this.timeText], 
-      ['完成度', `${databus.sudokuData.filter(item => !!item).length}/${databus.sudokuData.length}`]
+      ['完成度', `${databus.sudokuData.filter(item => !!item).length}/${databus.sudokuCompleteTotal}`]
     ]
     const startY = 4 
     const startX = 4 
@@ -184,23 +184,35 @@ export default class Modal extends cax.Group {
   handleHidden() {
     this.visible = false 
     this.button.visible = true 
+    this.title.text = '暂停'
   }
 
   // 游戏结束
   onGameEnd() {
     this.button.visible = false 
+    this.title.text = '游戏结束'
     this.updateInfo()
+    this.visible = true 
+  }
+
+  // 游戏完成
+  onGameComplete() {
+    this.button.visible = false 
+    this.title.text = '游戏完成'
+    this.updateInfo() 
     this.visible = true 
   }
 
   eventBind() {
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop, this)
     EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_END, this.onGameEnd, this)
+    EVENT_EMITTER.addListener(EVENT_EMITTER_NAME.ON_GAME_COMPLETE, this.onGameComplete, this)
   }
 
   eventUnBind() {
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_STOP, this.onGameStop)
     EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_END, this.onGameEnd)
+    EVENT_EMITTER.removeListener(EVENT_EMITTER_NAME.ON_GAME_COMPLETE, this.onGameComplete)
   }
 
 }

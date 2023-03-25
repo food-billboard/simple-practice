@@ -2,7 +2,7 @@ import cax from '../../libs/cax'
 import DataBus, { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import Image from './components/image'
 import { Interval } from '../../base/utils/index'
-import ErrorCount from '../../base/utils/error-count'
+import ErrorCount from '../../base/utils/tool-bar/error-count'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth

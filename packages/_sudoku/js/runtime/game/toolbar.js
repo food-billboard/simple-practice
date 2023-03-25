@@ -1,6 +1,9 @@
 import { ColorStyleManage, EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../databus'
 import cax from '../../libs/cax'
-
+import ClearAction from '../../base/utils/tool-bar/clear-action'
+import MemoAction from '../../base/utils/tool-bar/memo-action'
+import SummaryAction from '../../base/utils/tool-bar/summary-action'
+import UndoAction from '../../base/utils/tool-bar/undo-action'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
@@ -18,11 +21,11 @@ export default class Toolbar extends cax.Group {
   }
 
   onClear() {
-    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_CLEAR)
+    ClearAction.emit()
   }
 
   onUndo() {
-    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_UNDO)
+    UndoAction.emit()
   }
 
   onRestart() {
@@ -30,11 +33,11 @@ export default class Toolbar extends cax.Group {
   }
 
   onSummary() {
-    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_SUMMARY)
+    SummaryAction.emit()
   }
 
   onMemo() {
-    EVENT_EMITTER.emit(EVENT_EMITTER_NAME.ON_MEMO)
+    MemoAction.emit()
   }
 
   onClickAction(value) {
