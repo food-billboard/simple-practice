@@ -40,8 +40,9 @@ export default class Info extends cax.Group {
   bg 
 
   init() {
+    const font = `${ColorStyleManage.contentFontSize}px Arial`
     this.level = new cax.Text(`难度: ${databus.difficulty}`, {
-      font: '16px Arial',
+      font,
       color: ColorStyleManage.defaultFontColor,
       baseline: 'middle'
     })
@@ -49,7 +50,7 @@ export default class Info extends cax.Group {
     this.level.y = this.height / 2
 
     this.timeoutText = new cax.Text('00:00:00', {
-      font: '16px Arial',
+      font,
       color: ColorStyleManage.defaultFontColor,
       baseline: 'middle',
       textAlign: 'right',
@@ -57,7 +58,7 @@ export default class Info extends cax.Group {
     this.timeoutText.x = screenWidth - 20
     this.timeoutText.y = this.height / 2
 
-    const errorHeight = this.height * 0.6
+    const errorHeight = this.height * 0.5
     const errorWidth = 100 / 79 * errorHeight
     this.errorModal = new Array(3).fill(0).map((_, index) => {
       const object = new Image({

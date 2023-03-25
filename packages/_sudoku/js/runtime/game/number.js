@@ -5,8 +5,7 @@ import cax from '../../libs/cax'
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
 
-const NORMAL_COLOR = '#ffffff'
-const ACTIVE_COLOR = '#ff7700'
+const NORMAL_COLOR = ColorStyleManage.defaultFontColor
 
 export default class Number extends cax.Group {
   constructor (options) {
@@ -31,20 +30,20 @@ export default class Number extends cax.Group {
   init() {
     // 间距
     const space = 4
-    const size = this.height * 0.8 
+    const size = screenWidth / 11
     const startY = (this.height - size) / 2
     const startX = (screenWidth - (size * 9 + space * 8)) / 2
     this.instances = new Array(9).fill(0).map((_, index) => {
       const group = new cax.Group()
 
       const rect = new cax.Rect(size, size, {
-        fillStyle: ColorStyleManage.activeBackgroundColor,
+        fillStyle: ColorStyleManage.nextBackgroundColor,
       })
       rect.x = startX + (size + space) * index 
       rect.y = startY
 
       const text = new cax.Text(index + 1, {
-        font: '16px Arial',
+        font: `${ColorStyleManage.primaryButtonSize}px Arial`,
         color: NORMAL_COLOR,
         baseline: 'middle',
         textAlign: 'center'

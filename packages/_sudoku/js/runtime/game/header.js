@@ -26,7 +26,7 @@ export default class Header extends cax.Group {
       originHeight: 128,
       onClick: this.handleStop,
     })
-    this.stopButton.x = 12 
+    this.stopButton.x = 20 
     this.stopButton.y = this.height * 0.1
 
     this.add(this.stopButton)
