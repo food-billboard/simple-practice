@@ -22,6 +22,9 @@ export default class Button extends cax.Group {
       originWidth,
       originHeight
     })
+    this.temp = new cax.Rect(width, height, {
+      fillStyle: 'rgba(0, 0, 0, 0.01)'
+    })
 
     this.title = new cax.Text(title, {
       font: `${ColorStyleManage.defaultButtonSize}px Arial`,
@@ -34,8 +37,9 @@ export default class Button extends cax.Group {
 
     this.background.image.on('tap', onClick)
     this.title.on('tap', onClick)
+    this.temp.on('tap', onClick)
 
-    this.add(this.background, this.title)
+    this.add(this.background, this.title, this.temp)
 
   }
 

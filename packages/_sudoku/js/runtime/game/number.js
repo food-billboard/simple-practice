@@ -30,7 +30,8 @@ export default class Number extends cax.Group {
   init() {
     // 间距
     const space = 4
-    const size = screenWidth / 11
+    let size = screenWidth / 11
+    if(size + 4 >= this.height) size = this.height * 0.7
     const startY = (this.height - size) / 2
     const startX = (screenWidth - (size * 9 + space * 8)) / 2
     this.instances = new Array(9).fill(0).map((_, index) => {

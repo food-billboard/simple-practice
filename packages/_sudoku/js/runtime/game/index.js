@@ -13,6 +13,7 @@ const dataBus = new DataBus()
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
 const screenHeight = info.windowHeight
+const statusBarHeight = info.statusBarHeight
 
 export default class Game extends cax.Group {
   constructor () {
@@ -25,26 +26,28 @@ export default class Game extends cax.Group {
     this.height = screenHeight - BANNER_HEIGHT
 
     // 除了数独外的剩余高度
-    const restHeight = this.height - screenWidth
+    const restHeight = this.height - screenWidth - statusBarHeight
     const unitHeight = restHeight / 4
+    const startY = statusBarHeight 
 
     const header = new Header({
-      height: unitHeight
+      height: unitHeight,
+      y: startY
     })
     const info = new Info({
       height: unitHeight,
-      y: unitHeight
+      y: startY + unitHeight
     })
     const blockGroup = new BlockGroup({
-      y: unitHeight * 2
+      y: startY + unitHeight * 2
     }) 
     const number = new Number({
       height: unitHeight,
-      y: unitHeight * 2 + screenWidth
+      y: startY + unitHeight * 2 + screenWidth
     })
     const toolbar = new Toolbar({
       height: unitHeight,
-      y: unitHeight * 3 + screenWidth
+      y: startY + unitHeight * 3 + screenWidth
     })
     const modal = new Modal()
 

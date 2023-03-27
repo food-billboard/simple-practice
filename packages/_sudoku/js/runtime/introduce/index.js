@@ -1,10 +1,12 @@
 import cax from '../../libs/cax'
 import DataBus, { ColorStyleManage } from '../../databus'
 import { BANNER_HEIGHT } from '../banner'
+import Button from '../game/components/button'
 
 const info = wx.getSystemInfoSync()
 const screenWidth = info.windowWidth
 const screenHeight = info.windowHeight
+const statusBarHeight = info.statusBarHeight
 
 const dataBus = new DataBus()
 
@@ -14,33 +16,33 @@ const LOGO_HEIGHT = 185
 
 function createLevel(options) {
   const {
-    width=screenWidth,
     height,
-    x=0,
     y,
     text,
     fontOptions={},
     tap,
   } = options 
-  const group = new cax.Group()
-  group.width = width
-  group.height = height 
-  group.x = x 
-  group.y = y 
 
-  const textInstance = new cax.Text(text, {
-    font: '20px Arial',
-    color: ColorStyleManage.activeFontColor,
-    baseline: 'middle',
-    textAlign: 'center',
-    ...fontOptions
+  const button = new Button({
+    width: screenWidth * 0.3, 
+    height: height * 0.5, 
+    title: text, 
+    onClick: tap, 
+    buttonProps: {
+
+    }, 
+    titleProps: {
+      font: `${ColorStyleManage.primaryButtonSize}px Arial`,
+      baseline: 'middle',
+      textAlign: 'center',
+      ...fontOptions
+    }
   })
-  textInstance.x = width / 2
-  textInstance.y = height / 2
-  textInstance.on('tap', tap)
-  group.add(textInstance)
 
-  return group 
+  button.x = screenWidth * 0.35
+  button.y = y + height * 0.25
+
+  return button 
 }
 
 export default class Introduce extends cax.Group {
@@ -53,9 +55,9 @@ export default class Introduce extends cax.Group {
     this.logo.originY = LOGO_HEIGHT / 2
     this.logo.scaleX = this.logo.scaleY = screenWidth / 4 / LOGO_WIDTH
     this.logo.x = screenWidth / 2
-    this.logo.y = 20 + this.logo.scaleY * LOGO_HEIGHT / 2
+    this.logo.y = 20 + this.logo.scaleY * LOGO_HEIGHT / 2 + statusBarHeight
 
-    const levelStartY = this.logo.y + this.logo.scaleY * LOGO_HEIGHT / 2 + 20
+    const levelStartY = this.logo.y + this.logo.scaleY * LOGO_HEIGHT / 2 + 20 + statusBarHeight
     const restHeight = screenHeight - levelStartY - BANNER_HEIGHT
 
     const levelHeight = restHeight / Object.keys(this.levelMap).length
@@ -99,8 +101,6 @@ export default class Introduce extends cax.Group {
   update () {
     if(dataBus.gameStep === 0) {
       if(!this.visible) this.visible = true 
-      // this.text.x = 100
-      // this.text.y = 100
     }else if(this.visible) {
       this.visible = false 
     }

@@ -1,4 +1,3 @@
-
 const keys = [
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
   'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
@@ -83,7 +82,8 @@ function randomIndexFunc(count=2) {
 }
 
 // 数独生成
-export function generateSudoku() {
+export function generateSudoku(level) {
+
   const baseDataSource = []
 
   class Block {

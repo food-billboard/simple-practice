@@ -69,7 +69,7 @@ export default class Info extends cax.Group {
         originHeight: 79
       })
       object.setProp({
-        x: screenWidth / 2 - this.height * (3 / 2 - index),
+        x: screenWidth / 2 - (errorWidth + 4) * (3 / 2 - index),
         y: (this.height - errorHeight) / 2,
       })
       return object

@@ -40,7 +40,7 @@ export default class BlockGroup extends cax.Group {
   }
 
   init() {
-    databus.initSudokuData(generateSudoku().slice(0, -4))
+    databus.initSudokuData(generateSudoku(databus.difficulty))
     this.instances.forEach((block, index) => {
       block.init(databus.sudokuData[index])
     })

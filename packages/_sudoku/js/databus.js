@@ -65,7 +65,7 @@ export default class DataBus {
     // 难度
     this.difficulty = 0
     // 介绍页还是游戏页
-    this.gameStep = 1
+    this.gameStep = 0
     // 分数
     this.score = 0
     // 是否游戏结束
