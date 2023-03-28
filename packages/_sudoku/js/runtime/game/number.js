@@ -44,7 +44,7 @@ export default class Number extends cax.Group {
       rect.y = startY
 
       const text = new cax.Text(index + 1, {
-        font: `${ColorStyleManage.primaryButtonSize}px Arial`,
+        font: `${Math.min(ColorStyleManage.primaryButtonSize, size * 0.6)}px Arial`,
         color: NORMAL_COLOR,
         baseline: 'middle',
         textAlign: 'center'

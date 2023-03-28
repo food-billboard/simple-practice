@@ -37,6 +37,7 @@ export class Interval {
   }
 
   update = (first=false) => {
+    clearTimeout(this.timer)
     if(!first) {
       this.counter ++ 
       let hour = Math.floor(this.counter / 60 / 60)
@@ -79,6 +80,29 @@ function randomIndexFunc(count=2) {
   }, [])
 
   return result
+}
+
+const LEVEL_MAP = {
+  0: 30,
+  1: 40,
+  2: 60 
+}
+
+// 挖空
+function hollowOutSudoku(_dataSource, level) {
+
+  const dataSource = [..._dataSource]
+
+  new Array(LEVEL_MAP[level]).fill(0).forEach(() => {
+    let index
+    while(!dataSource[index]) {
+      index = Math.floor(Math.random() * dataSource.length)
+    }
+    dataSource[index] = 0 
+  })
+
+  return dataSource
+
 }
 
 // 数独生成
@@ -160,6 +184,8 @@ export function generateSudoku(level) {
     }
   }
 
-  return baseDataSource.map(item => item.value)
+  const completeSudokuData = baseDataSource.map(item => item.value)
+
+  return hollowOutSudoku(completeSudokuData, level)
 
 }
