@@ -1,5 +1,6 @@
 import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../../databus'
 
+// 笔记
 class SummaryAction {
   
   emit() {

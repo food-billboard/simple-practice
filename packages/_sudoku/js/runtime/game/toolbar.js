@@ -57,7 +57,7 @@ export default class Toolbar extends cax.Group {
 
   init() {
     const text = [
-      '清除', '撤销', '重玩', '笔记', '提示'
+      '清除', '重玩', '笔记', '提示'
     ]
     const length = text.length
     // 间距

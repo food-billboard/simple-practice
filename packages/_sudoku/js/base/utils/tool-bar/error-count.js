@@ -1,5 +1,6 @@
 import { EVENT_EMITTER, EVENT_EMITTER_NAME } from "../../../databus"
 
+// 错误次数
 class ErrorCount {
 
   value = 3 

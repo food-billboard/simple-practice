@@ -1,5 +1,6 @@
 import { EVENT_EMITTER, EVENT_EMITTER_NAME } from '../../../databus'
 
+// 清除
 class ClearAction {
   
   constructor() {
