@@ -11,6 +11,7 @@ type ListData = {
   classify: string 
   status: 'todo' | 'delete' | 'complete'
   label: string 
+  images?: string[] 
   description?: string 
 }
 

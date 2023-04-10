@@ -6,6 +6,7 @@ import { ClassifyData, ListData, ListSearchType } from '../type'
 const REQUEST_CACHE_PREFIX = "TODO_LIST_REQUEST_CACHE_PREFIX"
 const REQUEST_CACHE_CLASSIFY = `${REQUEST_CACHE_PREFIX}_CLASSIFY`
 const REQUEST_CACHE_LIST_DATA = `${REQUEST_CACHE_PREFIX}_LIST_DATA`
+const REQUEST_CACHE_IMAGE = "REQUEST_CACHE_IMAGE"
 
 class DataSourceRequest {
 
@@ -148,6 +149,18 @@ class DataSourceRequest {
       console.error(err)
       return false 
     }
+  }
+
+  // 文件上传
+  async postImageUpload(file: File): Promise<string> {
+    return new Promise(resolve => {
+      const fileReader = new FileReader() 
+      fileReader.onload = (e) => {
+        const result = e.target?.result
+        resolve(result as string || '')
+      }
+      fileReader.readAsDataURL(file)
+    })
   }
 
 }
