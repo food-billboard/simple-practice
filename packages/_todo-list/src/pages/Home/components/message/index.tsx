@@ -24,10 +24,12 @@ const Message = (props: {
 function useMessage(duration=3000) {
 
   const [ visible, setVisible ] = useState(false)
+  const [ children, setChildren ] = useState<any>('')
 
   const timeoutRef = useRef<any>()
 
-  const show = useCallback(() => {
+  const show = useCallback((child?: ReactNode) => {
+    setChildren(child)
     setVisible(true)
     timeoutRef.current = setTimeout(() => {
       setVisible(false)
@@ -44,7 +46,8 @@ function useMessage(duration=3000) {
     show,
     hide,
     {
-      visible
+      visible,
+      children
     }
   ]
 

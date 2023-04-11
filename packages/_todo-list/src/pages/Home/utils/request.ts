@@ -37,8 +37,9 @@ class DataSourceRequest {
 
   // 指定分类todo 
   async getListDataByClassify(_classify?: string, _search?: ListSearchType): Promise<ListData[]> {
-    let classify
-    let search: ListSearchType
+
+    let classify = _classify === 'all' ? '' : _classify
+    let search: ListSearchType = _search || {}
 
     if(typeof _classify === 'object') {
       classify = '' 
@@ -105,10 +106,11 @@ class DataSourceRequest {
   async postInsertClassify(classify: Omit<ClassifyData, 'id'>) {
     try {
       const data = await this.getClassifyList()
-      data.push({
+      const newData: ClassifyData = {
         ...classify,
         id: uuid()
-      })
+      }
+      data.push(newData)
       await LocalForage.setItem(REQUEST_CACHE_CLASSIFY, data)
       return true 
     }catch(err) {
