@@ -21,19 +21,19 @@ const Message = (props: {
 
 }
 
-function useMessage(duration=3000) {
+function useMessage(duration=1000) {
 
   const [ visible, setVisible ] = useState(false)
   const [ children, setChildren ] = useState<any>('')
 
   const timeoutRef = useRef<any>()
 
-  const show = useCallback((child?: ReactNode) => {
+  const show = useCallback((child?: ReactNode, _duration?: number) => {
     setChildren(child)
     setVisible(true)
     timeoutRef.current = setTimeout(() => {
       setVisible(false)
-    }, duration)
+    }, _duration ?? duration)
   }, [duration])
 
   const hide = useCallback(() => {

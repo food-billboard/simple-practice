@@ -4,7 +4,7 @@ import {
   WiredImage as WERWiredImage 
 } from 'wired-elements-react'
 import DataSourceRequest from '../../utils/request'
-import useMessage from '../message'
+import { useContext } from '../../utils/context'
 import { CommonFormProps } from '../../type'
 import './index.less'
 
@@ -16,7 +16,7 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
   const { value=[], onChange, limit=3 } = props 
   const [ loading, setLoading ] = useState(false)
 
-  const [ Message, show, hide, messageProps ] = useMessage()
+  const { message } = useContext()
 
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -29,7 +29,7 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
     const [file] = e.target.files 
     if(file) {
       if(file.size > 5 * 1024) {
-        show()
+        message('文件大小不能超过5kb')
         return 
       }
       setLoading(true)
@@ -55,7 +55,7 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
         (!~limit || limit > value.length) && (
           <WiredCard className='todo-list-add'>
             <div onClick={handleAdd}>
-              文件上传
+              +
             </div>
           </WiredCard>
         )
@@ -73,10 +73,7 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
           )
         })
       }
-      <input multiple={false} type="file" ref={fileRef} onChange={onFileChange} />
-      <Message {...messageProps}>
-        文件大小不能超过5kb
-      </Message>
+      <input style={{display: 'none'}} multiple={false} type="file" ref={fileRef} onChange={onFileChange} />
     </div>
   )
 

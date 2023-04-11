@@ -13,3 +13,18 @@
 .todo-list-card-section {
   
 }
+.todo-list-card-item {
+  width: 100%;
+  .todo-list-card-item-wrapper {
+    width: 100%;
+    display: flex;
+    & > div:nth-of-type(1) {
+      flex: 1;
+      display: flex;
+      margin-right: 30px;
+      .todo-list-card-item-label {
+        flex: 1;
+      }
+    }
+  }
+}

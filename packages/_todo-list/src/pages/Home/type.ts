@@ -1,4 +1,10 @@
 
+// 全局数据
+type ContextData = {
+  classify: ClassifyData[]
+  message: (message: string) => void 
+}
+
 // 分类
 type ClassifyData = {
   id: string 
@@ -31,5 +37,6 @@ export {
   CommonFormProps,
   ClassifyData,
   ListData,
-  ListSearchType
+  ListSearchType,
+  ContextData
 }
