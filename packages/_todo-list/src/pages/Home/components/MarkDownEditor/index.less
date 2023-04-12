@@ -1,5 +1,9 @@
 .todo-list-markdown {
   width: 100%;
+  max-width: ~'min(400px, 50vw)';
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   box-sizing: border-box;
   &-header {
     text-align: right;
@@ -7,5 +11,10 @@
   &-editor {
     width: 100%;
     box-sizing: border-box;
+  }
+  &-shower {
+    width: 100%;
+    min-height: 100px;
+    word-break: break-all;
   }
 }

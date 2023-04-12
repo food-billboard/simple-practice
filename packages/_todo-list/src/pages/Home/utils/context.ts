@@ -3,6 +3,7 @@ import { ContextData } from '../type'
 
 export const Context = createContext<ContextData>({
   classify: [],
+  width: 100,
   message: () => {}
 })
 

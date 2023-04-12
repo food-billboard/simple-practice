@@ -8,6 +8,7 @@ import {
   WiredInput as WERWiredInput,
   WiredButton as WERWiredButton
 } from 'wired-elements-react'
+import { useSize } from 'ahooks'
 import useMessage from './components/message';
 import useModal from './components/Modal'
 import List, { ToDoCardRef } from './components/List'
@@ -34,8 +35,9 @@ function HomePage() {
   const [toDoInputValue, setToDoInputValue] = useState('')
   const [classifyInputValue, setClassifyInputValue] = useState('')
 
+  const { width=0 } = useSize(() => document.querySelector('')) || {}
+
   const cardRef = useRef<ToDoCardRef>(null)
-  const selectRef = useRef<any>(null)
 
   const [Message, show, hide, messageProps] = useMessage(1000)
   const [AddClassifyModal, showModal, hideModal, modalProps] = useModal()
@@ -141,9 +143,12 @@ function HomePage() {
       value={{
         classify: classifyList,
         message: show,
+        width
       }}
     >
-      <WiredCard className={`todo-list-container-${isMobile ? 'h5' : 'pc'}`}>
+      <WiredCard 
+        className={`todo-list-container-${isMobile ? 'h5' : 'pc'}`}
+      >
         <header>
           <WiredCard className="todo-list-header">
             <div>
@@ -162,8 +167,8 @@ function HomePage() {
             <WiredButton onClick={handleCreateToDo}>生成</WiredButton>
           </div>
           <div className='todo-list-section-action'>
-            <div>
-              <WiredCombo ref={selectRef} id="classify-select" selected={currentClassify} onselected={onSelectChange}>
+            <div className='todo-list-section-action-wrapper'>
+              <WiredCombo id="classify-select" selected={currentClassify} onselected={onSelectChange}>
                 <WiredItem value="all">全部</WiredItem>
                 {classifyDomList}
               </WiredCombo>

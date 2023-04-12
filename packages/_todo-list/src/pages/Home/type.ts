@@ -2,6 +2,7 @@
 // 全局数据
 type ContextData = {
   classify: ClassifyData[]
+  width: number 
   message: (message: string) => void 
 }
 

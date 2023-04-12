@@ -2,8 +2,6 @@ import { useRef, useState, useCallback, useMemo } from 'react'
 import MarkDownIt from 'markdown-it'
 import {
   WiredCard as WERWiredCard,
-  WiredCheckbox as WERWiredCheckbox,
-  WiredIconButton as WERWiredIconButton,
   WiredButton as WERWiredButton,
   WiredTextarea as WERWiredTextarea,
 } from 'wired-elements-react'
@@ -11,10 +9,8 @@ import { CommonFormProps } from '../../type'
 import './index.less'
 
 const WiredCard = WERWiredCard as any
-const WiredCheckbox = WERWiredCheckbox as any
 const WiredButton = WERWiredButton as any
 const WiredTextarea = WERWiredTextarea as any
-const WiredIconButton = WERWiredIconButton as any
 
 let instance: MarkDownRender
 
@@ -58,23 +54,24 @@ const MarkDownEditor = (props: CommonFormProps) => {
     <WiredCard className="todo-list-markdown">
       <div className='todo-list-markdown-header'>
         <WiredButton onClick={setMarkdownAble.bind(null, !markdownAble)}>
-          {markdownAble ? 'Markdown模式' : '预览模式'}
+          {markdownAble ? '编辑模式' : '预览模式'}
         </WiredButton>
       </div>
+      <WiredTextarea 
+        className="todo-list-markdown-editor" 
+        style={{
+          display: markdownAble ? 'inline-block' : 'none'
+        }}
+        onchange={onTextChange}
+        value={value} 
+        rows={6}
+        maxRows={10}
+      />
       {
-        markdownAble ? (
-          <WiredTextarea 
-            className="todo-list-markdown-editor" 
-            onchange={onTextChange}
-            value={value} 
-            rows={6}
-            maxRows={10}
-          />
-        )
-        :
-        (
-          <div>
+        !markdownAble && (
+          <div className="todo-list-markdown-shower">
             {previewValue}
+            {'22'.repeat(200)}
           </div>
         )
       }
