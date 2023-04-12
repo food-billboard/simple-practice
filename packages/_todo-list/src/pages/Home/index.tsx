@@ -35,7 +35,7 @@ function HomePage() {
   const [toDoInputValue, setToDoInputValue] = useState('')
   const [classifyInputValue, setClassifyInputValue] = useState('')
 
-  const { width=0 } = useSize(() => document.querySelector('')) || {}
+  const { width=0 } = useSize(() => document.querySelector('.todo-list-container')) || {}
 
   const cardRef = useRef<ToDoCardRef>(null)
 
@@ -147,7 +147,7 @@ function HomePage() {
       }}
     >
       <WiredCard 
-        className={`todo-list-container-${isMobile ? 'h5' : 'pc'}`}
+        className={`todo-list-container todo-list-container-${isMobile ? 'h5' : 'pc'}`}
       >
         <header>
           <WiredCard className="todo-list-header">

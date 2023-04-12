@@ -14,6 +14,8 @@ import {
   WiredButton as WERWiredButton,
   WiredInput as WERWiredInput,
 } from 'wired-elements-react'
+import { uniqueId } from 'lodash'
+import useNotation from '../Notation';
 import DataSourceRequest from '../../utils/request'
 import { useContext } from '../../utils/context'
 import useModal from '../Modal'
@@ -39,9 +41,12 @@ const ToDoItem = (props: ListData & {
   const [editData, setEditData] = useState<ListData>({ ...nextData })
 
   const loading = useRef(false)
+  const todoId = useRef(uniqueId('todo-item'))
+
+  const [ showNotation, hideNotation ] = useNotation(`#${todoId.current}`)
 
   const [EditModal, show, hide, modalProps] = useModal()
-  const { message, classify: classifyDataSource } = useContext()
+  const { message, classify: classifyDataSource, width } = useContext()
 
   const classifyData = useMemo(() => {
     return classifyDataSource.find(item => item.id === classify)
@@ -90,10 +95,15 @@ const ToDoItem = (props: ListData & {
     loading.current = false
   }, [id, classify, onReload, status])
 
+  useEffect(() => {
+
+  }, [])
+
   return (
     <>
       <WiredCard
         className="todo-list-card-item"
+        id={todoId.current}
       >
         <div className='todo-list-card-item-wrapper'>
           <div>

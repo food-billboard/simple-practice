@@ -5,6 +5,7 @@ import {
   WiredDivider as WERWiredDivider
 } from 'wired-elements-react'
 import './index.less'
+import { useContext } from '../../utils/context';
 
 const WiredDialog = WERWiredDialog as any 
 const WiredButton = WERWiredButton as any 
@@ -25,6 +26,8 @@ const Modal = (props: {
 
   const { children, visible, title, okText='确定', cancelText='取消', onOk, onCancel, disabled, style, className } = props 
 
+  const { width } = useContext()
+
   return (
     <WiredDialog 
       className={`todo-list-modal ${className || ""}`}
@@ -32,7 +35,12 @@ const Modal = (props: {
       elevation={3}
       style={style}
     >
-      <div className='todo-list-modal-wrapper'>
+      <div 
+        className='todo-list-modal-wrapper'
+        style={{
+          maxWidth: width 
+        }}
+      >
         {
           !!title && (
             <div className='todo-list-modal-title'>

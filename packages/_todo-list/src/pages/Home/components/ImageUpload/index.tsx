@@ -55,10 +55,13 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
         (!~limit || limit > value.length) && (
           <div onClick={handleAdd} className='todo-list-upload-item'>
             <WiredCard className='todo-list-upload-item-card'>
+              
+            </WiredCard>
+            <div className='todo-list-upload-item-card' style={{ padding: 10 }}>
               <img
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAABMCAMAAAAr8gs7AAAAPFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQLyYwAAAAE3RSTlMAwECAcF4gTxDfsPDQoDDvkI/PCjtUZwAAAQVJREFUWMPt2I1OxSAMhmHawoD9a+//XgVPTObJjGL6xRB5L+DJlhVYcKPRn5bCbo9Oh+pmroqWJmuVIGou6OKs0xJZo1xVgajBWpWqMkRN1ipBRoAQI+CWop7mKmSwHGQEdojKHanxqvawYId6r+4sL0T6iFLzWcgXiTlK1Q793NmsBg6y0at+VcPRNr0/VdYf5t1TaaanDr0pE81S8/yRyEalRVe5+SLflCXw5BrzNxARbVKw9ff7a7i+VXLXCLJr61BrM0SloXahckdqhMyrQNbWCVFJax6isrGaIar+d3WCqAxRvSrgJkMequtBJaC6QlTqQvWYH6K5oGty1kWJbjRq6g3isSNM2K9SuQAAAABJRU5ErkJggg=="
               />
-            </WiredCard>
+            </div>
           </div>
         )
       }
@@ -71,9 +74,9 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
               className='todo-list-upload-item'
             >
               <WiredCard className='todo-list-upload-item-card'>
-               
+
               </WiredCard>
-              <div className='todo-list-upload-item-card' style={{padding: 10}}>
+              <div className='todo-list-upload-item-card' style={{ padding: 10 }}>
                 <img
                   src={item}
                 />
