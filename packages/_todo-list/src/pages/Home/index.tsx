@@ -16,6 +16,7 @@ import DataSourceRequest from './utils/request'
 import { Context } from './utils/context'
 import Loading from './components/Loading'
 import { ClassifyData } from './type'
+import 'animate.css'
 import './index.less'
 
 const WiredCard = WERWiredCard as any
@@ -39,7 +40,7 @@ function HomePage() {
 
   const cardRef = useRef<ToDoCardRef>(null)
 
-  const [Message, show, hide, messageProps] = useMessage(1000)
+  const [Message, show, hide, messageProps] = useMessage(2000)
   const [AddClassifyModal, showModal, hideModal, modalProps] = useModal()
 
   // 选择分类

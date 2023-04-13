@@ -3,21 +3,19 @@ import MarkDownIt from 'markdown-it'
 import {
   WiredCard as WERWiredCard,
   WiredButton as WERWiredButton,
-  WiredTextarea as WERWiredTextarea,
 } from 'wired-elements-react'
 import { CommonFormProps } from '../../type'
 import './index.less'
 
 const WiredCard = WERWiredCard as any
 const WiredButton = WERWiredButton as any
-const WiredTextarea = WERWiredTextarea as any
 
 let instance: MarkDownRender
 
 class MarkDownRender {
 
   constructor() {
-    if(!instance) return instance 
+    if(instance) return instance 
     instance = this 
     this.markDownInstance = new MarkDownIt('default', {
       langPrefix: 'language-',
@@ -43,11 +41,11 @@ const MarkDownEditor = (props: CommonFormProps) => {
 
   const onTextChange = useCallback((value: any) => {
     onChange?.(value.target.value)
-  }, [])
+  }, [onChange])
 
   const previewValue = useMemo(() => {
-    if(markdownAble) return '' 
-    return markdownRef.current.render(value)
+    if(markdownAble || !value) return '' 
+    return markdownRef.current.render(value.toString())
   }, [markdownAble, value])
 
   return (
@@ -57,24 +55,22 @@ const MarkDownEditor = (props: CommonFormProps) => {
           {markdownAble ? '编辑模式' : '预览模式'}
         </WiredButton>
       </div>
-      <WiredTextarea 
-        className="todo-list-markdown-editor" 
-        style={{
-          display: markdownAble ? 'inline-block' : 'none'
-        }}
-        onchange={onTextChange}
-        value={value} 
-        rows={6}
-        maxRows={10}
-      />
-      {
-        !markdownAble && (
-          <div className="todo-list-markdown-shower">
-            {previewValue}
-            {'22'.repeat(200)}
-          </div>
-        )
-      }
+      <WiredCard className="todo-list-markdown-editor">
+        {
+          markdownAble ? (
+            <textarea onChange={onTextChange} value={value} rows={10} placeholder='可以输入待办的描述（这是一个markdown编辑）' />
+          )
+          :
+          (
+            <div 
+              className="todo-list-markdown-shower"
+              dangerouslySetInnerHTML={{
+                __html: previewValue || ''
+              }}
+            />
+          )
+        }
+      </WiredCard>
     </WiredCard>
   )
 

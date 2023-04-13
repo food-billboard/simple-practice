@@ -15,6 +15,7 @@ import {
   WiredInput as WERWiredInput,
 } from 'wired-elements-react'
 import { uniqueId } from 'lodash'
+import { useUpdateEffect } from 'ahooks'
 import useNotation from '../Notation';
 import DataSourceRequest from '../../utils/request'
 import { useContext } from '../../utils/context'
@@ -46,12 +47,17 @@ const ToDoItem = (props: ListData & {
   const [ showNotation, hideNotation ] = useNotation(`#${todoId.current}`)
 
   const [EditModal, show, hide, modalProps] = useModal()
-  const { message, classify: classifyDataSource, width } = useContext()
+  const { message, classify: classifyDataSource } = useContext()
+
+  const disabled = useMemo(() => {
+    return status === 'delete'
+  }, [status])
 
   const classifyData = useMemo(() => {
     return classifyDataSource.find(item => item.id === classify)
   }, [classify, classifyDataSource])
 
+  // 修改数据监听
   const onEditChange = useCallback((key: keyof ListData, value: any) => {
     let realValue = value 
     try {
@@ -66,22 +72,28 @@ const ToDoItem = (props: ListData & {
     })
   }, [editData])
 
+  // 打开修改
   const handleEdit = useCallback(() => {
     if(nextData.status !== 'todo') return 
     setEditData({...nextData})
     show()
   }, [show, nextData])
 
+  // 修改提交
   const onEditOk = useCallback(async () => {
     if (loading.current) return
     loading.current = false
     const result = await DataSourceRequest.postUpdateTodo(id, classify, editData)
-    if (result) {
+    if (!result) {
       message('操作失败')
+    }else {
+      await onReload?.()
+      hide()
     }
     loading.current = true
-  }, [id, classify])
+  }, [id, classify, editData])
 
+  // 删除
   const onToDoDelete = useCallback(async () => {
     if (loading.current) return
     loading.current = true
@@ -95,23 +107,57 @@ const ToDoItem = (props: ListData & {
     loading.current = false
   }, [id, classify, onReload, status])
 
-  useEffect(() => {
-
+  const onStatusChange = useCallback(async (e: any) => {
+    if (loading.current) return
+    loading.current = true
+    const value = e.detail.checked 
+    const nextStatus = value ? 'complete' : 'todo'
+    const result = await DataSourceRequest.postUpdateTodo(id, classify, {
+      status: nextStatus
+    })
+    if (!result) {
+      message('操作失败')
+    }
+    await onReload?.()
+    loading.current = false 
   }, [])
+
+  const updateNotation = (status: ListData['status'], animate: boolean) => {
+    if(status === 'delete') {
+      showNotation({
+        type: 'crossed-off',
+        animate 
+      })
+    }else if(status === 'complete') {
+      showNotation({
+        type: 'strike-through',
+        animate 
+      })
+    }else {
+      hideNotation()
+    }
+  }
+
+  useEffect(() => {
+    updateNotation(status, false)
+  }, [])
+
+  useUpdateEffect(() => {
+    updateNotation(status, true)
+  }, [status])
 
   return (
     <>
       <WiredCard
-        className="todo-list-card-item"
-        id={todoId.current}
+        className="todo-list-card-item animate__animated animate__delay-1s"
       >
         <div className='todo-list-card-item-wrapper'>
           <div>
-            <WERWiredCheckbox checked={status === 'complete'} />
+            <WERWiredCheckbox disabled={disabled} checked={status === 'complete'} onchange={onStatusChange} />
             <WiredCard className="todo-list-card-item-label">
-              <div onClick={handleEdit}>{label}</div>
+              <div id={todoId.current} onClick={handleEdit}>{label}</div>
             </WiredCard>
-            <WiredButton>{classifyData?.label}</WiredButton>
+            <WiredButton disabled={disabled}>{classifyData?.label}</WiredButton>
           </div>
           <div className="todo-list-card-item-action">
             <WiredIconButton onClick={onToDoDelete}>
@@ -132,6 +178,8 @@ const ToDoItem = (props: ListData & {
           {...modalProps}
           onOk={onEditOk}
           onCancel={hide}
+          title={label}
+          width={0.8}
         >
           <WiredInput style={{width: '100%'}} placeholder="输入代办事项标题" value={editData.label} onchange={onEditChange.bind(null, 'label')} />
           <MarkDownEditor value={editData.description} onChange={onEditChange.bind(null, 'description')} />

@@ -3,7 +3,7 @@
 type ContextData = {
   classify: ClassifyData[]
   width: number 
-  message: (message: string) => void 
+  message: (message: string, duration?: number) => void 
 }
 
 // 分类

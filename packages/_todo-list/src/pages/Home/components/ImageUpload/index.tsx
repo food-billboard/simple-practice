@@ -27,10 +27,14 @@ const ImageUpload = (props: CommonFormProps<string[]> & { limit?: number }) => {
 
   const onFileChange = useCallback(async (e: any) => {
     const [file] = e.target.files
+    e.target.value = ''
     if (file) {
       if (file.size > 5 * 1024) {
         message('文件大小不能超过5kb')
         return
+      }else if(!['png', 'jpg', 'jpeg', 'webp'].includes(file.type.split('/')[1])) {
+        message('不支持的图片格式')
+        return 
       }
       setLoading(true)
       try {

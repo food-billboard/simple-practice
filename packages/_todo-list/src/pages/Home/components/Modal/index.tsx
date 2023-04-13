@@ -21,10 +21,11 @@ const Modal = (props: {
   onCancel?: () => void 
   disabled?: boolean 
   style?: CSSProperties
-  className?: string 
+  className?: string,
+  width?: number 
 }) => {
 
-  const { children, visible, title, okText='确定', cancelText='取消', onOk, onCancel, disabled, style, className } = props 
+  const { children, visible, title, okText='确定', cancelText='取消', onOk, onCancel, disabled, style, className, width: propsWidth } = props 
 
   const { width } = useContext()
 
@@ -37,8 +38,10 @@ const Modal = (props: {
     >
       <div 
         className='todo-list-modal-wrapper'
-        style={{
-          maxWidth: width 
+        style={propsWidth ? {
+          width: propsWidth <= 1 ? propsWidth * width : propsWidth
+        } : {
+          maxWidth: width * 0.8
         }}
       >
         {

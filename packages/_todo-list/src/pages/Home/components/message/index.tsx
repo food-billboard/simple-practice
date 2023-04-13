@@ -1,8 +1,10 @@
 import { ReactNode, useCallback, useState, useRef } from 'react';
 import { 
-  WiredCard
+  WiredCard as WERWiredCard
 } from 'wired-elements-react'
 import './index.less'
+
+const WiredCard = WERWiredCard as any
 
 const Message = (props: {
   children?: ReactNode
@@ -11,17 +13,17 @@ const Message = (props: {
 
   const { children, visible } = props 
 
-  if(visible) return null 
+  if(!visible) return null 
 
   return (
-    <div className='todo-list-message'>
+    <WiredCard className='todo-list-message animate__animated animate__fadeInUp animate__faster' fill="green">
       {children}
-    </div>
+    </WiredCard>
   )
 
 }
 
-function useMessage(duration=1000) {
+function useMessage(duration=3000) {
 
   const [ visible, setVisible ] = useState(false)
   const [ children, setChildren ] = useState<any>('')

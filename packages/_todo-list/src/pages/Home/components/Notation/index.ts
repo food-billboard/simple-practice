@@ -14,31 +14,32 @@ const COLOR_TYPE_MAP: {
   bracket: ''
 }
 
-export default function useNotation(query: string) {
+type ShowMethodType = (config: Partial<RoughAnnotationConfig> & { type: RoughAnnotationConfig['type'] }) => void 
+
+export default function useNotation(query: string): [
+  ShowMethodType,
+  () => void 
+] {
 
   const notationRef = useRef<ReturnType<typeof annotate>>()
   const currentType = useRef('')
 
-  const element: any = useMemo(() => {
-    return document.querySelector(query)
-  }, [query])
-
-  const show = useCallback((config: Partial<RoughAnnotationConfig> & { type: RoughAnnotationConfig['type'] }) => {
+  const show: ShowMethodType = useCallback((config) => {
     const { type } = config 
-    if(!type || !element) return
+    if(!type) return
     const prevType = currentType.current 
     currentType.current = type
     if(currentType.current !== prevType) {
       notationRef.current?.remove()
-      notationRef.current = annotate(element, {
+      notationRef.current = annotate(document.querySelector(query) as any, {
         color: COLOR_TYPE_MAP[config.type],
         ...config 
       })
     }
+    notationRef.current?.show()
   }, [])
 
   const hide = useCallback(() => {
-    currentType.current = '' 
     notationRef.current?.hide() 
   }, [])
 
