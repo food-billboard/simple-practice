@@ -9,7 +9,7 @@ const COLOR_TYPE_MAP: {
   box: '',
   circle: '',
   highlight: '',
-  'strike-through': '#666',
+  'strike-through': '#4ea397',
   'crossed-off': '#f00',
   bracket: ''
 }

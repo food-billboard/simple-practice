@@ -157,7 +157,7 @@ const ToDoItem = (props: ListData & {
             <WiredCard className="todo-list-card-item-label">
               <div id={todoId.current} onClick={handleEdit}>{label}</div>
             </WiredCard>
-            <WiredButton disabled={disabled}>{classifyData?.label}</WiredButton>
+            <WiredCard disabled={disabled}>{classifyData?.label}</WiredCard>
           </div>
           <div className="todo-list-card-item-action">
             <WiredIconButton onClick={onToDoDelete}>
@@ -295,15 +295,14 @@ const ToDoCard = forwardRef<ToDoCardRef, Partial<ClassifyData> & {
             })
           }
         </div>
-        <div className='todo-list-card-header-action'>
-          {
-            !isAll && (
-              <>
-                <WiredButton style={{ marginRight: 8 }} elevation={3} onClick={handleUpdateClassify}>修改</WiredButton>
-                <WiredButton elevation={3} onClick={deleteShow}>删除</WiredButton>
-              </>
-            )
-          }
+        <div 
+          className='todo-list-card-header-action'
+          style={{
+            visibility: isAll ? 'hidden' : 'visible'
+          }}
+        >
+          <WiredButton style={{ marginRight: 8 }} elevation={3} onClick={handleUpdateClassify}>修改</WiredButton>
+          <WiredButton elevation={3} onClick={deleteShow}>删除</WiredButton>
         </div>
       </div>
       <div className='todo-list-card-section'>

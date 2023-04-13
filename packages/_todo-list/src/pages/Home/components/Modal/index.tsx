@@ -56,8 +56,16 @@ const Modal = (props: {
         {
           (okText || cancelText) && (
             <div className='todo-list-modal-footer'>
-              <WiredButton style={{marginRight: 8}} elevation={3} onClick={onCancel}>{cancelText}</WiredButton>
-              <WiredButton disabled={disabled} elevation={3} onClick={onOk}>{okText}</WiredButton>
+              {
+                !!cancelText && (
+                  <WiredButton style={{marginRight: 8}} elevation={3} onClick={onCancel}>{cancelText}</WiredButton>
+                )
+              }
+              {
+                !!okText && (
+                  <WiredButton disabled={disabled} elevation={3} onClick={onOk}>{okText}</WiredButton>
+                )
+              }
             </div>
           )
         }

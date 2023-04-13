@@ -1,4 +1,10 @@
 
+// 图表数据
+type ChartData = {
+  name: string 
+  value: number 
+}
+
 // 全局数据
 type ContextData = {
   classify: ClassifyData[]
@@ -20,6 +26,7 @@ type ListData = {
   label: string 
   images?: string[] 
   description?: string 
+  timestamps: number 
 }
 
 // 列表搜索项
@@ -39,5 +46,6 @@ export {
   ClassifyData,
   ListData,
   ListSearchType,
-  ContextData
+  ContextData,
+  ChartData
 }
