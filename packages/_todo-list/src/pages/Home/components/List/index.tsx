@@ -24,7 +24,7 @@ import useModal from '../Modal'
 import Loading from '../Loading'
 import MarkDownEditor from '../MarkDownEditor';
 import ImageUpload from '../ImageUpload';
-import { ClassifyData, ListData } from '../../type'
+import { ClassifyData, ListData, ListSearchType } from '../../type'
 import './index.less'
 
 const WiredCard = WERWiredCard as any
@@ -223,7 +223,7 @@ const ToDoItem = (props: ListData & {
 }
 
 export type ToDoCardRef = {
-  reload: () => Promise<void>
+  reload: (search?: ListSearchType) => Promise<void>
 }
 
 const ToDoCard = forwardRef<ToDoCardRef, Partial<ClassifyData> & {
@@ -278,8 +278,8 @@ const ToDoCard = forwardRef<ToDoCardRef, Partial<ClassifyData> & {
     setLoading(false)
   }, [id, reload, loading])
 
-  const fetchData = useCallback(async () => {
-    const result = await DataSourceRequest.getListDataByClassify(id)
+  const fetchData = useCallback(async (search?: ListSearchType) => {
+    const result = await DataSourceRequest.getListDataByClassify(id, search)
     setDataSource(result)
   }, [id])
 

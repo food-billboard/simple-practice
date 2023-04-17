@@ -117,7 +117,11 @@ class DataSourceRequest {
 					(await LocalForage.getItem<ListData[]>(
 						`${REQUEST_CACHE_LIST_DATA}_${classify}`
 					)) || []
-				const target = sort ? this.sortToDoList(result) : result 
+				let target = sort ? this.sortToDoList(result) : result 
+				target = target.filter(item => {
+					const { status, content } = search || {}
+					return (!status || item.status === status) && (!content || item.description?.includes(content) || item.label.includes(content))
+				})
 				this.#CACHE.todoList = target 
 				return target
 			} else {

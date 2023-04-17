@@ -67,6 +67,15 @@ function HomePage() {
     setClassifyInputValue(value)
   }, [])
 
+  // 搜索todo
+  const handleSearchToDo = useCallback(async () => {
+    if (!toDoInputValue || fetchLoading) return
+    await cardRef.current?.reload({
+      content: toDoInputValue
+    })
+    setFetchLoading(false)
+  }, [toDoInputValue, fetchLoading])
+
   // 生成todo
   const handleCreateToDo = useCallback(async () => {
     if (!toDoInputValue || fetchLoading) return
@@ -182,6 +191,7 @@ function HomePage() {
             <div className='todo-list-section-input'>
               <WiredInput className="todo-list-section-input-main" placeholder="输入你的待办事项吧（根据下面的当前分类进行增加）" value={toDoInputValue} onchange={onInputChange} />
               <WiredButton onClick={handleCreateToDo}>生成</WiredButton>
+              <WiredButton onClick={handleSearchToDo}>搜索</WiredButton>
             </div>
             <div className='todo-list-section-action'>
               <div className='todo-list-section-action-wrapper'>
