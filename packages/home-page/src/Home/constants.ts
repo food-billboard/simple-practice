@@ -23,6 +23,7 @@ import fuitAlliance from './images/fruit-alliance.png'
 import flagGetter from './images/flag-getter.png'
 import flappyBird from './images/flappy-bird.png'
 import myBlog from './images/my-blog.png'
+import todoList from './images/todo-list.png'
 
 const internalUrl = (name: string) => `https://food-billboard.github.io/simple-practice/${name}/index.html`
 
@@ -38,6 +39,15 @@ export const PACKAGE_MAP = [
     url: 'https://food-billboard.github.io/',
     development: true,
     code: 'https://github.com/food-billboard/food-billboard.github.io/tree/hexo'
+  },
+  {
+    label: 'ToDoList',
+    description: '手绘风格的todo list',
+    date: '2023-04-17',
+    image: todoList,
+    key: 'todo-list',
+    url: internalUrl('todo-list'),
+    code: 'https://github.com/food-billboard/simple-practice/tree/master/packages/todo-list'
   },
   {
     label: 'flappy bird小游戏',
