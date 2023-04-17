@@ -1,0 +1,13 @@
+.todo-list-modal {
+  box-sizing: border-box;
+}
+.todo-list-modal-wrapper {
+  width: 100%;
+}
+.todo-list-modal-title {
+  margin-bottom: 16px;
+}
+.todo-list-modal-footer{ 
+  margin: 8px 0;
+  text-align: right;
+}
