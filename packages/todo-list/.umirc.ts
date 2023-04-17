@@ -5,7 +5,5 @@ export default defineConfig({
     { path: "/", component: "Test" },
   ],
   npmClient: 'yarn',
-  codeSplitting: {
-    jsStrategy: 'bigVendors'
-  }
+  publicPath: './'
 });
