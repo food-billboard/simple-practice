@@ -26,7 +26,8 @@ class DataSourceRequest {
 
 	// 排序todo
 	sortToDoList(value: ListData[]) {
-		const { todo, remove, complete } = value.reduce<{
+		const { todo, remove, complete, top } = value.reduce<{
+			top: ListData[]
 			todo: ListData[]
 			remove: ListData[]
 			complete: ListData[]
@@ -41,18 +42,24 @@ class DataSourceRequest {
 						acc.remove.push(cur)
 						break
 					case "todo":
-						acc.todo.push(cur)
+						if(cur.top) {
+							acc.top.push(cur)
+						}else {
+							acc.todo.push(cur)
+						}
 						break
 				}
 				return acc
 			},
 			{
+				top: [],
 				todo: [],
 				remove: [],
 				complete: [],
 			}
 		)
 		return [
+			...top.sort((a, b) => b.timestamps - a.timestamps),
 			...todo.sort((a, b) => b.timestamps - a.timestamps),
 			...complete.sort((a, b) => b.timestamps - a.timestamps),
 			...remove.sort((a, b) => b.timestamps - a.timestamps),
@@ -134,12 +141,13 @@ class DataSourceRequest {
 	// ---setter--
 
 	// 增加todo项
-	async postInsertTodo(value: Omit<ListData, "id" | "status" | "timestamps">) {
+	async postInsertTodo(value: Omit<ListData, "id" | "status" | "timestamps" | "top">) {
 		const { classify } = value
 		try {
 			const data = await this.getListDataByClassify(classify)
 			data.push({
 				...value,
+				top: false,
 				timestamps: Date.now(),
 				status: "todo",
 				id: uuid(),
@@ -156,7 +164,7 @@ class DataSourceRequest {
 	async postUpdateTodo(
 		id: string,
 		classify: string,
-		value: Partial<Pick<ListData, "label" | "description" | "status">>
+		value: Partial<Pick<ListData, "label" | "description" | "status" | "top">>
 	) {
 		try {
 			const data = await this.getListDataByClassify(classify)

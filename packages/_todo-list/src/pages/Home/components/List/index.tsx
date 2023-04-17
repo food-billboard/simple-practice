@@ -19,6 +19,7 @@ import { useUpdateEffect } from 'ahooks'
 import useNotation from '../Notation';
 import DataSourceRequest from '../../utils/request'
 import { useContext } from '../../utils/context'
+import { COLOR_MAP } from '../../utils/tool'
 import useModal from '../Modal'
 import Loading from '../Loading'
 import MarkDownEditor from '../MarkDownEditor';
@@ -37,7 +38,7 @@ const ToDoItem = (props: ListData & {
 }) => {
 
   const { onReload, ...nextData } = props
-  const { label, status, classify, id } = nextData
+  const { label, status, classify, id, top } = nextData
 
   const [editData, setEditData] = useState<ListData>({ ...nextData })
 
@@ -48,6 +49,11 @@ const ToDoItem = (props: ListData & {
 
   const [EditModal, show, hide, modalProps] = useModal()
   const { message, classify: classifyDataSource } = useContext()
+
+  const labelColor = useMemo(() => {
+    const targetIndex = (classifyDataSource.findIndex(item => item.id === classify) || -1) + 1
+    return COLOR_MAP[targetIndex % COLOR_MAP.length]
+  }, [classify, classifyDataSource])
 
   const disabled = useMemo(() => {
     return status === 'delete'
@@ -107,6 +113,19 @@ const ToDoItem = (props: ListData & {
     loading.current = false
   }, [id, classify, onReload, status])
 
+  const onToDoTop = useCallback(async () => {
+    if (loading.current) return
+    loading.current = true
+    const result = await DataSourceRequest.postUpdateTodo(id, classify, {
+      top: !top
+    })
+    if (!result) {
+      message('操作失败')
+    }
+    await onReload?.()
+    loading.current = false
+  }, [id, classify, onReload, top])
+
   const onStatusChange = useCallback(async (e: any) => {
     if (loading.current) return
     loading.current = true
@@ -157,9 +176,21 @@ const ToDoItem = (props: ListData & {
             <WiredCard className="todo-list-card-item-label">
               <div id={todoId.current} onClick={handleEdit}>{label}</div>
             </WiredCard>
-            <WiredCard disabled={disabled}>{classifyData?.label}</WiredCard>
+            <WiredCard fill={labelColor} disabled={disabled}>{classifyData?.label}</WiredCard>
           </div>
           <div className="todo-list-card-item-action">
+            <WiredIconButton onClick={onToDoTop} style={{marginRight: 4}}>
+              {
+                top ? 
+                (
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1531" width="16" height="16"><path d="M189.3 115h653.4c12.1 0 22-9.9 22-22v-6c0-12.1-9.9-22-22-22H189.3c-12.1 0-22 9.9-22 22v6c0 12.1 9.9 22 22 22zM152.2 524.5c-16.1 15.5-16.5 41.4-1 57.5s41.4 16.5 57.5 1l150.5-145-57.4-57.6-149.6 144.1zM474.5 918.4c0 22.4 18.3 40.6 40.6 40.6 22.4 0 40.6-18.3 40.6-40.6V635.3l-81.3-81.6v364.7zM872.3 524.5L547.1 211.3c-7.5-9.5-19-15.6-32-15.6h-0.5c-0.8 0-1.6 0-2.4 0.1-10.9-0.6-22 3.2-30.4 11.3l-98.4 94.7 57.4 57.6 33.6-32.3v66l81.3 81.6V332.5l260.1 250.4c16.1 15.5 41.9 15.1 57.5-1 15.6-16 15.1-41.9-1-57.4zM257.1 207c-6.6-6.7-15.4-10-24.1-10-8.7 0-17.4 3.3-24 9.9-13.3 13.3-13.3 34.8-0.1 48.1l538 540c6.6 6.7 15.4 10 24.1 10 8.7 0 17.4-3.3 24-9.9 13.3-13.3 13.3-34.8 0.1-48.1l-538-540z" fill="#2c2c2c" p-id="1532"></path></svg>
+                )
+                :
+                (
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1741" width="16" height="16"><path d="M555.818667 940.629333c-6.229333 56.746667-85.418667 51.669333-88.533334 0V324.693333l-272.64 263.210667c-42.752 36.778667-93.610667-22.058667-61.824-60.757333 120.704-117.034667 337.322667-326.485333 342.4-331.349334 19.968-21.674667 51.413333-22.784 72.661334 0 39.808 38.442667 334.890667 322.986667 343.808 333.226667 29.952 37.205333-18.432 92.245333-59.733334 61.226667-10.666667-9.002667-276.053333-265.514667-276.053333-265.514667l-0.085333 615.893333zM168.448 42.666667h687.104c14.336 0 21.504 8.704 21.504 26.069333 0 17.408-7.168 26.069333-21.504 26.069333H168.448c-14.336 0-21.504-8.661333-21.504-26.026666 0-17.408 7.168-26.112 21.504-26.112z" fill="#2c2c2c" p-id="1742"></path></svg>
+                )
+              }
+            </WiredIconButton>
             <WiredIconButton onClick={onToDoDelete}>
               {
                 status === 'delete' ? 

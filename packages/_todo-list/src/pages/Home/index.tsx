@@ -9,6 +9,7 @@ import {
   WiredButton as WERWiredButton
 } from 'wired-elements-react'
 import { useSize } from 'ahooks'
+import Marquee from 'react-fast-marquee'
 import useMessage from './components/message';
 import useModal from './components/Modal'
 import List, { ToDoCardRef } from './components/List'
@@ -107,7 +108,7 @@ function HomePage() {
   const onAddClassifyModalOk = useCallback(async () => {
     if (fetchLoading || !classifyInputValue) return
     setFetchLoading(true)
-    const result: any = await DataSourceRequest.postInsertClassify({ label: classifyInputValue })
+    const result: any = await DataSourceRequest.postInsertClassify({ label: classifyInputValue.slice(0, 4) })
     if (result) {
       await fetchClassifyList()
       hideModal()
@@ -163,7 +164,12 @@ function HomePage() {
           <header>
             <WiredCard className="todo-list-header">
               <div>
-                <div>我的待办事项</div>
+                <div>
+                  我的待办事项
+                  <Marquee style={{fontSize: '12px'}}>
+                    这是一个手绘风格的ToDoList列表，支持基本功能以及分类、置顶，数据存储在浏览器本地缓存中，记得及时清理哦。  
+                  </Marquee>
+                </div>
                 <WiredImage
                   className="todo-list-header-avatar"
                   src="data:image/jpeg;base64,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"
@@ -206,7 +212,7 @@ function HomePage() {
           onCancel={onAddClassifyModalClose}
           onOk={onAddClassifyModalOk}
         >
-          <WiredInput className="todo-list-classify-input" placeholder="输入分类名称" value={classifyInputValue} onchange={onClassifyInputValue} />
+          <WiredInput className="todo-list-classify-input" placeholder="输入分类名称(最多四个字)" value={classifyInputValue} onchange={onClassifyInputValue} />
         </AddClassifyModal>
       </WiredCard>
     </Context.Provider>

@@ -1,35 +1,24 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import {
   WiredButton as WERWiredButton
 } from 'wired-elements-react'
-// import {
-//   ArcSeries,
-//   Arc,
-//   Tooltip as RTooltip,
-//   ChartProvider as RChartProvider,
-// } from 'rough-charts'
+import {
+  ArcSeries,
+  Arc,
+  Tooltip as RTooltip,
+  ChartProvider as RChartProvider,
+} from 'rough-charts'
 // @ts-ignore
-import * as roughViz from 'react-roughviz'
 import { uniqueId } from 'lodash'
 import { useContext } from '../../utils/context'
 import DataSourceRequest from '../../utils/request'
+import { COLOR_MAP } from '../../utils/tool'
 import { ChartData } from '../../type'
 import useModal from '../Modal'
 
-const COLOR_MAP = [
-  "#c12e34",
-  "#e6b600",
-  "#0098d9",
-  "#2b821d",
-  "#005eaa",
-  "#339ca8",
-  "#cda819",
-  "#32a487"
-]
-
 const WiredButton = WERWiredButton as any
-// const ChartProvider = RChartProvider as any
-// const Tooltip = RTooltip as any
+const ChartProvider = RChartProvider as any
+const Tooltip = RTooltip as any
 
 const InternalChart = (props: {
   dataSource: { name: string, value: number }[]
@@ -57,61 +46,61 @@ const InternalChart = (props: {
   //   })
   // }, [])
 
-  return (
-    <roughViz.Pie
-      data={dataSource.reduce<{ labels: string[], values: number[] }>((acc, cur) => {
-        const { name, value } = cur
-        acc.labels.push(name)
-        acc.values.push(value) 
-        return acc 
-      }, {
-        labels: [],
-        values: [] 
-      })}
-      colors={COLOR_MAP}
-    >
+  // return (
+  //   <roughViz.Pie
+  //     data={dataSource.reduce<{ labels: string[], values: number[] }>((acc, cur) => {
+  //       const { name, value } = cur
+  //       acc.labels.push(name)
+  //       acc.values.push(value) 
+  //       return acc 
+  //     }, {
+  //       labels: [],
+  //       values: [] 
+  //     })}
+  //     colors={COLOR_MAP}
+  //   >
 
-    </roughViz.Pie>
-  )
-
-  return (
-    <div
-      id={chartId.current}
-    >
-
-    </div>
-  )
+  //   </roughViz.Pie>
+  // )
 
   // return (
-  //   <ChartProvider
-  //     height={width * 0.5}
-  //     width={width * 0.5}
-  //     data={dataSource}
+  //   <div
+  //     id={chartId.current}
   //   >
-  //     <ArcSeries
-  //       dataKey="value"
-  //     >
-  //       {(item, itemProps, index) => {
-  //         return (
-  //           <Arc
-  //             key={index}
-  //             {...itemProps}
-  //             // @ts-ignore
-  //             options={{ fill: COLOR_MAP[index % COLOR_MAP.length] }}
-  //           />
-  //         )
-  //       }}
-  //     </ArcSeries>
-  //     <Tooltip>
-  //       {
-  //         (activeItem: any) => {
-  //           const { name, value } = activeItem
-  //           return `${name}: ${value}`
-  //         }
-  //       }
-  //     </Tooltip>
-  //   </ChartProvider>
+
+  //   </div>
   // )
+
+  return (
+    <ChartProvider
+      height={width * 0.5}
+      width={width * 0.5}
+      data={dataSource}
+    >
+      <ArcSeries
+        dataKey="value"
+      >
+        {(item, itemProps, index) => {
+          return (
+            <Arc
+              key={index}
+              {...itemProps}
+              // @ts-ignore
+              options={{ fill: COLOR_MAP[index % COLOR_MAP.length] }}
+            />
+          )
+        }}
+      </ArcSeries>
+      <Tooltip>
+        {
+          (activeItem: any) => {
+            const { name, value } = activeItem
+            return `${name}: ${value}`
+          }
+        }
+      </Tooltip>
+    </ChartProvider>
+  )
 
 }
 
