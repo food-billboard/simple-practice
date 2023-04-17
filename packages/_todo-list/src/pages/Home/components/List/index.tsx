@@ -172,7 +172,7 @@ const ToDoItem = (props: ListData & {
       >
         <div className='todo-list-card-item-wrapper'>
           <div>
-            <WERWiredCheckbox disabled={disabled} checked={status === 'complete'} onchange={onStatusChange} />
+            <WiredCheckbox disabled={disabled} checked={status === 'complete'} onchange={onStatusChange} />
             <WiredCard className="todo-list-card-item-label">
               <div id={todoId.current} onClick={handleEdit}>{label}</div>
             </WiredCard>

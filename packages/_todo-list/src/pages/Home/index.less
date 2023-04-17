@@ -46,57 +46,72 @@ body {
   min-height: 400px;
   overflow: hidden;
   padding: 0;
-  .todo-list-container-wrapper {
-    height: 100vh;
-    min-height: 400px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    padding: 10px;
-    & section {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      .todo-list-section-main {
-        flex: 1;
-        overflow: auto;
-      }
-    }
-  }
-  .todo-list-header {
-    width: 100%;
-    & > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .todo-list-header-avatar {
-      width: ~'max(min(5vw, 100px), 50px)';
-    }
-  }
-  .todo-list-section-input {
-    width: 80%;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    &-main {
-      flex: 1;
-    }
-  }
-  .todo-list-classify-input {
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .todo-list-section-action {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    &-wrapper {
-      display: flex;
-      align-items: center;
-    }
-  }
-} 
+}
+.todo-list-container-pc .todo-list-container-wrapper,
+.todo-list-container-h5 .todo-list-container-wrapper {
+  height: 100vh;
+  min-height: 400px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.todo-list-container-pc .todo-list-container-wrapper section,
+.todo-list-container-h5 .todo-list-container-wrapper section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.todo-list-container-pc .todo-list-container-wrapper section .todo-list-section-main,
+.todo-list-container-h5 .todo-list-container-wrapper section .todo-list-section-main {
+  flex: 1;
+  overflow: auto;
+}
+.todo-list-container-pc .todo-list-header,
+.todo-list-container-h5 .todo-list-header {
+  width: 100%;
+}
+.todo-list-container-pc .todo-list-header > div,
+.todo-list-container-h5 .todo-list-header > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.todo-list-container-pc .todo-list-header > div > div,
+.todo-list-container-h5 .todo-list-header > div > div {
+  flex: 1;
+}
+.todo-list-container-pc .todo-list-header .todo-list-header-avatar,
+.todo-list-container-h5 .todo-list-header .todo-list-header-avatar {
+  width: max(min(5vw, 100px), 50px);
+}
+.todo-list-container-pc .todo-list-section-input,
+.todo-list-container-h5 .todo-list-section-input {
+  width: 80%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+.todo-list-container-pc .todo-list-section-input-main,
+.todo-list-container-h5 .todo-list-section-input-main {
+  flex: 1;
+}
+.todo-list-container-pc .todo-list-classify-input,
+.todo-list-container-h5 .todo-list-classify-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.todo-list-container-pc .todo-list-section-action,
+.todo-list-container-h5 .todo-list-section-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.todo-list-container-pc .todo-list-section-action-wrapper,
+.todo-list-container-h5 .todo-list-section-action-wrapper {
+  display: flex;
+  align-items: center;
+}
