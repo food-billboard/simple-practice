@@ -8,9 +8,9 @@ const COLOR_TYPE_MAP: {
   underline: '',
   box: '',
   circle: '',
-  highlight: '',
-  'strike-through': '#4ea397',
-  'crossed-off': '#f00',
+  highlight: '#2b821d',
+  'strike-through': '#e6b600',
+  'crossed-off': '#c12e34',
   bracket: ''
 }
 
@@ -22,25 +22,34 @@ export default function useNotation(query: string): [
 ] {
 
   const notationRef = useRef<ReturnType<typeof annotate>>()
-  const currentType = useRef('')
+  // const currentType = useRef('')
 
   const show: ShowMethodType = useCallback((config) => {
+    // const { type } = config 
+    // if(!type) return
+    // const prevType = currentType.current 
+    // currentType.current = type
+    // if(currentType.current !== prevType) {
+    //   notationRef.current?.remove()
+    //   notationRef.current = annotate(document.querySelector(query) as any, {
+    //     color: COLOR_TYPE_MAP[config.type],
+    //     ...config 
+    //   })
+    // }
+    // notationRef.current?.show()
     const { type } = config 
     if(!type) return
-    const prevType = currentType.current 
-    currentType.current = type
-    if(currentType.current !== prevType) {
-      notationRef.current?.remove()
-      notationRef.current = annotate(document.querySelector(query) as any, {
-        color: COLOR_TYPE_MAP[config.type],
-        ...config 
-      })
-    }
+    notationRef.current?.remove()
+    notationRef.current = annotate(document.querySelector(query) as any, {
+      color: COLOR_TYPE_MAP[config.type],
+      ...config 
+    })
     notationRef.current?.show()
   }, [])
 
   const hide = useCallback(() => {
     notationRef.current?.hide() 
+    notationRef.current?.remove() 
   }, [])
 
   useEffect(() => {

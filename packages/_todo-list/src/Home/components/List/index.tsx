@@ -129,7 +129,7 @@ const ToDoItem = (props: ListData & {
     loading.current = false 
   }, [])
 
-  const updateNotation = (status: ListData['status'], animate: boolean) => {
+  const updateNotation = (status: ListData['status'], top: boolean, animate: boolean) => {
     if(status === 'delete') {
       showNotation({
         type: 'crossed-off',
@@ -140,18 +140,23 @@ const ToDoItem = (props: ListData & {
         type: 'strike-through',
         animate 
       })
+    }else if(top) {
+      showNotation({
+        type: 'highlight',
+        animate 
+      })
     }else {
       hideNotation()
     }
   }
 
   useEffect(() => {
-    updateNotation(status, false)
+    updateNotation(status, top, false)
   }, [])
 
   useUpdateEffect(() => {
-    updateNotation(status, true)
-  }, [status])
+    updateNotation(status, top, true)
+  }, [status, top])
 
   return (
     <>
@@ -167,7 +172,13 @@ const ToDoItem = (props: ListData & {
             <WiredCard fill={labelColor} disabled={disabled}>{classifyData?.label}</WiredCard>
           </div>
           <div className="todo-list-card-item-action">
-            <WiredIconButton onClick={onToDoTop} style={{marginRight: 4}}>
+            <WiredIconButton 
+              onClick={onToDoTop} 
+              style={{
+                marginRight: 4,
+                visibility: status === 'todo' ? 'visible' : 'hidden'
+              }}
+            >
               {
                 top ? 
                 (

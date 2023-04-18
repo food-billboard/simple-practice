@@ -1,10 +1,6 @@
-import { useCallback, useState, useRef } from 'react';
-// import {
-//   ArcSeries,
-//   Arc,
-//   Tooltip as RTooltip,
-//   ChartProvider as RChartProvider,
-// } from 'rough-charts'
+import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
+// @ts-ignore
+import * as ChartXkcd from 'chart.xkcd'
 // @ts-ignore
 import { uniqueId } from 'lodash'
 import { useContext } from '../../utils/context'
@@ -14,92 +10,48 @@ import { COLOR_MAP } from '../../utils/tool'
 import { ChartData } from '../../type'
 import useModal from '../Modal'
 
-// const ChartProvider = RChartProvider as any
-// const Tooltip = RTooltip as any
+const InternalChart = (props: {
+  dataSource: { name: string, value: number }[]
+}) => {
 
-// const InternalChart = (props: {
-//   dataSource: { name: string, value: number }[]
-// }) => {
+  const { dataSource } = props
 
-//   const { dataSource } = props 
+  const chartRef = useRef<SVGSVGElement>(null)
 
-//   const { width } = useContext()
+  const realDataSource = useMemo(() => {
+    let labels: string[] = []
+    let values: number[] = []
+    dataSource.forEach(item => {
+      const { name, value } = item
+      labels.push(name)
+      values.push(value)
+    })
+    return {
+      labels,
+      datasets: [{
+        data: values,
+      }]
+    }
+  }, [dataSource])
 
-//   const chartId = useRef(uniqueId('todo-chart'))
+  useEffect(() => {
+    new ChartXkcd.Pie(chartRef.current, {
+      title: '',
+      data: realDataSource,
+      options: {
+        backgroundColor: 'transparent',
+        dataColors: COLOR_MAP
+      }
+    })
+  }, [realDataSource])
 
-//   // useEffect(() => {
-//   //   new roughViz.Pie({
-//   //     element: `#${chartId.current}`,
-//   //     colors: COLOR_MAP,
-//   //     data: dataSource.reduce<{ labels: string[], values: number[] }>((acc, cur) => {
-//   //       const { name, value } = cur
-//   //       acc.labels.push(name)
-//   //       acc.values.push(value) 
-//   //       return acc 
-//   //     }, {
-//   //       labels: [],
-//   //       values: [] 
-//   //     })
-//   //   })
-//   // }, [])
+  return (
+    <svg
+      ref={chartRef}
+    />
+  )
 
-//   // return (
-//   //   <roughViz.Pie
-//   //     data={dataSource.reduce<{ labels: string[], values: number[] }>((acc, cur) => {
-//   //       const { name, value } = cur
-//   //       acc.labels.push(name)
-//   //       acc.values.push(value) 
-//   //       return acc 
-//   //     }, {
-//   //       labels: [],
-//   //       values: [] 
-//   //     })}
-//   //     colors={COLOR_MAP}
-//   //   >
-
-//   //   </roughViz.Pie>
-//   // )
-
-//   // return (
-//   //   <div
-//   //     id={chartId.current}
-//   //   >
-
-//   //   </div>
-//   // )
-
-//   return (
-//     <ChartProvider
-//       height={width * 0.5}
-//       width={width * 0.5}
-//       data={dataSource}
-//     >
-//       <ArcSeries
-//         dataKey="value"
-//       >
-//         {(item, itemProps, index) => {
-//           return (
-//             <Arc
-//               key={index}
-//               {...itemProps}
-//               // @ts-ignore
-//               options={{ fill: COLOR_MAP[index % COLOR_MAP.length] }}
-//             />
-//           )
-//         }}
-//       </ArcSeries>
-//       <Tooltip>
-//         {
-//           (activeItem: any) => {
-//             const { name, value } = activeItem
-//             return `${name}: ${value}`
-//           }
-//         }
-//       </Tooltip>
-//     </ChartProvider>
-//   )
-
-// }
+}
 
 const Chart = () => {
 
@@ -163,7 +115,7 @@ const Chart = () => {
         onOk={hideModal}
       >
         <div style={{ textAlign: 'center' }}>
-          {/* <InternalChart dataSource={dataSource} /> */}
+          <InternalChart dataSource={dataSource} />
         </div>
       </Modal>
     </div>

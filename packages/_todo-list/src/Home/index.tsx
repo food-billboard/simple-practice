@@ -62,7 +62,7 @@ function HomePage() {
 
   // 搜索todo
   const handleSearchToDo = useCallback(async () => {
-    if (!toDoInputValue || fetchLoading) return
+    if (fetchLoading) return
     await cardRef.current?.reload({
       content: toDoInputValue
     })
