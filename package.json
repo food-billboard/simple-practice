@@ -4,7 +4,9 @@
   "description": "关于一些小练习，做个简单记录。",
   "main": "index.js",
   "scripts": {
-    "build": "node ./scripts/build.js"
+    "build": "node ./scripts/build.js",
+    "deploy:raspberry": "node ./scripts/raspberryDeploy.js",
+    "build-and-deploy": "npm run build && npm run deploy:raspberry"
   },
   "repository": {
     "type": "git",
@@ -21,9 +23,11 @@
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "chalk": "4.1.2",
+    "chalk": "4.1.0",
+    "dotenv": "^16.4.7",
     "fs-extra": "^11.1.0",
     "gh-pages": "^5.0.0",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "ssh2-sftp-client": "9.1.0"
   }
 }

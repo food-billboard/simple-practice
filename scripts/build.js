@@ -25,7 +25,7 @@ async function buildPackage(dir) {
       shelljs.exec('yarn build', {
         async: true 
       }, (_, __, error) => {
-        if(error) {
+        if(error && (typeof error === 'string' && !error.includes('Browserslist'))) {
           reject(error)
         }else {
           resolve()
@@ -61,12 +61,14 @@ new Promise((resolve, reject) => {
   for(let i = 0; i < dirList.length; i ++) {
     const dir = dirList[i]
     const packageRoot = path.join(packagesDirname, dir)
-    console.log(chalk.green(`current package is ${packageRoot}`))
+    console.log(chalk.green(`current package is --- ${packageRoot}`))
+    console.log(chalk.yellow('-'.repeat(20)))
     const packageJsonPath = path.join(packageRoot, 'package.json')
     const hasPackageJson = fsPromise.existsSync(packageJsonPath)
     const srcDir = path.join(packageRoot, 'src')
     const distDir = path.join(packageRoot, 'dist')
     const buildDir = path.join(packageRoot, 'build')
+    // 存在package.json
     if(hasPackageJson) {
       console.log(chalk.green(`${dir} package need build`))
       
